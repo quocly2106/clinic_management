@@ -1,4 +1,4 @@
-package com.clinic.clinic.config;
+package com.clinic.clinic.config.Admin;
 
 import com.clinic.clinic.model.Admin;
 import org.springframework.security.core.GrantedAuthority;

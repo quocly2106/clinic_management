@@ -1,4 +1,4 @@
-package com.clinic.clinic.config;
+package com.clinic.clinic.config.Admin;
 
 import com.clinic.clinic.model.Admin;
 import com.clinic.clinic.repository.AdminRepository;
@@ -18,7 +18,7 @@ public class AdminDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Admin admin = adminRepository.findByEmail(email);
         if (admin == null) {
-            throw new UsernameNotFoundException("Admin not found");
+            throw new UsernameNotFoundException("Admin with email " + email + " not found");
         }
         return org.springframework.security.core.userdetails.User
                 .withUsername(admin.getEmail())

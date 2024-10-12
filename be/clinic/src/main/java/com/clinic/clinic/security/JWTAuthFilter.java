@@ -1,6 +1,6 @@
 package com.clinic.clinic.security;
 
-import com.clinic.clinic.config.AdminDetailsService;
+import com.clinic.clinic.config.Admin.AdminDetailsService;
 import com.clinic.clinic.utils.JWTUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
