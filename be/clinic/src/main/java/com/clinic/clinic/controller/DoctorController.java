@@ -1,18 +1,14 @@
 package com.clinic.clinic.controller;
 
-import com.clinic.clinic.config.Doctor.DoctorDetails;
+
 import com.clinic.clinic.dto.DoctorDto;
 import com.clinic.clinic.model.Doctor;
 import com.clinic.clinic.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +42,7 @@ public class DoctorController {
     @PreAuthorize("hasRole('ADMIN') or (hasRole('DOCTOR') and #id == authentication.principal.id)")
     @PutMapping("/update/{id}")
     public ResponseEntity<Doctor> updateDoctor(@PathVariable Long id, @RequestBody DoctorDto doctorDto) {
+
         Doctor updatedDoctor = doctorService.updateDoctor(id, doctorDto);
         return ResponseEntity.ok(updatedDoctor);
     }

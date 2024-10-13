@@ -25,6 +25,7 @@ public class DoctorDetailsService implements UserDetailsService {
         Doctor doctor = optionalDoctor.orElseThrow(() ->
                 new UsernameNotFoundException("Doctor with email " + email + " not found")
         );
+        System.out.println("Loading user: " + doctor.getEmail() + " with role: " + doctor.getRole());
         return new DoctorDetails(doctor);
     }
 }

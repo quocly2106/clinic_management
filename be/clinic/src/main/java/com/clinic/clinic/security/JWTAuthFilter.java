@@ -2,6 +2,7 @@ package com.clinic.clinic.security;
 
 import com.clinic.clinic.config.Admin.AdminDetailsService;
 import com.clinic.clinic.config.Doctor.DoctorDetailsService;
+import com.clinic.clinic.config.Reception.ReceptionistDetailsService;
 import com.clinic.clinic.utils.JWTUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -29,8 +30,13 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     @Autowired
     private DoctorDetailsService doctorDetailsService;
 
+    @Autowired
+    private ReceptionistDetailsService receptionistDetailsService;
+
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
         final String jwtToken;
         final String userEmail;
@@ -57,7 +63,13 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                     userDetails = doctorDetailsService.loadUserByUsername(userEmail);
                     System.out.println("User found in doctor service: " + userDetails.getUsername());
                 } catch (UsernameNotFoundException doctorNotFoundException) {
-                    System.out.println("User not found in both admin and doctor services");
+                    System.out.println("User not found in doctor service, trying receptionist service");
+                    try {
+                        userDetails = receptionistDetailsService.loadUserByUsername(userEmail);
+                        System.out.println("User found in receptionist service: " + userDetails.getUsername());
+                    } catch (UsernameNotFoundException receptionistNotFoundException) {
+                        System.out.println("User not found in both admin, doctor, and receptionist services");
+                    }
                 }
             }
 

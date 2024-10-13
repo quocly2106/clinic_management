@@ -1,6 +1,6 @@
-package com.clinic.clinic.config.Doctor;
+package com.clinic.clinic.config.Reception;
 
-import com.clinic.clinic.model.Doctor;
+import com.clinic.clinic.model.Receptionist;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,27 +8,27 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
-public class DoctorDetails implements UserDetails {
+public class ReceptionistDetails implements UserDetails {
 
-    private final Doctor doctor;
+    private final Receptionist receptionist;
 
-    public DoctorDetails(Doctor doctor) {
-        this.doctor = doctor;
+    public ReceptionistDetails(Receptionist receptionist) {
+        this.receptionist = receptionist;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + doctor.getRole().name()));
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + receptionist.getRole().name()));
     }
 
     @Override
     public String getPassword() {
-        return doctor.getPassword();
+        return receptionist.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return doctor.getEmail(); // Sử dụng email làm username
+        return receptionist.getEmail();
     }
 
     @Override
@@ -51,10 +51,10 @@ public class DoctorDetails implements UserDetails {
         return true; // Bạn có thể thêm logic nếu cần
     }
 
-    public Doctor getDoctor() {
-        return doctor;
+    public Receptionist getReceptionist() {
+        return receptionist;
     }
     public Long getId() {
-        return doctor.getId(); // Thêm getter cho ID
+        return receptionist.getId(); // Thêm getter cho ID
     }
 }

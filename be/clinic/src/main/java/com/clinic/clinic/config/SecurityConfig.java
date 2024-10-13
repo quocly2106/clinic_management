@@ -31,10 +31,13 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())  // Tắt CSRF cho API (cần thiết cho Stateless API)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/admin/register", "/admin/login").permitAll()  // Cho phép tất cả truy cập tới endpoint đăng ký và đăng nhập admin
-                        .requestMatchers("/doctors/login").permitAll()  // Cho phép tất cả truy cập tới endpoint đăng nhập bác sĩ
-                        .requestMatchers("/admin/**","/doctors/**").hasRole("ADMIN")
-                        .requestMatchers("/doctors/update/{id}").hasAnyRole("DOCTOR")
+                        .requestMatchers("/admin/register", "/admin/login").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/doctors/update/{id}").hasAnyRole("DOCTOR","ADMIN")
+                        .requestMatchers("/receptions/update/{id}").hasAnyRole("RECEPTIONIST","ADMIN")
+                        .requestMatchers("/doctors/login","receptions/login").permitAll()
+                        .requestMatchers("/doctors/**","/receptions/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
