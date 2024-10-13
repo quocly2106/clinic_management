@@ -54,4 +54,7 @@ public class DoctorDetails implements UserDetails {
     public Doctor getDoctor() {
         return doctor;
     }
+    public Long getId() {
+        return doctor.getId(); // Thêm getter cho ID
+    }
 }

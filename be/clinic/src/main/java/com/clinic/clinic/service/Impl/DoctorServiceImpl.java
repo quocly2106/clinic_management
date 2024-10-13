@@ -2,7 +2,7 @@ package com.clinic.clinic.service.Impl;
 
 import com.clinic.clinic.config.Doctor.DoctorDetails;
 import com.clinic.clinic.dto.DoctorDto;
-import com.clinic.clinic.model.Admin;
+import com.clinic.clinic.exception.ResourceNotFoundException;
 import com.clinic.clinic.model.Department;
 import com.clinic.clinic.model.Doctor;
 import com.clinic.clinic.model.Role;
@@ -15,8 +15,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
-
 
 @Service
 public class DoctorServiceImpl implements DoctorService {
@@ -27,7 +27,7 @@ public class DoctorServiceImpl implements DoctorService {
     private JWTUtils jwtUtils;
 
     @Autowired
-    DepartmentRepository departmentRepository;
+    private DepartmentRepository departmentRepository;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -42,16 +42,55 @@ public class DoctorServiceImpl implements DoctorService {
         Optional<Doctor> optionalDoctor = doctorRepository.findByEmail(doctorDto.getEmail());
         if (optionalDoctor.isPresent()) {
             Doctor doctor = optionalDoctor.get();
-            // Kiểm tra mật khẩu
             if (passwordEncoder.matches(doctorDto.getPassword(), doctor.getPassword())) {
-                // Tạo và trả về token
-                UserDetails doctorDetails = new DoctorDetails(doctor); // Chuyển đổi Doctor thành DoctorDetails
-                return jwtUtils.generateToken(doctorDetails); // Gọi phương thức generateToken
+                UserDetails doctorDetails = new DoctorDetails(doctor);
+                return jwtUtils.generateToken(doctorDetails);
             }
         }
         return null;
     }
 
+    @Override
+    public Doctor updateDoctor(Long id, DoctorDto doctorDto) {
+        Doctor existingDoctor = doctorRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor not found"));
+
+        existingDoctor.setFirstName(doctorDto.getFirstName());
+        existingDoctor.setLastName(doctorDto.getLastName());
+
+        if (doctorDto.getEmail() != null && !doctorDto.getEmail().isEmpty()) {
+            existingDoctor.setEmail(doctorDto.getEmail());
+        } else {
+            throw new RuntimeException("Email cannot be null or empty");
+        }
+
+        if (doctorDto.getPassword() != null && !doctorDto.getPassword().isEmpty()) {
+            existingDoctor.setPassword(passwordEncoder.encode(doctorDto.getPassword()));
+        }
+
+        if (doctorDto.getDepartmentId() != null) {
+            Department department = departmentRepository.findById(doctorDto.getDepartmentId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
+            existingDoctor.setDepartment(department);
+        }
+
+        return doctorRepository.save(existingDoctor);
+    }
+
+    @Override
+    public void deleteDoctor(Long id) {
+        doctorRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Doctor> getAllDoctors() {
+        return doctorRepository.findAll();
+    }
+
+    @Override
+    public Doctor getDoctorById(Long id) {
+        return doctorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Doctor not found"));
+    }
 
     private Doctor convertToEntity(DoctorDto doctorDto) {
         Doctor doctor = new Doctor();
@@ -62,11 +101,9 @@ public class DoctorServiceImpl implements DoctorService {
         doctor.setRole(Role.DOCTOR);
         if (doctorDto.getDepartmentId() != null) {
             Department department = departmentRepository.findById(doctorDto.getDepartmentId())
-                    .orElseThrow(() -> new RuntimeException("Department not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
             doctor.setDepartment(department);
         }
         return doctor;
     }
-
-
 }

@@ -1,5 +1,7 @@
 package com.clinic.clinic.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,7 +36,9 @@ public class Doctor {
     private Role role; // Doctor chỉ có 1 role là "doctor"
 
     // Mối quan hệ n-1 với Department
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id", nullable = false)
-    private Department department; // Đặt lại đây
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Department department;
+
 }

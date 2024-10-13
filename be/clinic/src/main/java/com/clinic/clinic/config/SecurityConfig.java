@@ -10,8 +10,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -31,15 +29,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.disable())  // Tắt CSRF cho API (cần thiết cho Stateless API)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/admin/register", "/admin/login").permitAll()  // Cho phép tất cả truy cập tới endpoint đăng ký và đăng nhập admin
                         .requestMatchers("/doctors/login").permitAll()  // Cho phép tất cả truy cập tới endpoint đăng nhập bác sĩ
-                        .requestMatchers("/admin/**").hasRole("ADMIN")  // Chỉ cho phép admin truy cập các endpoint dưới /admin
-                        .requestMatchers("/doctors/**").hasAnyRole("DOCTOR", "ADMIN")  // Cho phép cả bác sĩ và admin truy cập các endpoint dưới /doctor
-                        .anyRequest().authenticated()  // Các yêu cầu còn lại cần phải xác thực
+                        .requestMatchers("/admin/**","/doctors/**").hasRole("ADMIN")
+                        .requestMatchers("/doctors/update/{id}").hasAnyRole("DOCTOR")
+                        .anyRequest().authenticated()
                 )
-
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  // Không sử dụng session
                 )
@@ -50,11 +47,11 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder();  // Sử dụng BCrypt cho việc mã hóa mật khẩu
     }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
+        return configuration.getAuthenticationManager();  // Cung cấp AuthenticationManager
     }
 }
