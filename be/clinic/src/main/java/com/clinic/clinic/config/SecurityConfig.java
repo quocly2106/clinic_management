@@ -36,7 +36,8 @@ public class SecurityConfig {
                         .requestMatchers("/doctors/update/{id}").hasAnyRole("DOCTOR","ADMIN")
                         .requestMatchers("/receptions/update/{id}").hasAnyRole("RECEPTIONIST","ADMIN")
                         .requestMatchers("/doctors/login","receptions/login").permitAll()
-                        .requestMatchers("/doctors/**","/receptions/**").hasRole("ADMIN")
+                        .requestMatchers("/patients/**").hasAnyRole("ADMIN","RECEPTIONIST")
+                        .requestMatchers("/doctors/**","/receptions/**","/departments/**").hasRole("ADMIN")
 
                         .anyRequest().authenticated()
                 )

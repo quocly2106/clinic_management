@@ -36,5 +36,5 @@ public class Payment {
     // Quan hệ n-1 với Treatment
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "treatment_id", nullable = false)
-    private Treatment treatment;
+    private Treatments treatment;
 }

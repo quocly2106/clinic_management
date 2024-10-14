@@ -54,26 +54,21 @@ public class DoctorServiceImpl implements DoctorService {
     public Doctor updateDoctor(Long id, DoctorDto doctorDto) {
         Doctor existingDoctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Doctor not found"));
-
         existingDoctor.setFirstName(doctorDto.getFirstName());
         existingDoctor.setLastName(doctorDto.getLastName());
-
         if (doctorDto.getEmail() != null && !doctorDto.getEmail().isEmpty()) {
             existingDoctor.setEmail(doctorDto.getEmail());
         } else {
             throw new RuntimeException("Email cannot be null or empty");
         }
-
         if (doctorDto.getPassword() != null && !doctorDto.getPassword().isEmpty()) {
             existingDoctor.setPassword(passwordEncoder.encode(doctorDto.getPassword()));
         }
-
         if (doctorDto.getDepartmentId() != null) {
             Department department = departmentRepository.findById(doctorDto.getDepartmentId())
                     .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
             existingDoctor.setDepartment(department);
         }
-
         return doctorRepository.save(existingDoctor);
     }
 

@@ -23,9 +23,7 @@ public class Admin {
     private String email;
     @Column(nullable = false)
     private String password;
-
     private String image;
-
 
     @Enumerated(EnumType.STRING)
     private Role role;
