@@ -64,6 +64,7 @@ public class DoctorServiceImpl implements DoctorService {
         if (doctorDto.getPassword() != null && !doctorDto.getPassword().isEmpty()) {
             existingDoctor.setPassword(passwordEncoder.encode(doctorDto.getPassword()));
         }
+        existingDoctor.setImage(doctorDto.getImage());
         if (doctorDto.getDepartmentId() != null) {
             Department department = departmentRepository.findById(doctorDto.getDepartmentId())
                     .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
@@ -93,6 +94,7 @@ public class DoctorServiceImpl implements DoctorService {
         doctor.setLastName(doctorDto.getLastName());
         doctor.setEmail(doctorDto.getEmail());
         doctor.setPassword(passwordEncoder.encode(doctorDto.getPassword()));
+        doctor.setImage(doctorDto.getImage());
         doctor.setRole(Role.DOCTOR);
         if (doctorDto.getDepartmentId() != null) {
             Department department = departmentRepository.findById(doctorDto.getDepartmentId())

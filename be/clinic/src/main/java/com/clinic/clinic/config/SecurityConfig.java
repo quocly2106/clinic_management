@@ -37,7 +37,9 @@ public class SecurityConfig {
                         .requestMatchers("/receptions/update/{id}").hasAnyRole("RECEPTIONIST","ADMIN")
                         .requestMatchers("/doctors/login","receptions/login").permitAll()
                         .requestMatchers("/patients/**").hasAnyRole("ADMIN","RECEPTIONIST")
-                        .requestMatchers("/doctors/**","/receptions/**","/departments/**").hasRole("ADMIN")
+                        .requestMatchers("/news/add","/news/update/","news/delete/{id}").hasAnyRole("ADMIN")
+                        .requestMatchers("/news/all", "/news/{id}","/news/increment-views/{id}").permitAll()
+                        .requestMatchers("/doctors/**","/receptions/**","/departments/**","/schedules/**").hasRole("ADMIN")
 
                         .anyRequest().authenticated()
                 )

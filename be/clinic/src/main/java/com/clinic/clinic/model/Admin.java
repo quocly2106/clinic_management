@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,6 +26,9 @@ public class Admin {
     @Column(nullable = false)
     private String password;
     private String image;
+    // Quan hệ 1-nhiều với News
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<News> newsList;
 
     @Enumerated(EnumType.STRING)
     private Role role;

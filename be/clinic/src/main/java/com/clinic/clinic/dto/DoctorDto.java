@@ -20,5 +20,6 @@ public class DoctorDto {
     private String email;
     @NotBlank(message = "Password is required")
     private String password;
+    private String image;
     private Long departmentId;
 }

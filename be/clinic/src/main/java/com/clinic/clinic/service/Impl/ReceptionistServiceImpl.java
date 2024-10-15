@@ -62,6 +62,7 @@ public class ReceptionistServiceImpl implements ReceptionistService {
         if (receptionistDto.getPassword() != null && !receptionistDto.getPassword().isEmpty()) {
             existingReceptionist.setPassword(passwordEncoder.encode(receptionistDto.getPassword()));
         }
+        existingReceptionist.setImage(receptionistDto.getImage());
 
         return receptionistRepository.save(existingReceptionist);
     }
@@ -87,6 +88,7 @@ public class ReceptionistServiceImpl implements ReceptionistService {
         receptionist.setLastName(receptionistDto.getLastName());
         receptionist.setEmail(receptionistDto.getEmail());
         receptionist.setPassword(passwordEncoder.encode(receptionistDto.getPassword()));
+        receptionist.setImage(receptionistDto.getImage());
         receptionist.setRole(Role.RECEPTIONIST);
 
         return receptionist;

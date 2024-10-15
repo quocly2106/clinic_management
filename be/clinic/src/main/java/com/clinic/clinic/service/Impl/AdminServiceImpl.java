@@ -29,6 +29,7 @@ public class AdminServiceImpl implements AdminService {
         admin.setEmail(adminDto.getEmail());
         // Mã hóa password trước khi lưu vào DB
         admin.setPassword(passwordEncoder.encode(adminDto.getPassword()));
+        admin.setImage(adminDto.getImage());
         admin.setRole(Role.ADMIN); // Thiết lập role cho admin
         adminRepository.save(admin);
     }

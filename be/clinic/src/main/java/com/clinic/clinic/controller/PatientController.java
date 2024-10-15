@@ -28,7 +28,7 @@ public class PatientController {
         return ResponseEntity.ok(createdPatient);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','RECEPTIONIST')")
+
     @PutMapping("/update/{id}")
     public ResponseEntity<Patient> updatePatient(@PathVariable Long id, @RequestBody PatientDto patientDto) {
         Patient updatedPatient = patientService.updatePatient(id, patientDto);
