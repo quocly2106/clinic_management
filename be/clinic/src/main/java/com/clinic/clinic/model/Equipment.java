@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Data
@@ -34,6 +35,10 @@ public class Equipment {
 
     @Column(nullable = false)
     private LocalDate maintenanceDate;
+
+    // Mối quan hệ N-N với Treatment
+    @ManyToMany(mappedBy = "equipments")
+    private Set<Treatments> treatments;
 
     // Mối quan hệ n-1 với Admin
     @ManyToOne(fetch = FetchType.LAZY)

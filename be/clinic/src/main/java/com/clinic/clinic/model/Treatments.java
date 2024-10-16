@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Data
@@ -27,23 +28,31 @@ public class Treatments {
     @PastOrPresent
     private LocalDate treatmentDate; // Ngày điều trị
 
-    // Quan hệ n-1 với Doctor
+    // Quan hệ N-N với Medicine
+    @ManyToMany
+    @JoinTable(
+            name = "treatment_medicine",
+            joinColumns = @JoinColumn(name = "treatment_id"),
+            inverseJoinColumns = @JoinColumn(name = "medicine_id")
+    )
+    private Set<Medicine> medicines;
+
+    // Quan hệ N-N với Equipment
+    @ManyToMany
+    @JoinTable(
+            name = "treatment_equipment",
+            joinColumns = @JoinColumn(name = "treatment_id"),
+            inverseJoinColumns = @JoinColumn(name = "equipment_id")
+    )
+    private Set<Equipment> equipments;
+
+    // Quan hệ N-1 với Doctor
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id", nullable = false)
     private Doctor doctor;
 
-    // Quan hệ n-1 với Patient
+    // Quan hệ N-1 với Patient
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
-
-    // Quan hệ n-1 với Equipment
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "equipment_id")
-    private Equipment equipment;
-
-    // Quan hệ n-1 với Medicine
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "medicine_id")
-    private Medicine medicine;
 }

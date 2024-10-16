@@ -3,10 +3,10 @@ package com.clinic.clinic.service.Impl;
 import com.clinic.clinic.config.Doctor.DoctorDetails;
 import com.clinic.clinic.dto.DoctorDto;
 import com.clinic.clinic.exception.ResourceNotFoundException;
-import com.clinic.clinic.model.Department;
+import com.clinic.clinic.model.Specialty;
 import com.clinic.clinic.model.Doctor;
 import com.clinic.clinic.model.Role;
-import com.clinic.clinic.repository.DepartmentRepository;
+import com.clinic.clinic.repository.SpecialtyRepository;
 import com.clinic.clinic.repository.DoctorRepository;
 import com.clinic.clinic.service.DoctorService;
 import com.clinic.clinic.utils.JWTUtils;
@@ -27,7 +27,7 @@ public class DoctorServiceImpl implements DoctorService {
     private JWTUtils jwtUtils;
 
     @Autowired
-    private DepartmentRepository departmentRepository;
+    private SpecialtyRepository specialtyRepository;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -65,10 +65,10 @@ public class DoctorServiceImpl implements DoctorService {
             existingDoctor.setPassword(passwordEncoder.encode(doctorDto.getPassword()));
         }
         existingDoctor.setImage(doctorDto.getImage());
-        if (doctorDto.getDepartmentId() != null) {
-            Department department = departmentRepository.findById(doctorDto.getDepartmentId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
-            existingDoctor.setDepartment(department);
+        if (doctorDto.getSpecialtyId() != null) {
+            Specialty specialty = specialtyRepository.findById(doctorDto.getSpecialtyId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Specialty not found"));
+            existingDoctor.setSpecialty(specialty);
         }
         return doctorRepository.save(existingDoctor);
     }
@@ -96,10 +96,10 @@ public class DoctorServiceImpl implements DoctorService {
         doctor.setPassword(passwordEncoder.encode(doctorDto.getPassword()));
         doctor.setImage(doctorDto.getImage());
         doctor.setRole(Role.DOCTOR);
-        if (doctorDto.getDepartmentId() != null) {
-            Department department = departmentRepository.findById(doctorDto.getDepartmentId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
-            doctor.setDepartment(department);
+        if (doctorDto.getSpecialtyId() != null) {
+            Specialty specialty = specialtyRepository.findById(doctorDto.getSpecialtyId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Specialty not found"));
+            doctor.setSpecialty(specialty);
         }
         return doctor;
     }

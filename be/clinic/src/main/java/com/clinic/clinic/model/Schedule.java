@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -18,9 +19,7 @@ public class Schedule {
     @Column(name = "schedule_id")
     private Long id;
     @Column(nullable = false)
-    private LocalDate startTime;
-    @Column(nullable = false)
-    private LocalDate endTime;
+    private LocalDateTime dateTime;
 
     // Mối quan hệ n-1 với Doctor
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,4 +29,8 @@ public class Schedule {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receptionist_id")
     private Receptionist receptionist;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patient_id", nullable = true)
+    private Patient patient;
 }

@@ -10,7 +10,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DepartmentDto {
+public class SpecialtyDto {
 
     @NotBlank(message = "Name is required")
     private String name; // Tên khoa

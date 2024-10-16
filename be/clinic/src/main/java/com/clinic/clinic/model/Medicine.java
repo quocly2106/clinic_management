@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -30,6 +32,10 @@ public class Medicine {
     @Column(nullable = false)
     @Min(0)
     private Integer quantity;
+
+    // Mối quan hệ N-N với Treatment
+    @ManyToMany(mappedBy = "medicines")
+    private Set<Treatments> treatments;
 
     // Mối quan hệ n-1 với Admin
     @ManyToOne(fetch = FetchType.LAZY)

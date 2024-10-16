@@ -6,13 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ScheduleDto {
-    private LocalDate startTime;
-    private LocalDate endTime;
+    private LocalDateTime dateTime;
     private Long doctorId;
-    private Long receptionistId;
+    private PatientDto patient;
 }

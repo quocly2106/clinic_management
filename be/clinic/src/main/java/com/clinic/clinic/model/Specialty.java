@@ -13,11 +13,11 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "departments")
-public class Department {
+@Table(name = "specialties")
+public class Specialty {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "department_id")
+    @Column(name = "specialty_id")
     private Long id;
 
     @Column(nullable = false, unique = true)
@@ -26,7 +26,7 @@ public class Department {
     @Column(nullable = false)
     private String description; // Mô tả khoa
 
-    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "specialty", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Set<Doctor> doctors; // Mối quan hệ 1-n với Doctor

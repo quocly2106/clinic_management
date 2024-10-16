@@ -1,9 +1,7 @@
 package com.clinic.clinic.controller;
 
 
-import com.clinic.clinic.dto.DepartmentDto;
 import com.clinic.clinic.dto.ScheduleDto;
-import com.clinic.clinic.model.Department;
 import com.clinic.clinic.model.Schedule;
 import com.clinic.clinic.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,5 +49,9 @@ public class ScheduleController {
         return ResponseEntity.ok(schedule);
     }
 
-
+    @PostMapping("/book-appointment")
+    public ResponseEntity<?> bookAppointment(@RequestBody ScheduleDto scheduleDto) {
+        scheduleService.bookAppointment(scheduleDto);
+        return ResponseEntity.ok("Appointment booked successfully");
+    }
 }

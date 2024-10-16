@@ -35,10 +35,10 @@ public class Doctor {
     @Enumerated(EnumType.STRING)
     private Role role; // Doctor chỉ có 1 role là "doctor"
 
-    // Mối quan hệ n-1 với Department
+    // Mối quan hệ n-1 với Specialty
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "department_id", nullable = false)
+    @JoinColumn(name = "specialty_id", nullable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private Department department;
+    private Specialty specialty;
 
 }

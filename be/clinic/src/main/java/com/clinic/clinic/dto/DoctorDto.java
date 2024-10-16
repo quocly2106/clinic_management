@@ -21,5 +21,5 @@ public class DoctorDto {
     @NotBlank(message = "Password is required")
     private String password;
     private String image;
-    private Long departmentId;
+    private Long specialtyId;
 }
