@@ -38,7 +38,7 @@ public class Equipment {
 
     // Mối quan hệ N-N với Treatment
     @ManyToMany(mappedBy = "equipments")
-    private Set<Treatments> treatments;
+    private Set<Treatment> treatments;
 
     // Mối quan hệ n-1 với Admin
     @ManyToOne(fetch = FetchType.LAZY)

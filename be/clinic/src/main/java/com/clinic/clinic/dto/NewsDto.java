@@ -22,10 +22,6 @@ public class NewsDto {
     @NotBlank(message = "Content is required")
     private String content;
 
-
-    @NotNull(message = "Author ID is required")
-    private Long authorId; // Sử dụng Long để đại diện cho ID của tác giả
-
     @NotBlank(message = "Status is required")
     private String status;
 

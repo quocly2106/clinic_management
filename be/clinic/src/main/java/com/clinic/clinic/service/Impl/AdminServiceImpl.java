@@ -11,6 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Optional;
+
 @Service
 public class AdminServiceImpl implements AdminService {
 
@@ -35,8 +37,12 @@ public class AdminServiceImpl implements AdminService {
     }
 
     public String login(AdminDto adminDto) {
-        Admin admin = adminRepository.findByEmail(adminDto.getEmail());
-        if (admin != null) {
+        Optional<Admin> optionalAdmin = adminRepository.findByEmail(adminDto.getEmail());
+
+        // Kiểm tra nếu Admin tồn tại
+        if (optionalAdmin.isPresent()) {
+            Admin admin = optionalAdmin.get(); // Lấy Admin từ Optional
+
             // Kiểm tra password
             if (passwordEncoder.matches(adminDto.getPassword(), admin.getPassword())) {
                 // Tạo và trả về token

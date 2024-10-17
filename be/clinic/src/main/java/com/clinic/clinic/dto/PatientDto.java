@@ -18,5 +18,6 @@ public class PatientDto {
     private String gender;
     private LocalDate dateOfBirth;
     private Long doctorId;  // Sẽ sử dụng để liên kết với bác sĩ
-    private Long receptionistId;  // Sử dụng nếu có liên kết với lễ tân
+    private Long receptionistId;
+    private String role;// Sử dụng nếu có liên kết với lễ tân
 }

@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class AdminDetailsService implements UserDetailsService {
 
@@ -16,10 +18,14 @@ public class AdminDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Admin admin = adminRepository.findByEmail(email);
-        if (admin == null) {
-            throw new UsernameNotFoundException("Admin with email " + email + " not found");
-        }
+        Optional<Admin> optionalAdmin = adminRepository.findByEmail(email);
+
+        // Kiểm tra xem Admin có tồn tại không
+        Admin admin = optionalAdmin.orElseThrow(() ->
+                new UsernameNotFoundException("Admin with email " + email + " not found")
+        );
+
+        // Trả về UserDetails
         return org.springframework.security.core.userdetails.User
                 .withUsername(admin.getEmail())
                 .password(admin.getPassword())

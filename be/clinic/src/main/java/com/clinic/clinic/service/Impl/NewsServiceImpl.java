@@ -8,6 +8,8 @@ import com.clinic.clinic.repository.AdminRepository;
 import com.clinic.clinic.repository.NewsRepository;
 import com.clinic.clinic.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,19 +33,22 @@ public class NewsServiceImpl implements NewsService {
         news.setCreatedAt(now);
         news.setUpdatedAt(now);
 
-        if (newsDto.getAuthorId() != null) {
-            Admin admin = adminRepository.findById(newsDto.getAuthorId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Admin not found with ID: " + newsDto.getAuthorId()));
-            news.setAuthor(admin);
-        } else {
-            throw new IllegalArgumentException("Author ID must not be null");
-        }
+        // Lấy email từ SecurityContext
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName(); // Lấy email từ token
+
+        // Tìm Admin theo email
+        Admin admin = adminRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Admin not found with email: " + email));
+
+        // Gán author cho news
+        news.setAuthor(admin);
 
         news.setStatus(newsDto.getStatus());
-        news.setImage(newsDto.getImage()); // Đảm bảo thuộc tính đúng
+        news.setImage(newsDto.getImage());
         news.setTags(newsDto.getTags());
         news.setCategory(newsDto.getCategory());
-        news.setViews(0); // Khởi tạo lượt xem bằng 0
+        news.setViews(0);
 
         return newsRepository.save(news);
     }
