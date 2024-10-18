@@ -26,18 +26,6 @@ public class ReceptionistController {
         return ResponseEntity.ok(createdReceptionist);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody ReceptionistDto receptionistDto) {
-        String token = receptionistService.login(receptionistDto);
-        if (token != null) {
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "Login successful");
-            response.put("token", token);
-            return ResponseEntity.ok(response);
-        } else {
-            return ResponseEntity.status(401).body("Login failed");
-        }
-    }
 
     @PreAuthorize("hasRole('ADMIN') or (hasRole('RECEPTIONIST') and #id == authentication.principal.id)")
     @PutMapping("/update/{id}")

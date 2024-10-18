@@ -26,18 +26,6 @@ public class DoctorController {
         return ResponseEntity.ok(createdDoctor);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody DoctorDto doctorDto) {
-        String token = doctorService.login(doctorDto);
-        if (token != null) {
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "Login successful");
-            response.put("token", token);
-            return ResponseEntity.ok(response);
-        } else {
-            return ResponseEntity.status(401).body("Login failed");
-        }
-    }
 
     @PreAuthorize("hasRole('ADMIN') or (hasRole('DOCTOR') and #id == authentication.principal.id)")
     @PutMapping("/update/{id}")

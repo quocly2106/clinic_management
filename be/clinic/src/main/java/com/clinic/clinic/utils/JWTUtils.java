@@ -3,7 +3,9 @@ package com.clinic.clinic.utils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.annotation.PostConstruct;
 import lombok.experimental.NonFinal;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -19,12 +21,19 @@ public class JWTUtils {
     private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7; // 7 days in milliseconds
 
     @NonFinal
-    private static final String SECRET_KEY = "JhdtjPrb2gqmfT0uxPK439A1STxw6hxcN5HHCq9fHLDi3CZadBOedHUDUFo6OfKW"; // Use environment variable in production
+    @Value("${jwt.secret}")
+    private String secretKey;
 
-    private final SecretKey key;
+    private SecretKey key;
 
-    public JWTUtils() {
-        this.key = new SecretKeySpec(SECRET_KEY.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
+    // Initialize the key after the secret is set
+
+    @PostConstruct
+    public void init() {
+        if (secretKey == null || secretKey.isEmpty()) {
+            throw new IllegalArgumentException("Secret key cannot be null or empty.");
+        }
+        this.key = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
     }
 
     // Generate token

@@ -8,6 +8,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +23,9 @@ import java.io.IOException;
 
 @Component
 public class JWTAuthFilter extends OncePerRequestFilter {
+
+    private static final Logger logger = LoggerFactory.getLogger(JWTAuthFilter.class);
+
     @Autowired
     private JWTUtils jwtUtils;
 
@@ -33,7 +38,6 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     @Autowired
     private ReceptionistDetailsService receptionistDetailsService;
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -42,33 +46,32 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         final String userEmail;
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            System.out.println("No Bearer token found");
+            logger.warn("No Bearer token found in request");
             filterChain.doFilter(request, response);
             return;
         }
 
         jwtToken = authHeader.substring(7);
         userEmail = jwtUtils.extractUsername(jwtToken);
-        System.out.println("Extracted email: " + userEmail);
 
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = null;
 
             try {
                 userDetails = adminDetailsService.loadUserByUsername(userEmail);
-                System.out.println("User found in admin service: " + userDetails.getUsername());
-            } catch (UsernameNotFoundException adminNotFoundException) {
-                System.out.println("User not found in admin service, trying doctor service");
+                logger.info("User found in admin service: {}", userDetails.getUsername());
+            } catch (UsernameNotFoundException e) {
+                logger.warn("User not found in admin service, trying doctor service");
                 try {
                     userDetails = doctorDetailsService.loadUserByUsername(userEmail);
-                    System.out.println("User found in doctor service: " + userDetails.getUsername());
-                } catch (UsernameNotFoundException doctorNotFoundException) {
-                    System.out.println("User not found in doctor service, trying receptionist service");
+                    logger.info("User found in doctor service: {}", userDetails.getUsername());
+                } catch (UsernameNotFoundException e2) {
+                    logger.warn("User not found in doctor service, trying receptionist service");
                     try {
                         userDetails = receptionistDetailsService.loadUserByUsername(userEmail);
-                        System.out.println("User found in receptionist service: " + userDetails.getUsername());
-                    } catch (UsernameNotFoundException receptionistNotFoundException) {
-                        System.out.println("User not found in both admin, doctor, and receptionist services");
+                        logger.info("User found in receptionist service: {}", userDetails.getUsername());
+                    } catch (UsernameNotFoundException e3) {
+                        logger.error("User not found in any service (admin, doctor, receptionist)");
                     }
                 }
             }
@@ -78,9 +81,9 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                         userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-                System.out.println("Authentication set for user: " + userDetails.getUsername());
+                logger.info("Authentication set for user: {}", userDetails.getUsername());
             } else {
-                System.out.println("Token is not valid or user details are null");
+                logger.warn("Token is not valid or user details are null");
             }
         }
 

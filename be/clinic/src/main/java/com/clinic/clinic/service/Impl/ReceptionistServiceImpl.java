@@ -1,6 +1,7 @@
 package com.clinic.clinic.service.Impl;
 
 import com.clinic.clinic.config.Reception.ReceptionistDetails;
+import com.clinic.clinic.dto.LoginDto;
 import com.clinic.clinic.dto.ReceptionistDto;
 import com.clinic.clinic.exception.ResourceNotFoundException;
 import com.clinic.clinic.model.Receptionist;
@@ -33,17 +34,34 @@ public class ReceptionistServiceImpl implements ReceptionistService {
     }
 
     @Override
-    public String login(ReceptionistDto receptionistDto) {
-        Optional<Receptionist> optionalReceptionist = receptionistRepository.findByEmail(receptionistDto.getEmail());
+    public String login(LoginDto loginDto) {
+        Optional<Receptionist> optionalReceptionist = receptionistRepository.findByEmail(loginDto.getEmail());
+
         if (optionalReceptionist.isPresent()) {
             Receptionist receptionist = optionalReceptionist.get();
-            if (passwordEncoder.matches(receptionistDto.getPassword(), receptionist.getPassword())) {
+
+            if (passwordEncoder.matches(loginDto.getPassword(), receptionist.getPassword())) {
                 UserDetails receptionistDetails = new ReceptionistDetails(receptionist);
                 return jwtUtils.generateToken(receptionistDetails);
             }
         }
         return null;
     }
+
+    @Override
+    public boolean isValidUser(String email, String password) {
+        Optional<Receptionist> optionalReceptionist = receptionistRepository.findByEmail(email);
+
+        // Kiểm tra xem lễ tân có tồn tại và so sánh mật khẩu
+        if (optionalReceptionist.isPresent()) {
+            Receptionist receptionist = optionalReceptionist.get();
+            // So sánh mật khẩu đã mã hóa
+            return passwordEncoder.matches(password, receptionist.getPassword());
+        }
+
+        return false; // Trả về false nếu không tìm thấy lễ tân
+    }
+
 
     @Override
     public Receptionist updateReceptionist(Long id, ReceptionistDto receptionistDto) {

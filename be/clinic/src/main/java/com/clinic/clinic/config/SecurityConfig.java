@@ -31,11 +31,10 @@
             http
                     .csrf(csrf -> csrf.disable())  // Tắt CSRF cho API (cần thiết cho Stateless API)
                     .authorizeHttpRequests(authorize -> authorize
-                            .requestMatchers("/admin/register", "/admin/login").permitAll()
+                            .requestMatchers("/admin/register", "/auth/login").permitAll()
                             .requestMatchers("/admin/**").hasRole("ADMIN")
                             .requestMatchers("/doctors/update/{id}").hasAnyRole("DOCTOR","ADMIN")
                             .requestMatchers("/receptions/update/{id}").hasAnyRole("RECEPTIONIST","ADMIN")
-                            .requestMatchers("/doctors/login","receptions/login").permitAll()
                             .requestMatchers("/patients/**").hasAnyRole("ADMIN","RECEPTIONIST")
                             .requestMatchers("/news/add","/news/update/","news/delete/{id}").hasAnyRole("ADMIN")
                             .requestMatchers("/news/all", "/news/{id}","/news/increment-views/{id}").permitAll()

@@ -2,6 +2,7 @@ package com.clinic.clinic.service.Impl;
 
 import com.clinic.clinic.config.Doctor.DoctorDetails;
 import com.clinic.clinic.dto.DoctorDto;
+import com.clinic.clinic.dto.LoginDto;
 import com.clinic.clinic.exception.ResourceNotFoundException;
 import com.clinic.clinic.model.Specialty;
 import com.clinic.clinic.model.Doctor;
@@ -38,17 +39,34 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public String login(DoctorDto doctorDto) {
-        Optional<Doctor> optionalDoctor = doctorRepository.findByEmail(doctorDto.getEmail());
+    public String login(LoginDto loginDto) {
+        Optional<Doctor> optionalDoctor = doctorRepository.findByEmail(loginDto.getEmail());
+
         if (optionalDoctor.isPresent()) {
             Doctor doctor = optionalDoctor.get();
-            if (passwordEncoder.matches(doctorDto.getPassword(), doctor.getPassword())) {
+
+            if (passwordEncoder.matches(loginDto.getPassword(), doctor.getPassword())) {
                 UserDetails doctorDetails = new DoctorDetails(doctor);
                 return jwtUtils.generateToken(doctorDetails);
             }
         }
         return null;
     }
+
+    @Override
+    public boolean isValidUser(String email, String password) {
+        Optional<Doctor> optionalDoctor = doctorRepository.findByEmail(email);
+
+        // Kiểm tra xem bác sĩ có tồn tại và so sánh mật khẩu
+        if (optionalDoctor.isPresent()) {
+            Doctor doctor = optionalDoctor.get();
+            // So sánh mật khẩu đã mã hóa
+            return passwordEncoder.matches(password, doctor.getPassword());
+        }
+
+        return false; // Trả về false nếu không tìm thấy bác sĩ
+    }
+
 
     @Override
     public Doctor updateDoctor(Long id, DoctorDto doctorDto) {

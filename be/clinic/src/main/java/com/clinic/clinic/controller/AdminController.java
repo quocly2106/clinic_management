@@ -22,19 +22,6 @@ public class AdminController {
         return ResponseEntity.ok("Admin registered successfully");
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AdminDto adminDto) {
-        String token = adminService.login(adminDto);
-        if (token != null) {
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "Login successful");
-            response.put("token", token);
-
-            return ResponseEntity.ok(response);
-        } else {
-            return ResponseEntity.status(401).body("Login failed"); // Trả về thông báo thất bại
-        }
-    }
 
     @GetMapping("/admin/dashboard")
     public ResponseEntity<String> getDashboard() {
