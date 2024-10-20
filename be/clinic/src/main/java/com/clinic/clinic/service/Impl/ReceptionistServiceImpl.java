@@ -9,6 +9,7 @@ import com.clinic.clinic.model.Role;
 import com.clinic.clinic.repository.ReceptionistRepository;
 import com.clinic.clinic.service.ReceptionistService;
 import com.clinic.clinic.utils.JWTUtils;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -63,6 +64,7 @@ public class ReceptionistServiceImpl implements ReceptionistService {
     }
 
 
+    @Transactional
     @Override
     public Receptionist updateReceptionist(Long id, ReceptionistDto receptionistDto) {
         Receptionist existingReceptionist = receptionistRepository.findById(id)
@@ -73,10 +75,7 @@ public class ReceptionistServiceImpl implements ReceptionistService {
 
         if (receptionistDto.getEmail() != null && !receptionistDto.getEmail().isEmpty()) {
             existingReceptionist.setEmail(receptionistDto.getEmail());
-        } else {
-            throw new RuntimeException("Email cannot be null or empty");
         }
-
         if (receptionistDto.getPassword() != null && !receptionistDto.getPassword().isEmpty()) {
             existingReceptionist.setPassword(passwordEncoder.encode(receptionistDto.getPassword()));
         }

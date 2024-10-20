@@ -1,7 +1,20 @@
-// src/components/manager/navbar/Navbar.js
 import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
-function Navbar({ userName }) { // Nhận userName từ props
+function Navbar({ userName, onLogout }) {
+  const navigate = useNavigate(); // Khai báo useNavigate
+
+  const handleLogout = () => {
+    // Xóa token khỏi localStorage
+    localStorage.removeItem('token');
+
+    // Gọi hàm onLogout để cập nhật trạng thái người dùng
+    onLogout(); 
+
+    // Chuyển hướng về trang đăng nhập
+    navigate('/login');
+  };
+
   return (
     <nav className="navbar navbar-expand-md navbar-white bg-white">
       <a className="navbar-brand px-4" href="/">Nhan Tam</a>
@@ -27,12 +40,12 @@ function Navbar({ userName }) { // Nhận userName từ props
               aria-haspopup="true"
               aria-expanded="false"
             >
-              {userName || "Guest"} {/* Hiển thị email hoặc "Guest" */}
+              {userName || "Guest"}
             </a>
             <div className="dropdown-menu" aria-labelledby="dropdownId">
-              <a className="dropdown-item" href="/profile">Profile</a>
-              <a className="dropdown-item" href="/setting">Setting</a>
-              <a className="dropdown-item" href="/logout">Logout</a>
+              <Link className="dropdown-item" to="/profile">Profile</Link>
+              <Link className="dropdown-item" to="/setting">Setting</Link>
+              <button className="dropdown-item" onClick={handleLogout}>Logout</button> {/* Nút đăng xuất */}
             </div>
           </li>
         </ul>

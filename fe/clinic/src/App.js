@@ -1,36 +1,47 @@
-// src/App.js
 import "./App.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import Login from "./components/manager/login/Login";
-import Home from "./components/manager/home/Home"; // Import Home
-import { useState } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Navbar from './components/manager/navbar/Navbar';
+import Login from "./components/manager/user/login/Login";
+import Home from "./components/manager/home/Home";
+import { useState, useEffect } from "react";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userName, setUserName] = useState(''); // State để lưu tên người dùng
+  const [userName, setUserName] = useState('');
 
-  const handleLogin = (email) => { // Cập nhật hàm để nhận email
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsAuthenticated(true);
+      const email = localStorage.getItem("email");
+      setUserName(email || '');
+    }
+  }, []);
+
+  const handleLogin = (email) => {
     setIsAuthenticated(true);
-    setUserName(email); // Lưu email vào state
+    setUserName(email);
+    localStorage.setItem("email", email);
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setUserName('');
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
   };
 
   return (
-    <Router>
+    <>
+      {isAuthenticated && <Navbar userName={userName} onLogout={handleLogout} />}
       <Routes>
-        {/* Hiển thị trang login ban đầu */}
-        <Route path="/login" element={<Login onLogin={handleLogin} />} />
-        
-        {/* Nếu đã đăng nhập, chuyển đến Home */}
-        <Route path="/" element={isAuthenticated ? (
-          <Home userName={userName} /> // Truyền userName vào Home
-        ) : (
-          <Navigate to="/login" /> // Nếu chưa đăng nhập, chuyển đến trang login
-        )} />
+        <Route path="/login" element={!isAuthenticated ? <Login onLogin={handleLogin} /> : <Navigate to="/" />} />
+        <Route path="*" element={isAuthenticated ? <Home userName={userName} /> : <Navigate to="/login" />} />
       </Routes>
-    </Router>
+    </>
   );
 }
 

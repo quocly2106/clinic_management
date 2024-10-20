@@ -11,6 +11,7 @@ import com.clinic.clinic.repository.SpecialtyRepository;
 import com.clinic.clinic.repository.DoctorRepository;
 import com.clinic.clinic.service.DoctorService;
 import com.clinic.clinic.utils.JWTUtils;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -68,6 +69,7 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
 
+    @Transactional
     @Override
     public Doctor updateDoctor(Long id, DoctorDto doctorDto) {
         Doctor existingDoctor = doctorRepository.findById(id)
@@ -76,8 +78,6 @@ public class DoctorServiceImpl implements DoctorService {
         existingDoctor.setLastName(doctorDto.getLastName());
         if (doctorDto.getEmail() != null && !doctorDto.getEmail().isEmpty()) {
             existingDoctor.setEmail(doctorDto.getEmail());
-        } else {
-            throw new RuntimeException("Email cannot be null or empty");
         }
         if (doctorDto.getPassword() != null && !doctorDto.getPassword().isEmpty()) {
             existingDoctor.setPassword(passwordEncoder.encode(doctorDto.getPassword()));
