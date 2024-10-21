@@ -72,6 +72,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                         logger.info("User found in receptionist service: {}", userDetails.getUsername());
                     } catch (UsernameNotFoundException e3) {
                         logger.error("User not found in any service (admin, doctor, receptionist)");
+                        return; // Ngừng xử lý nếu không tìm thấy người dùng
                     }
                 }
             }
@@ -84,6 +85,8 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 logger.info("Authentication set for user: {}", userDetails.getUsername());
             } else {
                 logger.warn("Token is not valid or user details are null");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token is not valid");
+                return; // Ngừng xử lý nếu token không hợp lệ
             }
         }
 

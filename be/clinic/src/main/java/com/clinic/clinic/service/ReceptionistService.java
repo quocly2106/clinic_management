@@ -1,5 +1,6 @@
 package com.clinic.clinic.service;
 
+import com.clinic.clinic.dto.ChangePasswordDto;
 import com.clinic.clinic.dto.DoctorDto;
 import com.clinic.clinic.dto.LoginDto;
 import com.clinic.clinic.dto.ReceptionistDto;
@@ -22,4 +23,6 @@ public interface ReceptionistService {
     List<Receptionist> getAllReceptionists();
 
     Receptionist getReceptionistById(Long id);
+
+    boolean changePassword(Long id, ChangePasswordDto changePasswordDto);
 }

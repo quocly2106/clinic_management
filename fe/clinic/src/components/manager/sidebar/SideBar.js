@@ -1,8 +1,20 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Import Link từ react-router-dom
+import { Link, useNavigate } from 'react-router-dom'; // Import Link từ react-router-dom
 import './SideBar.css';
 
-const SideBar = () => {
+const SideBar = ({ userName, onLogout }) => {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    // Xóa token khỏi localStorage
+    localStorage.removeItem('token');
+
+    // Gọi hàm onLogout để cập nhật trạng thái người dùng
+    onLogout(); 
+
+    // Chuyển hướng về trang đăng nhập
+    navigate('/login');
+  };
+
   return (
     <div className="bg-white sidebar p-2">
       <hr className='text-dark' />
@@ -51,9 +63,9 @@ const SideBar = () => {
           <i className='bi bi-file-earmark-text-fill fs-4 me-3'></i>
           <span className='fs-5'>News</span>
         </Link>
-        <Link className='list-group-item py-2' to='/logout'>
+        <Link className='list-group-item py-2' onClick={handleLogout}>
           <i className='bi bi-power fs-4 me-3'></i>
-          <span className='fs-5'>Logout</span>
+          <span className='fs-5' >Logout</span>
         </Link>
       </div>
     </div>

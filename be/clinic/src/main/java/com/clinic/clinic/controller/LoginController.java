@@ -37,31 +37,37 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
-        String token = authenticateUser(loginDto);
-        if (token != null) {
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "Login successful");
-            response.put("token", token);
+        Map<String, String> response = authenticateUser(loginDto);
+        if (response != null) {
             return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.status(401).body("Login failed");
         }
     }
 
-    private String authenticateUser(LoginDto loginDto) {
-
+    private Map<String, String> authenticateUser(LoginDto loginDto) {
+        System.out.println("Authenticating user: " + loginDto.getEmail());
+        String token = null;
         String userRole = ""; // Biến để lưu role
 
         // Kiểm tra thông tin người dùng
         if (adminService.isValidUser(loginDto.getEmail(), loginDto.getPassword())) {
             userRole = "admin";
-            return adminService.login(loginDto);
+            token = adminService.login(loginDto);
         } else if (doctorService.isValidUser(loginDto.getEmail(), loginDto.getPassword())) {
             userRole = "doctor";
-            return doctorService.login(loginDto);
+            token = doctorService.login(loginDto);
         } else if (receptionistService.isValidUser(loginDto.getEmail(), loginDto.getPassword())) {
             userRole = "receptionist";
-            return receptionistService.login(loginDto);
+            token = receptionistService.login(loginDto);
+        }
+
+        if (token != null) {
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Login successful");
+            response.put("token", token);
+            response.put("role", userRole); // Thêm role vào phản hồi
+            return response; // Trả về token và role
         }
 
         return null; // Nếu không tìm thấy người dùng

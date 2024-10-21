@@ -38,6 +38,7 @@ public class JWTUtils {
 
     // Generate token
     public String generateToken(UserDetails userDetails) {
+
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))

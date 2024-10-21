@@ -1,9 +1,12 @@
 package com.clinic.clinic.service.Impl;
 
+import com.clinic.clinic.config.Doctor.DoctorDetails;
 import com.clinic.clinic.config.Reception.ReceptionistDetails;
+import com.clinic.clinic.dto.ChangePasswordDto;
 import com.clinic.clinic.dto.LoginDto;
 import com.clinic.clinic.dto.ReceptionistDto;
 import com.clinic.clinic.exception.ResourceNotFoundException;
+import com.clinic.clinic.model.Doctor;
 import com.clinic.clinic.model.Receptionist;
 import com.clinic.clinic.model.Role;
 import com.clinic.clinic.repository.ReceptionistRepository;
@@ -43,11 +46,15 @@ public class ReceptionistServiceImpl implements ReceptionistService {
 
             if (passwordEncoder.matches(loginDto.getPassword(), receptionist.getPassword())) {
                 UserDetails receptionistDetails = new ReceptionistDetails(receptionist);
-                return jwtUtils.generateToken(receptionistDetails);
+                String token = jwtUtils.generateToken(receptionistDetails);
+
+                // Trả về một JSON String với token, role và receptionistId
+                return "{\"token\": \"" + token + "\", \"role\": \"" + receptionist.getRole().name() + "\", \"receptionistId\": " + receptionist.getId() + "}";
             }
         }
         return null;
     }
+
 
     @Override
     public boolean isValidUser(String email, String password) {
@@ -97,6 +104,27 @@ public class ReceptionistServiceImpl implements ReceptionistService {
     @Override
     public Receptionist getReceptionistById(Long id) {
         return receptionistRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Receptionist not found"));
+    }
+
+    @Override
+    public boolean changePassword(Long id, ChangePasswordDto changePasswordDto) {
+        // Tìm kiếm người dùng theo ID
+        Optional<Receptionist> optionalReceptionist = receptionistRepository.findById(id);
+        if (!optionalReceptionist.isPresent()) {
+            throw new RuntimeException("Doctor not found");
+        }
+
+        Receptionist receptionist = optionalReceptionist.get();
+
+        // Kiểm tra mật khẩu cũ
+        if (!passwordEncoder.matches(changePasswordDto.getOldPassword(), receptionist.getPassword())) {
+            throw new RuntimeException("Old password is incorrect");
+        }
+
+        // Cập nhật mật khẩu mới
+        receptionist.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
+        receptionistRepository.save(receptionist);
+        return true;
     }
 
     private Receptionist convertToEntity(ReceptionistDto receptionistDto) {

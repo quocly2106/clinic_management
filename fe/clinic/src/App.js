@@ -11,35 +11,43 @@ import { useState, useEffect } from "react";
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userName, setUserName] = useState('');
+  const [userRole, setUserRole] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       setIsAuthenticated(true);
       const email = localStorage.getItem("email");
+      const role = localStorage.getItem("role");
       setUserName(email || '');
+      setUserRole(role ? role.toLowerCase() : '');
     }
   }, []);
 
-  const handleLogin = (email) => {
-    setIsAuthenticated(true);
-    setUserName(email);
-    localStorage.setItem("email", email);
-  };
+  const handleLogin = (email, token, role) => {
+  setIsAuthenticated(true);
+  setUserName(email);
+  setUserRole(role.toLowerCase());  // Ensure role is lowercase
+  localStorage.setItem("email", email);
+  localStorage.setItem("token", token);
+  localStorage.setItem("role", role.toLowerCase());
+};
 
   const handleLogout = () => {
     setIsAuthenticated(false);
     setUserName('');
+    setUserRole('');
     localStorage.removeItem("token");
     localStorage.removeItem("email");
+    localStorage.removeItem("role");
   };
 
   return (
     <>
-      {isAuthenticated && <Navbar userName={userName} onLogout={handleLogout} />}
+      {isAuthenticated && <Navbar userName={userName} userRole={userRole} onLogout={handleLogout} />}
       <Routes>
         <Route path="/login" element={!isAuthenticated ? <Login onLogin={handleLogin} /> : <Navigate to="/" />} />
-        <Route path="*" element={isAuthenticated ? <Home userName={userName} /> : <Navigate to="/login" />} />
+        <Route path="*" element={isAuthenticated ? <Home userRole={userRole} /> : <Navigate to="/login" />} />
       </Routes>
     </>
   );

@@ -1,6 +1,7 @@
 package com.clinic.clinic.service.Impl;
 
 import com.clinic.clinic.config.Doctor.DoctorDetails;
+import com.clinic.clinic.dto.ChangePasswordDto;
 import com.clinic.clinic.dto.DoctorDto;
 import com.clinic.clinic.dto.LoginDto;
 import com.clinic.clinic.exception.ResourceNotFoundException;
@@ -48,10 +49,13 @@ public class DoctorServiceImpl implements DoctorService {
 
             if (passwordEncoder.matches(loginDto.getPassword(), doctor.getPassword())) {
                 UserDetails doctorDetails = new DoctorDetails(doctor);
-                return jwtUtils.generateToken(doctorDetails);
+                String token = jwtUtils.generateToken(doctorDetails);
+
+                // Trả về một JSON String với token và role
+                return "{\"token\": \"" + token + "\", \"role\": \"" + doctor.getRole().name() + "\", \"doctorId\": " + doctor.getId() + "}";
             }
         }
-        return null;
+        return null; // Trả về null nếu không tìm thấy bác sĩ hoặc mật khẩu không đúng
     }
 
     @Override
@@ -106,6 +110,27 @@ public class DoctorServiceImpl implements DoctorService {
         return doctorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Doctor not found"));
     }
 
+    public boolean changePassword(Long id, ChangePasswordDto changePasswordDto) {
+        // Tìm kiếm người dùng theo ID
+        Optional<Doctor> optionalDoctor = doctorRepository.findById(id);
+        if (!optionalDoctor.isPresent()) {
+            throw new RuntimeException("Doctor not found");
+        }
+
+        Doctor doctor = optionalDoctor.get();
+
+        // Kiểm tra mật khẩu cũ
+        if (!passwordEncoder.matches(changePasswordDto.getOldPassword(), doctor.getPassword())) {
+            throw new RuntimeException("Old password is incorrect");
+        }
+
+        // Cập nhật mật khẩu mới
+        doctor.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
+        doctorRepository.save(doctor);
+        return true;
+    }
+
+
     private Doctor convertToEntity(DoctorDto doctorDto) {
         Doctor doctor = new Doctor();
         doctor.setFirstName(doctorDto.getFirstName());
@@ -121,4 +146,6 @@ public class DoctorServiceImpl implements DoctorService {
         }
         return doctor;
     }
+
+
 }

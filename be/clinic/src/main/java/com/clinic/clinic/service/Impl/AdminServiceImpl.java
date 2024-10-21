@@ -1,7 +1,9 @@
 package com.clinic.clinic.service.Impl;
 
 import com.clinic.clinic.dto.AdminDto;
+import com.clinic.clinic.dto.ChangePasswordDto;
 import com.clinic.clinic.dto.LoginDto;
+import com.clinic.clinic.exception.ResourceNotFoundException;
 import com.clinic.clinic.model.Admin;
 import com.clinic.clinic.model.Role;
 import com.clinic.clinic.repository.AdminRepository;
@@ -30,10 +32,9 @@ public class AdminServiceImpl implements AdminService {
         admin.setFirstName(adminDto.getFirstName());
         admin.setLastName(adminDto.getLastName());
         admin.setEmail(adminDto.getEmail());
-        // Mã hóa password trước khi lưu vào DB
         admin.setPassword(passwordEncoder.encode(adminDto.getPassword()));
         admin.setImage(adminDto.getImage());
-        admin.setRole(Role.ADMIN); // Thiết lập role cho admin
+        admin.setRole(Role.ADMIN);
         adminRepository.save(admin);
     }
 
@@ -50,13 +51,12 @@ public class AdminServiceImpl implements AdminService {
                         .password(admin.getPassword())
                         .authorities(Role.ADMIN.name())
                         .build();
-                return jwtUtils.generateToken(userDetails);
+                String token = jwtUtils.generateToken(userDetails);
+                return "{\"token\": \"" + token + "\", \"role\": \"" + admin.getRole().name() + "\", \"adminId\": " + admin.getId() + "}";
             } else {
-                // Xử lý mật khẩu không đúng
                 System.out.println("Invalid password");
             }
         } else {
-            // Xử lý email không tìm thấy
             System.out.println("Admin not found");
         }
         return null;
@@ -66,13 +66,32 @@ public class AdminServiceImpl implements AdminService {
     public boolean isValidUser(String email, String password) {
         Optional<Admin> optionalAdmin = adminRepository.findByEmail(email);
 
-        // Kiểm tra xem admin có tồn tại và so sánh mật khẩu
         if (optionalAdmin.isPresent()) {
             Admin admin = optionalAdmin.get();
-            // So sánh mật khẩu đã mã hóa
             return passwordEncoder.matches(password, admin.getPassword());
         }
 
-        return false; // Trả về false nếu không tìm thấy admin
+        return false;
     }
+
+    @Override
+    public Admin getAdminById(Long id) {
+        return adminRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Admin not found"));
+    }
+
+    @Override
+    public boolean changePassword(Long id, ChangePasswordDto changePasswordDto) {
+        Optional<Admin> optionalAdmin = adminRepository.findById(id);
+        if (!optionalAdmin.isPresent()) {
+            throw new RuntimeException("Doctor not found");
+        }
+        Admin admin = optionalAdmin.get();
+        if (!passwordEncoder.matches(changePasswordDto.getOldPassword(), admin.getPassword())) {
+            throw new RuntimeException("Old password is incorrect");
+        }
+        admin.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
+        adminRepository.save(admin);
+        return true;
+    }
+
 }

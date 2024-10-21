@@ -1,9 +1,11 @@
 package com.clinic.clinic.controller;
 
 
+import com.clinic.clinic.dto.ChangePasswordDto;
 import com.clinic.clinic.dto.DoctorDto;
 import com.clinic.clinic.model.Doctor;
 import com.clinic.clinic.service.DoctorService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -49,9 +51,23 @@ public class DoctorController {
         return ResponseEntity.ok(doctors);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('DOCTOR') and #id == authentication.principal.id)")
     @GetMapping("/{id}")
-    public ResponseEntity<Doctor> getDoctorById(@PathVariable Long id) {
+    public ResponseEntity<Doctor> getDoctorProfile(@PathVariable Long id) {
         Doctor doctor = doctorService.getDoctorById(id);
         return ResponseEntity.ok(doctor);
+    }
+
+
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('DOCTOR') and #id == authentication.principal.id)")
+    @PutMapping("/{id}/change-password")
+    public ResponseEntity<String> changePassword(@PathVariable Long id,
+                                                 @Valid @RequestBody ChangePasswordDto changePasswordDto) {
+        try {
+            doctorService.changePassword(id, changePasswordDto);
+            return ResponseEntity.ok("Password changed successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

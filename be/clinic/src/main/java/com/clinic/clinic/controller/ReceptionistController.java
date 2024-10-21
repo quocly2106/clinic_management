@@ -1,8 +1,10 @@
 package com.clinic.clinic.controller;
 
+import com.clinic.clinic.dto.ChangePasswordDto;
 import com.clinic.clinic.dto.ReceptionistDto;
 import com.clinic.clinic.model.Receptionist;
 import com.clinic.clinic.service.ReceptionistService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/receptions")
+@RequestMapping("/receptionists")
 public class ReceptionistController {
     @Autowired
     private ReceptionistService receptionistService;
@@ -49,10 +51,24 @@ public class ReceptionistController {
         return ResponseEntity.ok(Receptionists);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('RECEPTIONIST') and #id == authentication.principal.id)")
     @GetMapping("/{id}")
-    public ResponseEntity<Receptionist> getDoctorById(@PathVariable Long id) {
+    public ResponseEntity<Receptionist> getReceptionistProfile(@PathVariable Long id) {
         Receptionist receptionist = receptionistService.getReceptionistById(id);
         return ResponseEntity.ok(receptionist);
+    }
+
+
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('RECEPTIONIST') and #id == authentication.principal.id)")
+    @PutMapping("/{id}/change-password")
+    public ResponseEntity<String> changePassword(@PathVariable Long id,
+                                                 @Valid @RequestBody ChangePasswordDto changePasswordDto) {
+        try {
+            receptionistService.changePassword(id, changePasswordDto);
+            return ResponseEntity.ok("Password changed successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
 

@@ -1,23 +1,23 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+// Navbar.js
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-function Navbar({ userName, onLogout }) {
-  const navigate = useNavigate(); // Khai báo useNavigate
+function Navbar({ userName, userRole, onLogout }) {
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Xóa token khỏi localStorage
-    localStorage.removeItem('token');
-
-    // Gọi hàm onLogout để cập nhật trạng thái người dùng
-    onLogout(); 
-
-    // Chuyển hướng về trang đăng nhập
-    navigate('/login');
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+    onLogout();
+    navigate("/login");
   };
 
+  // Navbar.js
   return (
     <nav className="navbar navbar-expand-md navbar-white bg-white">
-      <a className="navbar-brand px-4" href="/">Nhan Tam</a>
+      <Link className="navbar-brand px-4" to="/">
+        Nhan Tam
+      </Link>
       <button
         className="navbar-toggler d-lg-none"
         type="button"
@@ -32,20 +32,63 @@ function Navbar({ userName, onLogout }) {
       <div className="collapse navbar-collapse" id="collapsibleNavId">
         <ul className="navbar-nav ms-auto mt-2 mt-lg-0">
           <li className="nav-item dropdown">
-            <a
+            <Link
               className="nav-link dropdown-toggle"
-              href="/home"
+              to="/"
               id="dropdownId"
               data-bs-toggle="dropdown"
               aria-haspopup="true"
               aria-expanded="false"
             >
               {userName || "Guest"}
-            </a>
+            </Link>
             <div className="dropdown-menu" aria-labelledby="dropdownId">
-              <Link className="dropdown-item" to="/profile">Profile</Link>
-              <Link className="dropdown-item" to="/setting">Setting</Link>
-              <button className="dropdown-item" onClick={handleLogout}>Logout</button> {/* Nút đăng xuất */}
+              {userRole === "doctor" && (
+                <button
+                  className="dropdown-item"
+                  to="/doctor/profile"
+                  onClick={(e) => {
+                    e.preventDefault(); // Prevent default just for testing
+                    navigate("/doctor/profile");
+                  }}
+                >
+                  Profile
+                </button>
+              )}
+              {userRole === "receptionist" && (
+                <button
+                  className="dropdown-item"
+                  to="/receptionist/profile"
+                  onClick={(e) => {
+                    e.preventDefault(); // Prevent default just for testing
+                    navigate("/receptionist/profile");
+                  }}
+                >
+                  Profile
+                </button>
+              )}
+              {userRole === "admin" && (
+                <button
+                  className="dropdown-item"
+                  to="/admin/profile"
+                  onClick={(e) => {
+                    e.preventDefault(); // Prevent default just for testing
+                    navigate("/admin/profile");
+                  }}
+                >
+                  Profile
+                </button>
+              )}
+
+              <Link className="dropdown-item" to="/change-password">
+                Change Password
+              </Link>
+              <Link className="dropdown-item" to="/setting">
+                Setting
+              </Link>
+              <button className="dropdown-item" onClick={handleLogout}>
+                Logout
+              </button>
             </div>
           </li>
         </ul>
