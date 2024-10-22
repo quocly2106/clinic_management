@@ -35,7 +35,7 @@ public class AdminController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
-    public ResponseEntity<Admin> getAdminProfile(@PathVariable Long id) {
+    public ResponseEntity<Admin> getAdminById(@PathVariable Long id) {
         Admin admin = adminService.getAdminById(id);
         return ResponseEntity.ok(admin);
     }

@@ -126,3 +126,38 @@ export const addDoctor = async (data) => {
     throw error;
   }
 };
+
+export const editDoctor = async (doctorId , data) => {
+  try {
+    const token = localStorage.getItem("token"); // Lấy token từ localStorage
+    console.log("Token:", token);
+    const response = await axios.put(`http://localhost:9191/doctors/update/${doctorId}`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Gửi token trong header
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error edit doctor:", error);
+    throw error
+  }
+};
+
+export const allSepecialties = async () => {
+  try {
+    const response = await api.get('/specialties/all'); // Sử dụng api instance
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching all specialties:", error); // Log lỗi nếu có
+    throw error;
+  }
+};
+
+export async function deleteDoctor(doctorId) {
+  try {
+    const result = await api.delete(`/doctors/delete/${doctorId}`);
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error deleting doctor" ${error.message}`);
+  }
+}

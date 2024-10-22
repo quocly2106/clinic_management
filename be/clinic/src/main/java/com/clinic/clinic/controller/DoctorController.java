@@ -53,7 +53,7 @@ public class DoctorController {
 
     @PreAuthorize("hasRole('ADMIN') or (hasRole('DOCTOR') and #id == authentication.principal.id)")
     @GetMapping("/{id}")
-    public ResponseEntity<Doctor> getDoctorProfile(@PathVariable Long id) {
+    public ResponseEntity<Doctor> getDoctorById(@PathVariable Long id) {
         Doctor doctor = doctorService.getDoctorById(id);
         return ResponseEntity.ok(doctor);
     }

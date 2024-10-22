@@ -53,7 +53,7 @@ public class ReceptionistController {
 
     @PreAuthorize("hasRole('ADMIN') or (hasRole('RECEPTIONIST') and #id == authentication.principal.id)")
     @GetMapping("/{id}")
-    public ResponseEntity<Receptionist> getReceptionistProfile(@PathVariable Long id) {
+    public ResponseEntity<Receptionist> getReceptionistById(@PathVariable Long id) {
         Receptionist receptionist = receptionistService.getReceptionistById(id);
         return ResponseEntity.ok(receptionist);
     }

@@ -8,6 +8,7 @@ import ReceptionistProfile from "../user/profile/ReceptionistProfile";
 import AdminProfile from "../user/profile/AdminProfile";
 import ChangePassword from "../user/change-password/ChangePassword";
 import AddDoctor from "../doctor/AddDoctor";
+import EditDoctor from "../doctor/EditDoctor";
 
 function Home({ userRole }) {
   return (
@@ -21,6 +22,7 @@ function Home({ userRole }) {
             <Route path="*" element={<Dashboard />} />
             <Route path="/doctor" element={<Doctor />} />
             <Route path="/add-doctor" element={<AddDoctor />} />
+            <Route path="/edit-doctor/:doctorId" element={<EditDoctor />} />
             <Route
               path="/doctor/profile"
               element={
