@@ -9,10 +9,12 @@ import AdminProfile from "../user/profile/AdminProfile";
 import ChangePassword from "../user/change-password/ChangePassword";
 import AddDoctor from "../doctor/AddDoctor";
 import EditDoctor from "../doctor/EditDoctor";
+import { ToastContainer } from "react-bootstrap";
 
 function Home({ userRole }) {
   return (
     <div className="container-fluid">
+      <ToastContainer/>
       <div className="row">
         <div className="col-2 bg-light">
           <SideBar />

@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { allDoctors, deleteDoctor } from "../../utils/ApiFunction";
 import { Link, useNavigate } from "react-router-dom";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { ToastContainer, Toast } from "react-bootstrap";
+import './Doctor.css';
+import { MdAdd, MdDelete, MdEdit } from "react-icons/md";
+import { BiSearchAlt } from "react-icons/bi";
+import colors from '../../../config/color';
 
 function Doctor() {
   const navigate = useNavigate();
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [search, setSearch] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("success");
 
   const fetchDoctors = async () => {
     try {
@@ -18,113 +24,156 @@ function Doctor() {
     } catch (error) {
       console.error("Error fetching doctors:", error);
       setLoading(false);
+      showToastMessage("Error fetching doctors data", "error");
     }
   };
 
+  const showToastMessage = (message, type = "success") => {
+    setToastMessage(message);
+    setToastType(type);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
+  };
+
   const handleDelete = async (doctorId) => {
-    const confirmDelete = window.confirm(`Are you sure you want to delete Doctor No ${doctorId}?`); // Xác nhận trước khi xóa
+    const confirmDelete = window.confirm(`Are you sure you want to delete Doctor No ${doctorId}?`);
     if (!confirmDelete) return;
 
     try {
       const result = await deleteDoctor(doctorId);
-      if (result === "") {
-        setSuccessMessage(`Doctor No ${doctorId} was deleted successfully.`);
+      if (result === null || result === "" || result === undefined || result.success) {
+        showToastMessage(`Doctor No ${doctorId} was deleted successfully.`, "success");
       } else {
-        setErrorMessage(`Error deleting doctor: ${result.message}`);
+        showToastMessage(`Error deleting doctor: ${result.message || "Unknown error"}`, "error");
       }
       fetchDoctors();
     } catch (error) {
-      setErrorMessage(error.message);
+      showToastMessage(`Error: ${error.message}`, "error");
     }
-
-    setTimeout(() => {
-      setSuccessMessage("");
-      setErrorMessage("");
-    }, 3000);
   };
-
 
   useEffect(() => {
     fetchDoctors();
   }, []);
 
+  const handleSearch = (event) => {
+    setSearch(event.target.value.toLowerCase());
+  };
+
+  const filteredDoctors = doctors.filter((doctor) => {
+    const fullName = `${doctor.firstName} ${doctor.lastName}`.toLowerCase();
+    return fullName.includes(search);
+  });
+
   return (
-    <><div className="container col-md-8 col-lg-6">
-      {successMessage && (
-        <div className="alert alert-danger">{successMessage}</div>
-      )}
-      {errorMessage && (
-        <div className="alert alert-success">{errorMessage}</div>
-      )}
-    </div>
-      <div className="d-flex justify-content-between align-items-center mb-3 mt-5">
-        <div className="input-group w-25" style={{ maxWidth: "200px" }}>
-          <input
-            type="search"
-            id="form1"
-            className="form-control"
-            placeholder="Search"
-            aria-label="Search"
-            aria-describedby="search-button"
-          />
-          <button type="button" className="btn btn-primary" id="search-button">
-            <i className="fas fa-search"></i>
-          </button>
+    <div className="doctor-wrapper">
+      <div className="doctor-container">
+        <ToastContainer position="top-end" className="custom-toast">
+          <Toast
+            show={showToast}
+            onClose={() => setShowToast(false)}
+            bg={toastType === "success" ? "success" : "danger"}
+            delay={3000}
+            autohide
+          >
+            <Toast.Header closeButton>
+              <strong className="me-auto">
+                {toastType === "success" ? "Success" : "Error"}
+              </strong>
+            </Toast.Header>
+            <Toast.Body className={toastType === "success" ? "text-white" : ""}>
+              {toastMessage}
+            </Toast.Body>
+          </Toast>
+        </ToastContainer>
+
+        <div className="search-section">
+          <div className="search-add-wrapper">
+            <div className="search-container">
+              <BiSearchAlt className="search-icon" />
+              <input
+                type="search"
+                className="search-input"
+                placeholder="Search by name..."
+                value={search}
+                onChange={handleSearch}
+              />
+            </div>
+
+            <button
+              className="add-button" style={{
+                background: colors.background}}
+              onClick={() => navigate("/add-doctor")}
+            >
+              <MdAdd className="add-icon" />
+              <span>Add</span>
+            </button>
+          </div>
         </div>
 
-        <button
-          type="button"
-          className="btn btn-success"
-          onClick={() => navigate("/add-doctor")}>
-          Add
-        </button>
-      </div>
-
-      <div className="table-responsive-md mb-4">
-        <table className="table table-primary">
-          <thead>
-            <tr>
-              <th scope="col">STT</th>
-              <th scope="col">Email</th>
-              <th scope="col">First Name</th>
-              <th scope="col">Last Name</th>
-              <th scope="col">Specialty</th>
-              <th scope="col">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan="5" className="text-center">
-                  Loading...
-                </td>
-              </tr>
-            ) : (
-              doctors.map((doctor, index) => (
-                <tr key={doctor.id}>
-                  <td >{index + 1}</td>
-                  <td>{doctor.email}</td>
-                  <td>{doctor.firstName}</td>
-                  <td>{doctor.lastName}</td>
-                  <td>{doctor.specialty ? doctor.specialty.name : "N/A"}</td>
-                  <td className="gap-4">
-                    <Link to={`/edit-doctor/${doctor.id}`}>
-                      <span className="btn btn-warning btn-sm">
-                        <FaEdit />
-                      </span>
-                    </Link>
-                    <button className="btn btn-danger btn-sm"
-                      onClick={() => handleDelete(doctor.id)}>
-                      <FaTrashAlt />
-                    </button>
-                  </td>
+        <div className="table-container">
+          <div className="table-responsive">
+            <table className="modern-table">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Email</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Specialty</th>
+                  <th>Action</th>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr>
+                    <td colSpan="6" className="text-center">
+                      <div className="loading-spinner">
+                        <div className="spinner"></div>
+                      </div>
+                    </td>
+                  </tr>
+                ) : filteredDoctors.length === 0 ? (
+                  <tr>
+                    <td colSpan="6" className="no-data">
+                      No doctors found
+                    </td>
+                  </tr>
+                ) : (
+                  filteredDoctors.map((doctor, index) => (
+                    <tr key={doctor.id}>
+                      <td>{index + 1}</td>
+                      <td>{doctor.email}</td>
+                      <td>{doctor.firstName}</td>
+                      <td>{doctor.lastName}</td>
+                      <td>{doctor.specialty ? doctor.specialty.name : "N/A"}</td>
+                      <td>
+                        <div className="action-buttons">
+                          <Link
+                            to={`/edit-doctor/${doctor.id}`}
+                            className="edit-button"
+                            title="Edit"
+                          >
+                            <MdEdit />
+                          </Link>
+                          <button
+                            className="delete-button"
+                            onClick={() => handleDelete(doctor.id)}
+                            title="Delete"
+                          >
+                            <MdDelete />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 }
 

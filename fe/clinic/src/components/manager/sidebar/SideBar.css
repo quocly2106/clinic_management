@@ -1,5 +1,38 @@
-.list-group a:hover{
-    background-color: rgb(157, 230, 248);
-    color: white ;
-    cursor: pointer;
-}
+/* SideBar.css */
+.sidebar {
+    height: 100vh; /* Chiếm toàn bộ chiều cao của viewport */
+    background: var(--colors-background, white); /* Sử dụng biến màu chủ đạo */
+    border: 10px solid rgba(110, 194, 247, 0.2); /* Border 10px */
+    padding: 1rem; /* Padding cho sidebar */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+  }
+  
+  .list-group {
+    width: 100%; /* Đảm bảo bảng chiếm toàn bộ chiều rộng */
+    border-collapse: collapse; /* Loại bỏ khoảng cách giữa các ô */
+  }
+  
+  .list-group-item {
+    border: 2px solid rgba(110, 194, 247, 0.5); /* Border cho mỗi link */
+    border-radius: 5px; /* Bo góc cho border */
+    display: block; /* Đảm bảo rằng link chiếm toàn bộ chiều rộng */
+    padding: 0.5rem 1rem; /* Padding cho link */
+    margin-top: 2px; /* Thêm margin-top cho các ô */
+    transition: background-color 0.3s; /* Hiệu ứng chuyển đổi màu nền */
+  }
+  
+  .list-group-item:hover {
+    background-color: rgba(110, 194, 247, 0.1); /* Hiệu ứng hover */
+  }
+  
+  td {
+    padding: 0; /* Xóa padding mặc định */
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .sidebar {
+      padding: 0.5rem; /* Giảm padding trên mobile */
+    }
+  }
+  
