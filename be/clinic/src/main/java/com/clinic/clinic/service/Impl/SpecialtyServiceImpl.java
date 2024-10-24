@@ -7,10 +7,13 @@ import com.clinic.clinic.service.SpecialtyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class SpecialtyServiceImpl implements SpecialtyService {
+
 
     @Autowired
     private SpecialtyRepository specialtyRepository;
@@ -20,6 +23,7 @@ public class SpecialtyServiceImpl implements SpecialtyService {
         Specialty specialty = new Specialty();
         specialty.setName(specialtyDto.getName());
         specialty.setDescription(specialtyDto.getDescription());
+        specialty.setDateCreated(LocalDate.now());
         return specialtyRepository.save(specialty);
     }
 

@@ -5,6 +5,7 @@ import com.clinic.clinic.dto.ChangePasswordDto;
 import com.clinic.clinic.dto.LoginDto;
 import com.clinic.clinic.exception.ResourceNotFoundException;
 import com.clinic.clinic.model.Admin;
+import com.clinic.clinic.model.Doctor;
 import com.clinic.clinic.model.Role;
 import com.clinic.clinic.repository.AdminRepository;
 import com.clinic.clinic.service.AdminService;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -92,6 +94,11 @@ public class AdminServiceImpl implements AdminService {
         admin.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
         adminRepository.save(admin);
         return true;
+    }
+
+    @Override
+    public List<Admin> getAllAdmins() {
+        return adminRepository.findAll();
     }
 
 }

@@ -5,6 +5,7 @@ import com.clinic.clinic.model.Specialty;
 import com.clinic.clinic.service.SpecialtyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class SpecialtyController {
         return ResponseEntity.ok("Specialty deleted successfully");
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'RECEPTIONIST')")
     @GetMapping("/all")
     public ResponseEntity<List<Specialty>> getAllSpecialties() {
         List<Specialty> specialties = specialtyService.getAllSpecialties();

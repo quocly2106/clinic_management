@@ -44,6 +44,7 @@ public class PatientServiceImpl implements PatientService {
         existingPatient.setLastName(patientDto.getLastName());
         existingPatient.setGender(patientDto.getGender());
         existingPatient.setDateOfBirth(patientDto.getDateOfBirth());
+        existingPatient.setPhone(patientDto.getPhone());
         // Cập nhật doctor nếu có
         if (patientDto.getDoctorId() != null) {
             Doctor doctor = doctorRepository.findById(patientDto.getDoctorId())
@@ -82,6 +83,7 @@ public class PatientServiceImpl implements PatientService {
         patient.setLastName(patientDto.getLastName());
         patient.setGender(patientDto.getGender());
         patient.setDateOfBirth(patientDto.getDateOfBirth());
+        patient.setPhone(patientDto.getPhone());
         // Thiết lập doctor nếu có
         if (patientDto.getDoctorId() != null) {
             Doctor doctor = new Doctor();

@@ -13,6 +13,10 @@ import { ToastContainer } from "react-bootstrap";
 import Receptionist from "../receptionist/Receptionist";
 import AddReceptionist from "../receptionist/AddReceptionist";
 import EditReceptionist from "../receptionist/EditReceptionist";
+import Admin from "../admin/Admin";
+import Specialty from "../specialty/Specialty";
+import AddSpecialty from "../specialty/AddSpecialty";
+import EditSpecialty from "../specialty/EditSpecialty";
 
 function Home({ userRole }) {
   return (
@@ -31,6 +35,10 @@ function Home({ userRole }) {
             <Route path="/receptionist" element={<Receptionist />} />
             <Route path="/add-receptionist" element={<AddReceptionist />} />
             <Route path="/edit-receptionist/:receptionistId" element={<EditReceptionist />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/specialty" element={<Specialty />} />
+            <Route path="/add-specialty" element={<AddSpecialty />} />
+            <Route path="/edit-specialty/:specialtyId" element={<EditSpecialty />} /> 
             <Route
               path="/doctor/profile"
               element={

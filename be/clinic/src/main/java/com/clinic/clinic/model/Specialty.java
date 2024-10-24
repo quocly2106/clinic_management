@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
@@ -25,6 +26,9 @@ public class Specialty {
 
     @Column(nullable = false)
     private String description; // Mô tả khoa
+
+    @Column(name = "date_created", nullable = false)
+    private LocalDate dateCreated = LocalDate.now();
 
     @OneToMany(mappedBy = "specialty", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Data
@@ -13,11 +14,14 @@ import java.util.Set;
 public class SpecialtyDto {
 
     @NotBlank(message = "Name is required")
-    private String name; // Tên khoa
-
+    private String name;
     @NotBlank(message = "Description is required")
-    private String description; // Mô tả khoa
+    private String description;
+    @NotBlank(message = "Date is required")
+    private LocalDate dateCreated;
 
     // Bạn có thể thêm một danh sách các bác sĩ nếu cần
     private Set<DoctorDto> doctors; // Mối quan hệ 1-n với Doctor (nếu cần)
+
+
 }

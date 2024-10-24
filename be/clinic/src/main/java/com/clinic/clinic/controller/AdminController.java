@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -51,4 +52,11 @@ public class AdminController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+    @GetMapping("/all")
+    public ResponseEntity<List<Admin>> getAllAdmins() {
+        System.out.println("Fetching all admins");
+        List<Admin> admins = adminService.getAllAdmins();
+        return ResponseEntity.ok(admins);
+    }
+
 }

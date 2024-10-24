@@ -225,3 +225,64 @@ export async function deleteReceptionist(receptionistId) {
     throw new Error(`Error deleting receptionist" ${error.message}`);
   }
 }
+
+export const allAdmins = async () => {
+  try {
+    const response = await api.get('/admin/all'); // Sử dụng api instance
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching all admins:", error); // Log lỗi nếu có
+    throw error;
+  }
+};
+
+export const allSpecialties = async () => {
+  try {
+    const response = await api.get('/specialties/all'); // Sử dụng api instance
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching all specialties:", error); // Log lỗi nếu có
+    throw error;
+  }
+};
+
+export const addSpecialty = async (data) => {
+  try {
+    const token = localStorage.getItem("token"); // Lấy token từ localStorage
+    console.log("Token:", token);
+    const response = await axios.post('http://localhost:9191/specialties/add', data, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Gửi token trong header
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error add specialty:", error);
+    throw error;
+  }
+};
+
+export const editSpecialty  = async (specialtyId , data) => {
+  try {
+    const token = localStorage.getItem("token"); // Lấy token từ localStorage
+    console.log("Token:", token);
+    const response = await axios.put(`http://localhost:9191/specialties/update/${specialtyId}`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Gửi token trong header
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error edit specialty:", error);
+    throw error
+  }
+};
+
+export async function deleteSpecialty (specialtyId) {
+  try {
+    const result = await api.delete(`/specialties/delete/${specialtyId}`);
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error deleting specialty" ${error.message}`);
+  }
+}

@@ -32,6 +32,9 @@ public class Patient {
     @Column(nullable = false)
     private LocalDate dateOfBirth;
 
+    @Column(nullable = false)
+    private String phone;
+
     // Quan hệ n-1 với Doctor
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id", nullable = false)

@@ -6,13 +6,17 @@ import com.clinic.clinic.dto.PatientDto;
 import com.clinic.clinic.model.Doctor;
 import com.clinic.clinic.model.Patient;
 import com.clinic.clinic.service.PatientService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/patients")
@@ -23,17 +27,33 @@ public class PatientController {
 
     @PreAuthorize("hasAnyRole('ADMIN','RECEPTIONIST')")
     @PostMapping("/add")
-    public ResponseEntity<Patient> createPatient(@RequestBody PatientDto patientDto){
+    public ResponseEntity<?> createPatient(@Valid @RequestBody PatientDto patientDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            // Thu thập tất cả lỗi và trả về cho phía client
+            String errors = bindingResult.getFieldErrors().stream()
+                    .map(FieldError::getDefaultMessage)
+                    .collect(Collectors.joining(", "));
+            return ResponseEntity.badRequest().body(errors);
+        }
+
         Patient createdPatient = patientService.addPatient(patientDto);
         return ResponseEntity.ok(createdPatient);
     }
 
-
     @PutMapping("/update/{id}")
-    public ResponseEntity<Patient> updatePatient(@PathVariable Long id, @RequestBody PatientDto patientDto) {
+    public ResponseEntity<?> updatePatient(@PathVariable Long id, @Valid @RequestBody PatientDto patientDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            // Thu thập tất cả lỗi và trả về cho phía client
+            String errors = bindingResult.getFieldErrors().stream()
+                    .map(FieldError::getDefaultMessage)
+                    .collect(Collectors.joining(", "));
+            return ResponseEntity.badRequest().body(errors);
+        }
+
         Patient updatedPatient = patientService.updatePatient(id, patientDto);
         return ResponseEntity.ok(updatedPatient);
     }
+
 
     @PreAuthorize("hasAnyRole('ADMIN','RECEPTIONIST')")
     @DeleteMapping("/delete/{id}")

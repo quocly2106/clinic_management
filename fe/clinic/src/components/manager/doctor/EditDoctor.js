@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import './EditDoctor.css'; // Import CSS
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "./EditDoctor.css"; // Import CSS
 
 const EditDoctor = () => {
   const { doctorId } = useParams();
@@ -10,19 +10,20 @@ const EditDoctor = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [specialties, setSpecialties] = useState([]);
-  const [selectedSpecialty, setSelectedSpecialty] = useState('');
+  const [selectedSpecialty, setSelectedSpecialty] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchDoctorById = async (id) => {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem("token");
         const response = await fetch(`http://localhost:9191/doctors/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
         if (!response.ok) {
-          throw new Error('Failed to fetch doctor');
+          throw new Error("Failed to fetch doctor");
         }
         const data = await response.json();
         setDoctor(data);
@@ -37,14 +38,14 @@ const EditDoctor = () => {
 
     const fetchSpecialties = async () => {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem("token");
         const response = await fetch(`http://localhost:9191/specialties/all`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
         if (!response.ok) {
-          throw new Error('Failed to fetch specialties');
+          throw new Error("Failed to fetch specialties");
         }
         const data = await response.json();
         setSpecialties(data);
@@ -61,29 +62,44 @@ const EditDoctor = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const updatedDoctor = {
-      firstName: doctor.firstName,
-      lastName: doctor.lastName,
-      specialtyId: selectedSpecialty,  // Chỉ cập nhật specialty nếu nó có sự thay đổi
+        firstName: doctor.firstName,
+        lastName: doctor.lastName,
+        specialtyId: selectedSpecialty, // Chỉ cập nhật specialty nếu nó có sự thay đổi
     };
+
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:9191/doctors/update/${doctorId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(updatedDoctor),
-      });
-      if (!response.ok) {
-        throw new Error('Failed to update doctor');
-      }
-      toast.success('Doctor updated successfully');
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+            `http://localhost:9191/doctors/update/${doctorId}`,
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(updatedDoctor),
+            }
+        );
+
+        if (!response.ok) {
+            const errorMessage = await response.text(); // Lấy thông báo lỗi từ server
+            console.error("Update failed:", errorMessage);
+            throw new Error("Failed to update doctor: " + errorMessage);
+        }
+
+        // Nếu cập nhật thành công, hiển thị toast và sau đó chuyển hướng
+        toast.success("Doctor updated successfully");
+
+        // Chuyển hướng sau 2 giây
+        setTimeout(() => {
+            navigate('/doctor'); 
+        }, 2000);
     } catch (error) {
-      setError(error.message);
-      toast.error(error.message);
+        setError(error.message);
+        toast.error(error.message);
     }
-  };
+};
+
 
   if (loading) {
     return (
@@ -115,11 +131,11 @@ const EditDoctor = () => {
           <div className="row">
             <div className="col-md-6 mb-3">
               <label className="form-label">Email</label>
-              <input 
-                type="text" 
-                className="form-control" 
-                value={doctor.email || ''} 
-                readOnly 
+              <input
+                type="text"
+                className="form-control"
+                value={doctor.email || ""}
+                readOnly
               />
             </div>
             <div className="col-md-6 mb-3">
@@ -127,8 +143,10 @@ const EditDoctor = () => {
               <input
                 type="text"
                 className="form-control"
-                value={doctor.firstName || ''}
-                onChange={(e) => setDoctor({ ...doctor, firstName: e.target.value })}
+                value={doctor.firstName || ""}
+                onChange={(e) =>
+                  setDoctor({ ...doctor, firstName: e.target.value })
+                }
               />
             </div>
             <div className="col-md-6 mb-3">
@@ -136,15 +154,17 @@ const EditDoctor = () => {
               <input
                 type="text"
                 className="form-control"
-                value={doctor.lastName || ''}
-                onChange={(e) => setDoctor({ ...doctor, lastName: e.target.value })}
+                value={doctor.lastName || ""}
+                onChange={(e) =>
+                  setDoctor({ ...doctor, lastName: e.target.value })
+                }
               />
             </div>
             <div className="col-md-6 mb-3">
               <label className="form-label">Specialty</label>
               <select
                 className="form-select"
-                value={selectedSpecialty || ''}
+                value={selectedSpecialty || ""}
                 onChange={(e) => setSelectedSpecialty(e.target.value)}
               >
                 <option value="">Select Specialty</option>
@@ -157,11 +177,11 @@ const EditDoctor = () => {
             </div>
             <div className="col-md-6 mb-3">
               <label className="form-label">Role</label>
-              <input 
-                type="text" 
-                className="form-control" 
-                value={doctor.role || ''} 
-                readOnly 
+              <input
+                type="text"
+                className="form-control"
+                value={doctor.role || ""}
+                readOnly
               />
             </div>
           </div>

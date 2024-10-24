@@ -39,8 +39,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/admin/register", "/auth/login").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/doctors/all", "/receptionists/all").permitAll()
-                        .requestMatchers("/doctors/update/{id}","doctors/{id}","doctors/{id}/change-password").hasAnyRole("DOCTOR", "ADMIN")
+                        .requestMatchers("/doctors/all", "/receptionists/all","/specialties/all").permitAll()
+                        .requestMatchers("/doctors/update/{id}","/doctors/{id}","/doctors/{id}/change-password").hasAnyRole("DOCTOR", "ADMIN")
                         .requestMatchers("/receptionists/update/{id}","/receptionists/{id}","/receptionists/{id}/change-password").hasAnyRole("RECEPTIONIST", "ADMIN")
                         .requestMatchers("/patients/**").hasAnyRole("ADMIN", "RECEPTIONIST")
                         .requestMatchers("/news/add", "/news/update/", "news/delete/{id}").hasAnyRole("ADMIN")

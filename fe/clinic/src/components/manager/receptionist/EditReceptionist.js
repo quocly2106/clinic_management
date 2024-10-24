@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './EditReceptionist.css'; // Import CSS
@@ -9,6 +9,7 @@ const EditReceptionist = () => {
   const [receptionist, setReceptionist] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchReceptionistById = async (id) => {
@@ -54,7 +55,10 @@ const EditReceptionist = () => {
       if (!response.ok) {
         throw new Error('Failed to update receptionist');
       }
-      toast.success('Receptionist updated successfully');
+      toast.success("Receptionist updated successfully");
+        setTimeout(() => {
+          navigate('/receptionist'); 
+      }, 2000);
     } catch (error) {
       setError(error.message);
       toast.error(error.message);
