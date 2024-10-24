@@ -1,0 +1,144 @@
+/* Register.css */
+.register-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 20px;
+  }
+  
+  .register-card {
+    background: white;
+    border-radius: 10px;
+    padding: 40px;
+    width: 100%;
+    max-width: 800px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .register-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .register-header h1 {
+    color: #2c3e50;
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+  
+  .register-header p {
+    color: #7f8c8d;
+    margin-bottom: 0;
+  }
+  
+  .form-control, .form-select {
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    padding: 12px;
+  }
+  
+  .form-control:focus, .form-select:focus {
+    border-color: #6EC2F7;
+    box-shadow: 0 0 0 0.2rem rgba(110, 194, 247, 0.25);
+  }
+  
+  .form-select {
+    padding-right: 30px;
+  }
+  
+  .btn-primary {
+    background-color: #6EC2F7;
+    border-color: #6EC2F7;
+    border-radius: 10px;
+    padding: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-primary:hover {
+    background-color: #55a4d6;
+    border-color: #55a4d6;
+    transform: translateY(-2px);
+  }
+  
+  .btn-primary:disabled {
+    background-color: #6EC2F7;
+    border-color: #6EC2F7;
+    opacity: 0.7;
+  }
+  
+  .btn-outline-primary {
+    color: #6EC2F7;
+    border-color: #6EC2F7;
+    border-radius: 10px;
+    padding: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-outline-primary:hover {
+    background-color: #6EC2F7;
+    border-color: #6EC2F7;
+    color: white;
+    transform: translateY(-2px);
+  }
+  
+  /* Floating label styling */
+  .form-floating label {
+    padding: 1rem;
+  }
+  
+  .form-floating>.form-control:focus~label,
+  .form-floating>.form-control:not(:placeholder-shown)~label,
+  .form-floating>.form-select~label {
+    transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+  }
+  
+  /* Toast styling */
+  .toast {
+    border-radius: 10px;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .register-card {
+      padding: 20px;
+    }
+  
+    .register-header h1 {
+      font-size: 1.5rem;
+    }
+  
+    .register-header p {
+      font-size: 0.9rem;
+    }
+  
+    .row {
+      margin-right: 0;
+      margin-left: 0;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .register-container {
+      padding: 10px;
+    }
+  }
+  
+  /* Animation for form elements */
+  .form-control, .form-select, .btn {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }

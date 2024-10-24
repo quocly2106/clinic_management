@@ -1,0 +1,174 @@
+/* Navbar.css */
+.custom-navbar {
+    background-color: white;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    padding: 1rem 1.5rem;
+    border: 10px solid rgba(110, 194, 247, 0.2); /* Thêm border giống sidebar */
+    margin-bottom: 20px; /* Thêm khoảng cách với content bên dưới */
+  }
+  
+  .navbar-brand {
+    transition: all 0.3s ease;
+  }
+  
+  .brand-text {
+    font-weight: 700;
+    font-size: 1.5rem;
+    background: linear-gradient(45deg, #6EC2F7, #55a4d6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .navbar-brand:hover {
+    transform: scale(1.05);
+  }
+  
+  .navbar-toggler {
+    border: none;
+    padding: 0.5rem;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+  }
+  
+  .navbar-toggler:focus {
+    box-shadow: 0 0 0 0.2rem rgba(110, 194, 247, 0.25);
+  }
+  
+  .user-profile {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    color: #2c3e50;
+    transition: all 0.3s ease;
+  }
+  
+  .user-profile:hover {
+    background-color: rgba(110, 194, 247, 0.1);
+    color: #6EC2F7;
+  }
+  
+  .user-profile i {
+    font-size: 1.2rem;
+    color: #6EC2F7;
+  }
+  
+  .dropdown-menu {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 0;
+    min-width: 200px;
+  }
+  
+  .dropdown-header {
+    padding: 0.5rem 1rem;
+    background-color: #f8f9fa;
+    border-radius: 10px 10px 0 0;
+  }
+  
+  .user-role {
+    font-size: 0.8rem;
+    color: #6c757d;
+    font-weight: 600;
+  }
+  
+  .dropdown-item {
+    padding: 0.7rem 1rem;
+    color: #2c3e50;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+  }
+  
+  .dropdown-item i {
+    width: 20px;
+    margin-right: 0.5rem;
+    color: #6EC2F7;
+  }
+  
+  .dropdown-item:hover {
+    background-color: rgba(110, 194, 247, 0.1);
+    color: #6EC2F7;
+    transform: translateX(5px);
+  }
+  
+  .logout-item {
+    color: #dc3545;
+  }
+  
+  .logout-item i {
+    color: #dc3545;
+  }
+  
+  .logout-item:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+  }
+  
+  .dropdown-divider {
+    margin: 0.5rem 0;
+    border-color: #e9ecef;
+  }
+  
+  /* Toast Styling */
+  .toast {
+    border-radius: 10px;
+    background-color: white;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .toast-header {
+    border-radius: 10px 10px 0 0;
+    background-color: #6EC2F7;
+    color: white;
+  }
+  
+  .toast-body {
+    border-radius: 0 0 10px 10px;
+  }
+  
+  /* Animation */
+  .animate {
+    animation-duration: 0.3s;
+    animation-fill-mode: both;
+  }
+  
+  .slideIn {
+    animation-name: slideIn;
+  }
+  
+  @keyframes slideIn {
+    0% {
+      transform: translateY(1rem);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .custom-navbar {
+      padding: 0.8rem 1rem;
+      border-width: 5px;
+    }
+  
+    .brand-text {
+      font-size: 1.2rem;
+    }
+  
+    .dropdown-menu {
+      margin-top: 0.5rem;
+      position: static !important;
+      float: none;
+      width: auto;
+      margin-top: 0;
+      background-color: transparent;
+      border: 0;
+      box-shadow: none;
+    }
+  }

@@ -19,6 +19,17 @@ api.interceptors.request.use(
   }
 );
 
+//Hàm đăng ký
+
+export async function register(data) {
+  try {
+    const response = await api.post("/admin/register", data);
+    return response.data; 
+  } catch (error) {
+    console.error("Error during register:", error);
+    throw error;
+  }
+}
 
 // Hàm đăng nhập
 export async function login(data) {
@@ -159,5 +170,58 @@ export async function deleteDoctor(doctorId) {
     return result.data;
   } catch (error) {
     throw new Error(`Error deleting doctor" ${error.message}`);
+  }
+}
+
+
+
+export const allReceptionists = async () => {
+  try {
+    const response = await api.get('/receptionists/all'); // Sử dụng api instance
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching all receptionists:", error); // Log lỗi nếu có
+    throw error;
+  }
+};
+
+export const addReceptionist = async (data) => {
+  try {
+    const token = localStorage.getItem("token"); // Lấy token từ localStorage
+    console.log("Token:", token);
+    const response = await axios.post('http://localhost:9191/receptionists/add', data, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Gửi token trong header
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error add receptionist:", error);
+    throw error;
+  }
+};
+
+export const editReceptionist = async (receptionistId , data) => {
+  try {
+    const token = localStorage.getItem("token"); // Lấy token từ localStorage
+    console.log("Token:", token);
+    const response = await axios.put(`http://localhost:9191/receptionists/update/${receptionistId}`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Gửi token trong header
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error edit receptionist:", error);
+    throw error
+  }
+};
+
+export async function deleteReceptionist(receptionistId) {
+  try {
+    const result = await api.delete(`/receptionists/delete/${receptionistId}`);
+    return result.data;
+  } catch (error) {
+    throw new Error(`Error deleting receptionist" ${error.message}`);
   }
 }

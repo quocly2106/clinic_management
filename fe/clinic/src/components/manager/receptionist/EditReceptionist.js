@@ -1,35 +1,29 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './Profile.css';
+import './EditReceptionist.css'; // Import CSS
 
-const ReceptionistProfile = () => {
-  const [profile, setProfile] = useState(null);
+const EditReceptionist = () => {
+  const { receptionistId } = useParams();
+  const [receptionist, setReceptionist] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchReceptionistProfile = async () => {
+    const fetchReceptionistById = async (id) => {
       try {
-        const receptionistId = localStorage.getItem('receptionistId');
         const token = localStorage.getItem('token');
-
-        if (!receptionistId) {
-          throw new Error('Receptionist ID not found. Please log in again.');
-        }
-
-        const response = await fetch(`http://localhost:9191/receptionists/${receptionistId}`, {
+        const response = await fetch(`http://localhost:9191/receptionists/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        
         if (!response.ok) {
-          throw new Error('Failed to fetch receptionist profile');
+          throw new Error('Failed to fetch receptionist');
         }
-        
         const data = await response.json();
-        setProfile(data);
+        setReceptionist(data);
       } catch (err) {
         setError(err.message);
         toast.error(err.message);
@@ -38,24 +32,16 @@ const ReceptionistProfile = () => {
       }
     };
 
-    fetchReceptionistProfile();
-  }, []);
+    fetchReceptionistById(receptionistId);
+  }, [receptionistId]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
-    if (!profile.firstName || !profile.lastName) {
-      toast.error('First Name and Last Name cannot be empty');
-      return;
-    }
-  
     const updatedReceptionist = {
-      firstName: profile.firstName,
-      lastName: profile.lastName,
+      firstName: receptionist.firstName,
+      lastName: receptionist.lastName
     };
-    
     try {
-      const receptionistId = localStorage.getItem('receptionistId');
       const token = localStorage.getItem('token');
       const response = await fetch(`http://localhost:9191/receptionists/update/${receptionistId}`, {
         method: 'PUT',
@@ -63,20 +49,17 @@ const ReceptionistProfile = () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(updatedReceptionist), // Chỉnh sửa đúng cấu trúc JSON
+        body: JSON.stringify(updatedReceptionist),
       });
-  
       if (!response.ok) {
-        throw new Error('Failed to update profile');
+        throw new Error('Failed to update receptionist');
       }
-  
-      toast.success('Profile updated successfully');
+      toast.success('Receptionist updated successfully');
     } catch (error) {
       setError(error.message);
       toast.error(error.message);
     }
   };
-  
 
   if (loading) {
     return (
@@ -88,12 +71,12 @@ const ReceptionistProfile = () => {
     );
   }
 
-  if (!profile) {
+  if (!receptionist) {
     return (
       <div className="container-fluid h-100">
         <div className="error-message">
           <i className="bi bi-exclamation-circle me-2"></i>
-          No profile found
+          No receptionist found
         </div>
       </div>
     );
@@ -103,7 +86,7 @@ const ReceptionistProfile = () => {
     <div className="container">
       <ToastContainer position="top-right" autoClose={3000} />
       <div className="form-container">
-        <h2 className="form-title">Receptionist Profile</h2>
+        <h2 className="form-title">Edit Receptionist</h2>
         <form onSubmit={handleSubmit}>
           <div className="row">
             <div className="col-md-6 mb-3">
@@ -111,7 +94,7 @@ const ReceptionistProfile = () => {
               <input 
                 type="text" 
                 className="form-control" 
-                value={profile.email || ''} 
+                value={receptionist.email || ''} 
                 readOnly 
               />
             </div>
@@ -120,8 +103,8 @@ const ReceptionistProfile = () => {
               <input
                 type="text"
                 className="form-control"
-                value={profile.firstName || ''}
-                onChange={(e) => setProfile({ ...profile, firstName: e.target.value })}
+                value={receptionist.firstName || ''}
+                onChange={(e) => setReceptionist({ ...receptionist, firstName: e.target.value })}
               />
             </div>
             <div className="col-md-6 mb-3">
@@ -129,8 +112,8 @@ const ReceptionistProfile = () => {
               <input
                 type="text"
                 className="form-control"
-                value={profile.lastName || ''}
-                onChange={(e) => setProfile({ ...profile, lastName: e.target.value })}
+                value={receptionist.lastName || ''}
+                onChange={(e) => setReceptionist({ ...receptionist, lastName: e.target.value })}
               />
             </div>
             <div className="col-md-6 mb-3">
@@ -138,7 +121,7 @@ const ReceptionistProfile = () => {
               <input 
                 type="text" 
                 className="form-control" 
-                value={profile.role || ''} 
+                value={receptionist.role || ''} 
                 readOnly 
               />
             </div>
@@ -154,4 +137,4 @@ const ReceptionistProfile = () => {
   );
 };
 
-export default ReceptionistProfile;
+export default EditReceptionist;

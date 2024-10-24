@@ -1,10 +1,10 @@
-.doctor-wrapper {
+.receptionist-wrapper {
     min-height: 100vh;
     background: #f5f7fb;
     padding: 20px;
   }
   
-  .doctor-container {
+  .receptionist-container {
     max-width: 100%;
     margin: 0 auto;
   }
@@ -204,7 +204,7 @@
   
   /* Responsive Design */
   @media (max-width: 768px) {
-    .doctor-wrapper {
+    .receptionist-wrapper {
       padding: 10px;
     }
   
@@ -240,7 +240,6 @@
     z-index: 1000;
   }
 
-
   .pagination {
     display: flex;
     justify-content: center;
@@ -265,5 +264,4 @@
     background: #6EC2F7;
     font-weight: bold;
   }
-  
   

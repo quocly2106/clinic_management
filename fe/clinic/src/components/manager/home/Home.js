@@ -10,6 +10,9 @@ import ChangePassword from "../user/change-password/ChangePassword";
 import AddDoctor from "../doctor/AddDoctor";
 import EditDoctor from "../doctor/EditDoctor";
 import { ToastContainer } from "react-bootstrap";
+import Receptionist from "../receptionist/Receptionist";
+import AddReceptionist from "../receptionist/AddReceptionist";
+import EditReceptionist from "../receptionist/EditReceptionist";
 
 function Home({ userRole }) {
   return (
@@ -24,7 +27,10 @@ function Home({ userRole }) {
             <Route path="*" element={<Dashboard />} />
             <Route path="/doctor" element={<Doctor />} />
             <Route path="/add-doctor" element={<AddDoctor />} />
-            <Route path="/edit-doctor/:doctorId" element={<EditDoctor />} />
+            <Route path="/edit-doctor/:doctorId" element={<EditDoctor />} /> 
+            <Route path="/receptionist" element={<Receptionist />} />
+            <Route path="/add-receptionist" element={<AddReceptionist />} />
+            <Route path="/edit-receptionist/:receptionistId" element={<EditReceptionist />} />
             <Route
               path="/doctor/profile"
               element={

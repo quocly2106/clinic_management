@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; 
-import { addDoctor } from '../../utils/ApiFunction';
+import {  addReceptionist } from '../../utils/ApiFunction';
 
-function AddDoctor() {
-  const [doctorData, setDoctorData] = useState({
+function AddReceptionist() {
+  const [receptionistData, setReceptionistData] = useState({
     email: '',
     firstName: '',
     lastName: '',
     password: '',
-    specialtyId: '',
-    role: 'DOCTOR',
+    role: 'RECEPTIONIST',
   });
 
   const [error, setError] = useState('');
@@ -19,29 +18,28 @@ function AddDoctor() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setDoctorData({ ...doctorData, [name]: value });
+    setReceptionistData({ ...receptionistData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Doctor Data:", doctorData);
+    console.log("Receptionist Data:", receptionistData);
     try {
-      await addDoctor(doctorData);
-      setSuccessMessage('Doctor added successfully!');
+      await addReceptionist(receptionistData);
+      setSuccessMessage('Receptionist added successfully!');
       setError('');
       setShowToast(true);
-      setDoctorData({
+      setReceptionistData({
         email: '',
         firstName: '',
         lastName: '',
         password: '',
-        specialtyId: '',
-        role: 'DOCTOR',
+        role: 'RECEPTIONIST',
       });
-      navigate('/doctor'); 
+      navigate('/receptionist'); 
     } catch (error) {
-      console.error("Error adding doctor:", error);
-      setError('Failed to add doctor. Please try again.');
+      console.error("Error adding receptionist:", error);
+      setError('Failed to add receptionist. Please try again.');
       setSuccessMessage('');
       setShowToast(true);
     }
@@ -49,7 +47,7 @@ function AddDoctor() {
 
   return (
     <div className="container mt-5">
-      <h2 className="text-center">Add Doctor</h2>
+      <h2 className="text-center">Add Receptionist</h2>
       {error && <div className="alert alert-danger rounded-3">{error}</div>}
       <form onSubmit={handleSubmit} className="rounded-3 shadow p-4 bg-light">
         <div className="mb-3">
@@ -59,7 +57,7 @@ function AddDoctor() {
             className="form-control rounded-3"
             id="firstName"
             name="firstName"
-            value={doctorData.firstName}
+            value={receptionistData.firstName}
             onChange={handleChange}
             required
           />
@@ -71,7 +69,7 @@ function AddDoctor() {
             className="form-control rounded-3"
             id="lastName"
             name="lastName"
-            value={doctorData.lastName}
+            value={receptionistData.lastName}
             onChange={handleChange}
             required
           />
@@ -83,7 +81,7 @@ function AddDoctor() {
             className="form-control rounded-3"
             id="email"
             name="email"
-            value={doctorData.email}
+            value={receptionistData.email}
             onChange={handleChange}
             required
           />
@@ -95,24 +93,12 @@ function AddDoctor() {
             className="form-control rounded-3"
             id="password"
             name="password"
-            value={doctorData.password}
+            value={receptionistData.password}
             onChange={handleChange}
             required
           />
         </div>
-        <div className="mb-3">
-          <label htmlFor="specialtyId" className="form-label">Specialty ID</label>
-          <input
-            type="number"
-            className="form-control rounded-3"
-            id="specialtyId"
-            name="specialtyId"
-            value={doctorData.specialtyId}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit" className="btn btn-primary">Add Doctor</button>
+        <button type="submit" className="btn btn-primary">Add Receptionist</button>
       </form>
 
       {/* Toast for success/error message */}
@@ -130,4 +116,4 @@ function AddDoctor() {
   );
 }
 
-export default AddDoctor;
+export default AddReceptionist;

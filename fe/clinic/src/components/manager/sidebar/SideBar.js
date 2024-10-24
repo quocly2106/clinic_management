@@ -44,10 +44,10 @@ const SideBar = ({ userName, onLogout }) => {
           <i className="bi bi-star-fill fs-5 me-2"></i>
           <span className="fs-5">Specialty</span>
         </Link>
-        <Link className="list-group-item py-2" to="/schedule">
+        {/* <Link className="list-group-item py-2" to="/schedule">
           <i className="bi bi-calendar3 fs-5 me-2"></i>
           <span className="fs-5">Schedule</span>
-        </Link>
+        </Link> */}
         <Link className="list-group-item py-2" to="/medicine">
           <i className="bi bi-capsule fs-5 me-2"></i>
           <span className="fs-5">Medicine</span>

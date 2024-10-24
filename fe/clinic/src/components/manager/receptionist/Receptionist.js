@@ -1,32 +1,33 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { allDoctors, deleteDoctor } from "../../utils/ApiFunction";
+import React, { useEffect, useState, useCallback } from "react";
+import { allReceptionists, deleteReceptionist } from "../../utils/ApiFunction";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, Toast } from "react-bootstrap";
-import "./Doctor.css";
+import './Receptionist.css';
 import { MdAdd, MdDelete, MdEdit } from "react-icons/md";
 import { BiSearchAlt } from "react-icons/bi";
-import colors from "../../../config/color";
+import colors from '../../../config/color';
 
-function Doctor() {
+function Receptionist() {
   const navigate = useNavigate();
-  const [doctors, setDoctors] = useState([]);
+  const [receptionists, setReceptionists] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("success");
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
 
-  const fetchDoctors = useCallback(async () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // Số lượng receptionist trên mỗi trang
+
+  const fetchReceptionists = useCallback(async () => {
     try {
-      const doctorsData = await allDoctors();
-      setDoctors(doctorsData);
+      const receptionistsData = await allReceptionists();
+      setReceptionists(receptionistsData);
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching doctors:", error);
+      console.error("Error fetching receptionists:", error);
       setLoading(false);
-      showToastMessage("Error fetching doctors data", "error");
+      showToastMessage("Error fetching receptionists data", "error");
     }
   }, []);
 
@@ -37,62 +38,52 @@ function Doctor() {
     setTimeout(() => setShowToast(false), 3000);
   };
 
-  const handleDelete = async (doctorId) => {
-    const confirmDelete = window.confirm(
-      `Are you sure you want to delete Doctor No ${doctorId}?`
-    );
+  const handleDelete = async (receptionistId) => {
+    const confirmDelete = window.confirm(`Are you sure you want to delete Receptionist No ${receptionistId}?`);
     if (!confirmDelete) return;
 
     try {
-      const result = await deleteDoctor(doctorId);
+      const result = await deleteReceptionist(receptionistId);
       console.log("Delete result:", result);
       if (result && !result.error) {
-        showToastMessage(
-          `Doctor No ${doctorId} was deleted successfully.`,
-          "success"
-        );
+        showToastMessage(`Receptionist No ${receptionistId} was deleted successfully.`, "success");
       } else {
-        showToastMessage(
-          `Error deleting doctor: ${result.message || "Unknown error"}`,
-          "error"
-        );
+        showToastMessage(`Error deleting receptionist: ${result.message || "Unknown error"}`, "error");
       }
-
-      fetchDoctors();
+      
+      fetchReceptionists();
     } catch (error) {
       showToastMessage(`Error: ${error.message}`, "error");
     }
   };
 
   useEffect(() => {
-    fetchDoctors();
-  }, [fetchDoctors]);
+    fetchReceptionists();
+  }, [fetchReceptionists]);
 
   const handleSearch = (event) => {
     setSearch(event.target.value.toLowerCase());
   };
 
-  const filteredDoctors = doctors.filter((doctor) => {
-    const fullName = `${doctor.firstName} ${doctor.lastName}`.toLowerCase();
+  const filteredReceptionist = receptionists.filter((receptionist) => {
+    const fullName = `${receptionist.firstName} ${receptionist.lastName}`.toLowerCase();
     return fullName.includes(search);
   });
 
-  const indexOfLastDoctor = currentPage * itemsPerPage;
-  const indexOfFirstDoctor = indexOfLastDoctor - itemsPerPage;
-  const currentDoctors = filteredDoctors.slice(
-    indexOfFirstDoctor,
-    indexOfLastDoctor
-  );
+  // Tính toán các receptionist cần hiển thị
+  const indexOfLastReceptionist = currentPage * itemsPerPage;
+  const indexOfFirstReceptionist = indexOfLastReceptionist - itemsPerPage;
+  const currentReceptionists = filteredReceptionist.slice(indexOfFirstReceptionist, indexOfLastReceptionist);
 
   // Tạo số trang
   const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(filteredDoctors.length / itemsPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(filteredReceptionist.length / itemsPerPage); i++) {
     pageNumbers.push(i);
   }
 
   return (
-    <div className="doctor-wrapper">
-      <div className="doctor-container">
+    <div className="receptionist-wrapper">
+      <div className="receptionist-container">
         <ToastContainer position="top-end" className="custom-toast">
           <Toast
             show={showToast}
@@ -126,11 +117,9 @@ function Doctor() {
             </div>
 
             <button
-              className="add-button"
-              style={{
-                background: colors.background,
-              }}
-              onClick={() => navigate("/add-doctor")}
+              className="add-button" style={{
+                background: colors.background}}
+              onClick={() => navigate("/add-receptionist")}
             >
               <MdAdd className="add-icon" />
               <span>Add</span>
@@ -147,7 +136,6 @@ function Doctor() {
                   <th>Email</th>
                   <th>First Name</th>
                   <th>Last Name</th>
-                  <th>Specialty</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -160,26 +148,23 @@ function Doctor() {
                       </div>
                     </td>
                   </tr>
-                ) : filteredDoctors.length === 0 ? (
+                ) : currentReceptionists.length === 0 ? (
                   <tr>
                     <td colSpan="6" className="no-data">
-                      No doctors found
+                      No receptionists found
                     </td>
                   </tr>
                 ) : (
-                  currentDoctors.map((doctor, index) => (
-                    <tr key={doctor.id}>
-                      <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-                      <td>{doctor.email}</td>
-                      <td>{doctor.firstName}</td>
-                      <td>{doctor.lastName}</td>
-                      <td>
-                        {doctor.specialty ? doctor.specialty.name : "N/A"}
-                      </td>
+                  currentReceptionists.map((receptionist, index) => (
+                    <tr key={receptionist.id}>
+                      <td>{index + 1 + indexOfFirstReceptionist}</td>
+                      <td>{receptionist.email}</td>
+                      <td>{receptionist.firstName}</td>
+                      <td>{receptionist.lastName}</td>
                       <td>
                         <div className="action-buttons">
                           <Link
-                            to={`/edit-doctor/${doctor.id}`}
+                            to={`/edit-receptionist/${receptionist.id}`}
                             className="edit-button"
                             title="Edit"
                           >
@@ -187,7 +172,7 @@ function Doctor() {
                           </Link>
                           <button
                             className="delete-button"
-                            onClick={() => handleDelete(doctor.id)}
+                            onClick={() => handleDelete(receptionist.id)}
                             title="Delete"
                           >
                             <MdDelete />
@@ -200,25 +185,23 @@ function Doctor() {
               </tbody>
             </table>
           </div>
+        </div>
 
-          {/* Phân trang */}
-          <div className="pagination">
-            {pageNumbers.map((number) => (
-              <button
-                key={number}
-                onClick={() => setCurrentPage(number)}
-                className={`page-button ${
-                  currentPage === number ? "active" : ""
-                }`}
-              >
-                {number}
-              </button>
-            ))}
-          </div>
+        {/* Phân trang */}
+        <div className="pagination">
+          {pageNumbers.map((number) => (
+            <button
+              key={number}
+              className={`page-button ${currentPage === number ? "active" : ""}`}
+              onClick={() => setCurrentPage(number)}
+            >
+              {number}
+            </button>
+          ))}
         </div>
       </div>
     </div>
   );
 }
 
-export default Doctor;
+export default Receptionist;

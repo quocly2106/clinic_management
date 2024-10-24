@@ -1,0 +1,60 @@
+.container {
+  height: 100vh;
+  background: white;
+  padding: 20px;
+}
+
+.form-container {
+  background: white;
+  border-radius: 10px;
+  padding: 2rem;
+  height: 100%;
+}
+
+.form-title {
+  color: #6EC2F7;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+.form-control,
+.form-select {
+  border-radius: 8px;
+  border: 1px solid rgba(110, 194, 247, 0.2);
+  padding: 0.7rem;
+}
+
+.form-label {
+  color: #555;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.btn-save {
+  background: #6EC2F7;
+  border: none;
+  padding: 0.8rem 2rem;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+}
+
+.btn-save:hover {
+  background: #55a4d6;
+}
+
+.btn-secondary {
+  padding: 0.8rem 2rem;
+  border-radius: 8px;
+}
+
+.loading-spinner {
+  color: #6EC2F7;
+}
+
+.error-message {
+  color: #dc3545;
+  padding: 1rem;
+  border-radius: 8px;
+  background: #ffe5e5;
+}

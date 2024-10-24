@@ -45,8 +45,10 @@ public class DoctorController {
         return ResponseEntity.ok("Doctor deleted successfully");
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'RECEPTIONIST')")
     @GetMapping("/all")
     public ResponseEntity<List<Doctor>> getAllDoctors() {
+        System.out.println("Fetching all doctors");
         List<Doctor> doctors = doctorService.getAllDoctors();
         return ResponseEntity.ok(doctors);
     }

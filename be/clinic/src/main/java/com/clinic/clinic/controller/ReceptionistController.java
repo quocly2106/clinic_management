@@ -44,7 +44,7 @@ public class ReceptionistController {
         receptionistService.deleteReceptionist(id);
         return ResponseEntity.ok("Receptionist deleted successfully");
     }
-
+    @PreAuthorize("hasAnyRole('ADMIN','DOCTOR','RECEPTIONIST')")
     @GetMapping("/all")
     public ResponseEntity<List<Receptionist>> getAllReceptionists() {
         List<Receptionist> Receptionists = receptionistService.getAllReceptionists();

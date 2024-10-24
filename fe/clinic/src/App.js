@@ -7,6 +7,7 @@ import Navbar from './components/manager/navbar/Navbar';
 import Login from "./components/manager/user/login/Login";
 import Home from "./components/manager/home/Home";
 import { useState, useEffect } from "react";
+import Register from "./components/manager/user/register/Register";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -47,6 +48,7 @@ function App() {
       {isAuthenticated && <Navbar userName={userName} userRole={userRole} onLogout={handleLogout} />}
       <Routes>
         <Route path="/login" element={!isAuthenticated ? <Login onLogin={handleLogin} /> : <Navigate to="/" />} />
+        <Route path="/register" element={<Register />} />
         <Route path="*" element={isAuthenticated ? <Home userRole={userRole} /> : <Navigate to="/login" />} />
       </Routes>
     </>

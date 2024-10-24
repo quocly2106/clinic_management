@@ -60,6 +60,11 @@ const EditDoctor = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const updatedDoctor = {
+      firstName: doctor.firstName,
+      lastName: doctor.lastName,
+      specialtyId: selectedSpecialty,  // Chỉ cập nhật specialty nếu nó có sự thay đổi
+    };
     try {
       const token = localStorage.getItem('token');
       const response = await fetch(`http://localhost:9191/doctors/update/${doctorId}`, {
@@ -68,7 +73,7 @@ const EditDoctor = () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ ...doctor, specialtyId: selectedSpecialty }),
+        body: JSON.stringify(updatedDoctor),
       });
       if (!response.ok) {
         throw new Error('Failed to update doctor');
