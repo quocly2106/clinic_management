@@ -34,12 +34,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())  // Tắt CSRF cho API (cần thiết cho Stateless API)
+                .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/admin/register", "/auth/login").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/doctors/all", "/receptionists/all","/specialties/all").permitAll()
+                        .requestMatchers("/doctors/all", "/receptionists/all","/specialties/all","/equipments/all" , "/medicines/all").permitAll()
                         .requestMatchers("/doctors/update/{id}","/doctors/{id}","/doctors/{id}/change-password").hasAnyRole("DOCTOR", "ADMIN")
                         .requestMatchers("/receptionists/update/{id}","/receptionists/{id}","/receptionists/{id}/change-password").hasAnyRole("RECEPTIONIST", "ADMIN")
                         .requestMatchers("/patients/**").hasAnyRole("ADMIN", "RECEPTIONIST")
@@ -47,7 +47,7 @@ public class SecurityConfig {
                         .requestMatchers("/news/all", "/news/{id}", "/news/increment-views/{id}","/doctors/all","/receptionists/all").permitAll()
                         .requestMatchers("/schedules/book-appointment").permitAll()
                         .requestMatchers("/doctors/**", "/receptionists/**", "/departments/**",
-                                "/schedules/**", "equipments/**", "/medicines/**").hasRole("ADMIN")
+                                "/schedules/**", "equipments/**", "/medicines/**","specialties/**").hasRole("ADMIN")
 
                         .anyRequest().authenticated()
                 )
@@ -61,7 +61,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();  // Sử dụng BCrypt cho việc mã hóa mật khẩu
+        return new BCryptPasswordEncoder();
     }
 
     @Bean

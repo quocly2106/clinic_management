@@ -6,6 +6,7 @@ import com.clinic.clinic.service.MedicineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +37,7 @@ public class MedicineController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'RECEPTIONIST')")
     @GetMapping("/all")
     public ResponseEntity<List<Medicine>> getAllMedicines() {
         List<Medicine> medicines = medicineService.getAllMedicines();

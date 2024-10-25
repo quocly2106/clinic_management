@@ -1,0 +1,16 @@
+body {
+    background-color: #f8f9fa; /* Màu nền nhạt */
+  }
+  
+  .container {
+    border-radius: 10px; /* Bo tròn các góc */
+  }
+  
+  .form-control {
+    border-radius: 10px; /* Bo tròn các góc cho input */
+  }
+  
+  .toast {
+    border-radius: 10px; /* Bo tròn các góc cho toast */
+  }
+  

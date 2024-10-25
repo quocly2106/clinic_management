@@ -17,6 +17,12 @@ import Admin from "../admin/Admin";
 import Specialty from "../specialty/Specialty";
 import AddSpecialty from "../specialty/AddSpecialty";
 import EditSpecialty from "../specialty/EditSpecialty";
+import Equipment from "../equipment/Equipment";
+import AddEquipment from "../equipment/AddEquipment";
+import EditEquipment from "../equipment/EditEquipment";
+import Medicine from "../medicine/Medicine";
+import EditMedicine from "../medicine/EditMedicine";
+import AddMedicine from "../medicine/AddMedicine";
 
 function Home({ userRole }) {
   return (
@@ -39,31 +45,20 @@ function Home({ userRole }) {
             <Route path="/specialty" element={<Specialty />} />
             <Route path="/add-specialty" element={<AddSpecialty />} />
             <Route path="/edit-specialty/:specialtyId" element={<EditSpecialty />} /> 
+            <Route path="/equipment" element={<Equipment />} />
+            <Route path="/add-equipment" element={<AddEquipment />} />
+            <Route path="/edit-equipment/:equipmentId" element={<EditEquipment />} />
+            <Route path="/medicine" element={<Medicine />} />
+            <Route path="/add-medicine" element={<AddMedicine />} />
+            <Route path="/edit-medicine/:medicineId" element={<EditMedicine />} />
+            <Route path="/doctor/profile"
+              element={userRole === "doctor" ? <DoctorProfile /> : <Navigate to="/" /> }/>
+            <Route path="/receptionist/profile"
+              element={userRole === "receptionist" ?  <ReceptionistProfile />  : <Navigate to="/" />}/>
+            <Route path="/admin/profile"
+              element={userRole === "admin" ?  <AdminProfile />  : <Navigate to="/" />}/>
             <Route
-              path="/doctor/profile"
-              element={
-                userRole === "doctor" ? <DoctorProfile /> : <Navigate to="/" />
-              }
-            />
-            <Route
-              path="/receptionist/profile"
-              element={
-                userRole === "receptionist" ?  <ReceptionistProfile />  : <Navigate to="/" />
-                
-              }
-            />
-            <Route
-              path="/admin/profile"
-              element={
-                userRole === "admin" ?  <AdminProfile />  : <Navigate to="/" />
-                
-              }
-            />
-             <Route
-              path="/change-password"
-              element={<ChangePassword />} // Thêm route cho ChangePassword
-            />
-      
+              path="/change-password" element={<ChangePassword />} />
           </Routes>
         </div>
       </div>
