@@ -27,9 +27,6 @@ public class NewsDto {
 
     private String image;
 
-    // Sử dụng HashSet thay vì Set để đảm bảo có constructor không tham số
-    private Set<String> tags = new HashSet<>(); // Khởi tạo một HashSet mới
-
     private String category;
 
     private Integer views;

@@ -23,6 +23,12 @@ import EditEquipment from "../equipment/EditEquipment";
 import Medicine from "../medicine/Medicine";
 import EditMedicine from "../medicine/EditMedicine";
 import AddMedicine from "../medicine/AddMedicine";
+import Patient from "../patient/Patient";
+import AddPatient from "../patient/AddPatient";
+import EditPatient from "../patient/EditPatient";
+import News from "../news/News";
+import AddNews from "../news/AddNews";
+import EditNews from "../news/EditNews";
 
 function Home({ userRole }) {
   return (
@@ -51,6 +57,12 @@ function Home({ userRole }) {
             <Route path="/medicine" element={<Medicine />} />
             <Route path="/add-medicine" element={<AddMedicine />} />
             <Route path="/edit-medicine/:medicineId" element={<EditMedicine />} />
+            <Route path="/patient" element={<Patient />} />
+            <Route path="/add-patient" element={<AddPatient />} />
+            <Route path="/edit-patient/:patientId" element={<EditPatient />} /> 
+            <Route path="/news" element={<News />} />
+            <Route path="/add-news" element={<AddNews />} />
+            <Route path="/edit-news/:newsId" element={<EditNews />} /> 
             <Route path="/doctor/profile"
               element={userRole === "doctor" ? <DoctorProfile /> : <Navigate to="/" /> }/>
             <Route path="/receptionist/profile"

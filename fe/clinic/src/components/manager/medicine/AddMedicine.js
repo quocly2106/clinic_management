@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addMedicine } from "../../utils/ApiFunction";
+import "./AddMedicine.css"
 
 function AddMedicine() {
   const [medicineData, setMedicineData] = useState({
@@ -49,7 +50,7 @@ function AddMedicine() {
       {error && <div className="alert alert-danger rounded-3">{error}</div>}
       <form onSubmit={handleSubmit} className="rounded-3 shadow p-4 bg-light">
         <div className="mb-3">
-          <label htmlFor="firstName" className="form-label">
+          <label htmlFor="name" className="form-label">
             Name
           </label>
           <input
@@ -63,7 +64,7 @@ function AddMedicine() {
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="lastName" className="form-label">
+          <label htmlFor="description" className="form-label">
             Description
           </label>
           <input
@@ -77,7 +78,7 @@ function AddMedicine() {
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="lastName" className="form-label">
+          <label htmlFor="price" className="form-label">
             Price
           </label>
           <input
@@ -91,7 +92,7 @@ function AddMedicine() {
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="lastName" className="form-label">
+          <label htmlFor="quantity" className="form-label">
             Quantity
           </label>
           <input

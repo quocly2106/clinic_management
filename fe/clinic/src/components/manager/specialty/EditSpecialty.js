@@ -18,9 +18,6 @@ const EditSpecialty = () => {
         const response = await api.get(`/specialties/${id}`);
         const data = response.data;
 
-        // Log dữ liệu nhận được
-        console.log("Fetched specialty:", data);
-
         if (data.name && data.description) {
           setSpecialty({ name: data.name, description: data.description });
         } else {

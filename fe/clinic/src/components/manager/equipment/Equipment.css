@@ -1,10 +1,10 @@
-.doctor-wrapper {
+.equipment-wrapper {
     min-height: 100vh;
     background: #f5f7fb;
     padding: 20px;
   }
   
-  .doctor-container {
+  .equipment-container {
     max-width: 100%;
     margin: 0 auto;
   }
@@ -204,7 +204,7 @@
   
   /* Responsive Design */
   @media (max-width: 768px) {
-    .doctor-wrapper {
+    .equipment-wrapper {
       padding: 10px;
     }
   

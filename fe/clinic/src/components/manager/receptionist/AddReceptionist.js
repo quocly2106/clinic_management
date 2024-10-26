@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import {  addReceptionist } from '../../utils/ApiFunction';
+import "./AddReceptionist.css"
 
 function AddReceptionist() {
   const [receptionistData, setReceptionistData] = useState({

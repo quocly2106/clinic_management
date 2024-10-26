@@ -3,10 +3,12 @@ package com.clinic.clinic.controller;
 import com.clinic.clinic.dto.NewsDto;
 import com.clinic.clinic.model.News;
 import com.clinic.clinic.service.NewsService;
+import com.clinic.clinic.utils.ImageUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,10 +21,14 @@ public class NewsController {
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')") // Chỉ cho phép Admin thêm bài viết
-    public ResponseEntity<News> createNews(@RequestBody NewsDto newsDto) {
-        News createdNews = newsService.addNews(newsDto);
+    public ResponseEntity<News> createNews(
+            @RequestPart("news") NewsDto newsDto,  // Sử dụng @RequestPart để nhận dữ liệu JSON
+            @RequestPart("imageFile") MultipartFile imageFile) { // Sử dụng @RequestPart cho tệp tin
+
+        News createdNews = newsService.addNews(newsDto, imageFile);
         return ResponseEntity.ok(createdNews);
     }
+
 
     @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('ADMIN')") // Chỉ cho phép Admin cập nhật bài viết

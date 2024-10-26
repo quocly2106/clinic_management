@@ -1,10 +1,10 @@
-.specialty-wrapper {
+.news-wrapper {
     min-height: 100vh;
     background: #f5f7fb;
     padding: 20px;
   }
   
-  .specialty-container {
+  .news-container {
     max-width: 100%;
     margin: 0 auto;
   }
@@ -204,7 +204,7 @@
   
   /* Responsive Design */
   @media (max-width: 768px) {
-    .specialty-wrapper {
+    .news-wrapper {
       padding: 10px;
     }
   

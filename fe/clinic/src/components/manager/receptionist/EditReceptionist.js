@@ -94,15 +94,6 @@ const EditReceptionist = () => {
         <form onSubmit={handleSubmit}>
           <div className="row">
             <div className="col-md-6 mb-3">
-              <label className="form-label">Email</label>
-              <input 
-                type="text" 
-                className="form-control" 
-                value={receptionist.email || ''} 
-                readOnly 
-              />
-            </div>
-            <div className="col-md-6 mb-3">
               <label className="form-label">First Name</label>
               <input
                 type="text"
@@ -118,6 +109,15 @@ const EditReceptionist = () => {
                 className="form-control"
                 value={receptionist.lastName || ''}
                 onChange={(e) => setReceptionist({ ...receptionist, lastName: e.target.value })}
+              />
+            </div>
+            <div className="col-md-6 mb-3">
+              <label className="form-label">Email</label>
+              <input 
+                type="text" 
+                className="form-control" 
+                value={receptionist.email || ''} 
+                readOnly 
               />
             </div>
             <div className="col-md-6 mb-3">

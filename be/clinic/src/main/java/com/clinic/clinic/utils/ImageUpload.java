@@ -10,7 +10,7 @@ import java.nio.file.StandardCopyOption;
 
 @Component
 public class ImageUpload {
-    private final String UPLOAD_FOLDER ="D:\\Quoc\\clinic\\clinic_management\\be\\clinic\\src\\main\\resources\\static\\img";
+    private final String UPLOAD_FOLDER ="D:\\Quoc\\clinic\\clinic\\be\\clinic\\src\\main\\resources\\static\\img";
 
     public boolean uploadImage(MultipartFile imageProduct){
         boolean isUpload = false;
@@ -25,12 +25,12 @@ public class ImageUpload {
         return isUpload;
     }
 
-    public boolean checkExisted(MultipartFile imageProduct){
+    public boolean checkExisted(MultipartFile imageFile) {
         boolean isExisted = false;
         try {
-            File file = new File(UPLOAD_FOLDER + "\\" + imageProduct.getOriginalFilename());
+            File file = new File(UPLOAD_FOLDER + "\\" + imageFile.getOriginalFilename());
             isExisted = file.exists();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return isExisted;

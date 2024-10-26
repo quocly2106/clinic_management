@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { addEquipment } from "../../utils/ApiFunction";
-import "./AddEquipment.css"
+import { addPatient } from "../../utils/ApiFunction";
+import "./AddPatient.css"
 
-function AddEquipment() {
-  const [equipmentData, setEquipmentData] = useState({
-    name: "",
-    type: "",
-    quantity: "",
-    manafacturer: "",
-    maintenanceDate: "",
+function AddPatient() {
+  const [patientData, setPatientData] = useState({
+    firstName: "",
+    lastName: "",
+    gender: "",
+    dateOfBirth: "",
+    phone: "",
+    doctorId: "",
   });
 
   const [error, setError] = useState("");
@@ -19,28 +20,29 @@ function AddEquipment() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEquipmentData({ ...equipmentData, [name]: value });
+    setPatientData({ ...patientData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Equipment Data:", equipmentData);
+    console.log("Patient Data:", patientData);
     try {
-      await addEquipment(equipmentData);
-      setSuccessMessage("Equipment added successfully!");
+      await addPatient(patientData);
+      setSuccessMessage("Patient added successfully!");
       setError("");
       setShowToast(true);
-      setEquipmentData({
-        name: "",
-        type: "",
-        quantity: "",
-        manafacturer: "",
-        maintenanceDate: "",
+      setPatientData({
+        firstName: "",
+        lastName: "",
+        gender: "",
+        dateOfBirth: "",
+        phone: "",
+        doctorId: "",
       });
-      navigate("/equipment");
+      navigate("/patient");
     } catch (error) {
-      console.error("Error adding equipment:", error);
-      setError("Failed to add equipment. Please try again.");
+      console.error("Error adding patient:", error);
+      setError("Failed to add patient. Please try again.");
       setSuccessMessage("");
       setShowToast(true);
     }
@@ -48,81 +50,95 @@ function AddEquipment() {
 
   return (
     <div className="container mt-5">
-      <h2 className="text-center">Add Equipment</h2>
+      <h2 className="text-center">Add Patient</h2>
       {error && <div className="alert alert-danger rounded-3">{error}</div>}
       <form onSubmit={handleSubmit} className="rounded-3 shadow p-4 bg-light">
         <div className="mb-3">
-          <label htmlFor="name" className="form-label">
-            Name
+          <label htmlFor="firstName" className="form-label">
+            First Name
           </label>
           <input
             type="text"
             className="form-control rounded-3"
-            id="name"
-            name="name"
-            value={equipmentData.name}
+            id="firstName"
+            name="firstName"
+            value={patientData.firstName}
             onChange={handleChange}
             required
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="type" className="form-label">
-            Type
+          <label htmlFor="lastName" className="form-label">
+            Last Name
           </label>
           <input
             type="text"
             className="form-control rounded-3"
-            id="type"
-            name="type"
-            value={equipmentData.type}
+            id="lastName"
+            name="lastName"
+            value={patientData.lastName}
             onChange={handleChange}
             required
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="quantity" className="form-label">
-            Quantity
-          </label>
-          <input
-            type="number"
-            className="form-control rounded-3"
-            id="quantity"
-            name="quantity"
-            value={equipmentData.quantity}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="manufacturer" className="form-label">
-          Manufacturer
+          <label htmlFor="gender" className="form-label">
+            Gender
           </label>
           <input
             type="text"
             className="form-control rounded-3"
-            id="manufacturer"
-            name="manufacturer"
-            value={equipmentData.manufacturer}
+            id="gender"
+            name="gender"
+            value={patientData.gender}
             onChange={handleChange}
             required
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="maintenanceDate" className="form-label">
-            Maintenance Date
+          <label htmlFor="dateOfBirth" className="form-label">
+            Date Of Birth
           </label>
           <input
             type="date"
             className="form-control rounded-3"
-            id="maintenanceDate"
-            name="maintenanceDate"
-            value={equipmentData.maintenanceDate}
+            id="dateOfBirth"
+            name="dateOfBirth"
+            value={patientData.dateOfBirth}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="phone" className="form-label">
+            Phone
+          </label>
+          <input
+            type="number"
+            className="form-control rounded-3"
+            id="phone"
+            name="phone"
+            value={patientData.phone}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="doctorId" className="form-label">
+            Doctor Id
+          </label>
+          <input
+            type="number"
+            className="form-control rounded-3"
+            id="doctorId"
+            name="doctorId"
+            value={patientData.doctorId}
             onChange={handleChange}
             required
           />
         </div>
         <button type="submit" className="btn btn-primary">
-          Add Equipment
+          Add Patient
         </button>
       </form>
 
@@ -151,4 +167,4 @@ function AddEquipment() {
   );
 }
 
-export default AddEquipment;
+export default AddPatient;

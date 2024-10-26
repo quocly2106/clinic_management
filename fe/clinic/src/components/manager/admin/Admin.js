@@ -1,14 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { allAdmins} from "../../utils/ApiFunction";
-import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, Toast } from "react-bootstrap";
 import "./Admin.css";
-import { MdAdd, MdDelete, MdEdit } from "react-icons/md";
 import { BiSearchAlt } from "react-icons/bi";
-import colors from "../../../config/color";
 
 function Admin() {
-  const navigate = useNavigate();
   const [admins, setAdmins] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");

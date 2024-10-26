@@ -38,9 +38,6 @@ public class News {
 
     private String image; // URL hình ảnh đại diện (nếu có)
 
-    @ElementCollection
-    private Set<String> tags; // Từ khóa bài viết
-
     @Column(nullable = false)
     private String category; // Danh mục bài viết
 

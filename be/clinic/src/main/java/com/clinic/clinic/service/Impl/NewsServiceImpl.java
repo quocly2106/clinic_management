@@ -7,10 +7,12 @@ import com.clinic.clinic.model.News;
 import com.clinic.clinic.repository.AdminRepository;
 import com.clinic.clinic.repository.NewsRepository;
 import com.clinic.clinic.service.NewsService;
+import com.clinic.clinic.utils.ImageUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,8 +26,11 @@ public class NewsServiceImpl implements NewsService {
     @Autowired
     private AdminRepository adminRepository;
 
+    @Autowired
+    private ImageUpload imageUpload;
+
     @Override
-    public News addNews(NewsDto newsDto) {
+    public News addNews(NewsDto newsDto, MultipartFile imageFile) {
         News news = new News();
         news.setTitle(newsDto.getTitle());
         news.setContent(newsDto.getContent());
@@ -33,7 +38,6 @@ public class NewsServiceImpl implements NewsService {
         news.setCreatedAt(now);
         news.setUpdatedAt(now);
 
-        // Lấy email từ SecurityContext
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName(); // Lấy email từ token
 
@@ -43,12 +47,16 @@ public class NewsServiceImpl implements NewsService {
 
         // Gán author cho news
         news.setAuthor(admin);
-
         news.setStatus(newsDto.getStatus());
-        news.setImage(newsDto.getImage());
-        news.setTags(newsDto.getTags());
         news.setCategory(newsDto.getCategory());
         news.setViews(0);
+
+        if (imageFile != null && !imageFile.isEmpty()) {
+            boolean isUploaded = imageUpload.uploadImage(imageFile);
+            if (isUploaded) {
+                news.setImage("/static/img/" + imageFile.getOriginalFilename()); // URL ảnh
+            }
+        }
 
         return newsRepository.save(news);
     }
@@ -63,7 +71,6 @@ public class NewsServiceImpl implements NewsService {
         existingNews.setUpdatedAt(LocalDateTime.now()); // Cập nhật thời gian sửa đổi
         existingNews.setStatus(newsDto.getStatus());
         existingNews.setImage(newsDto.getImage()); // Đảm bảo thuộc tính đúng
-        existingNews.setTags(newsDto.getTags());
         existingNews.setCategory(newsDto.getCategory());
 
         return newsRepository.save(existingNews);

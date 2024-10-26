@@ -24,7 +24,7 @@ api.interceptors.request.use(
 export async function register(data) {
   try {
     const response = await api.post("/admin/register", data);
-    return response.data; 
+    return response.data;
   } catch (error) {
     console.error("Error during register:", error);
     throw error;
@@ -34,7 +34,7 @@ export async function register(data) {
 // Hàm đăng nhập
 export async function login(data) {
   try {
-    const response = await api.post("/auth/login", data); 
+    const response = await api.post("/auth/login", data);
     return response.data; // Trả về dữ liệu
   } catch (error) {
     console.error("Error during login:", error); // Log lỗi nếu có
@@ -47,27 +47,33 @@ export async function login(data) {
 }
 // Profile
 export const getDoctorProfile = async (doctorId) => {
-  const token = localStorage.getItem('token'); // Lấy token từ localStorage
-  const response = await axios.get(`http://localhost:9191/doctors/${doctorId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`, // Gửi token trong header
-    },
-  });
+  const token = localStorage.getItem("token"); // Lấy token từ localStorage
+  const response = await axios.get(
+    `http://localhost:9191/doctors/${doctorId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`, // Gửi token trong header
+      },
+    }
+  );
   return response.data;
 };
 
 export const getReceptionistProfile = async (receptionistId) => {
-  const token = localStorage.getItem('token'); // Lấy token từ localStorage
-  const response = await axios.get(`http://localhost:9191/receptionists/${receptionistId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`, // Gửi token trong header
-    },
-  });
+  const token = localStorage.getItem("token"); // Lấy token từ localStorage
+  const response = await axios.get(
+    `http://localhost:9191/receptionists/${receptionistId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`, // Gửi token trong header
+      },
+    }
+  );
   return response.data;
 };
 
 export const getAdminProfile = async (adminId) => {
-  const token = localStorage.getItem('token'); // Lấy token từ localStorage
+  const token = localStorage.getItem("token"); // Lấy token từ localStorage
   const response = await axios.get(`http://localhost:9191/admin/${adminId}`, {
     headers: {
       Authorization: `Bearer ${token}`, // Gửi token trong header
@@ -76,7 +82,7 @@ export const getAdminProfile = async (adminId) => {
   return response.data;
 };
 
-// đổi password 
+// đổi password
 export const changeAdminPassword = async (adminId, data) => {
   try {
     const response = await api.put(`/admin/${adminId}/change-password`, data);
@@ -89,7 +95,10 @@ export const changeAdminPassword = async (adminId, data) => {
 
 export const changeDoctorPassword = async (doctorId, data) => {
   try {
-    const response = await api.put(`/doctors/${doctorId}/change-password`, data);
+    const response = await api.put(
+      `/doctors/${doctorId}/change-password`,
+      data
+    );
     return response.data;
   } catch (error) {
     console.error("Error during doctor password change:", error.response);
@@ -99,7 +108,10 @@ export const changeDoctorPassword = async (doctorId, data) => {
 
 export const changeReceptionistPassword = async (receptionistId, data) => {
   try {
-    const response = await api.put(`/receptionists/${receptionistId}/change-password`, data);
+    const response = await api.put(
+      `/receptionists/${receptionistId}/change-password`,
+      data
+    );
     return response.data;
   } catch (error) {
     console.error("Error during receptionist password change:", error.response);
@@ -110,7 +122,7 @@ export const changeReceptionistPassword = async (receptionistId, data) => {
 // doctor
 export const allDoctors = async () => {
   try {
-    const response = await api.get('/doctors/all'); // Sử dụng api instance
+    const response = await api.get("/doctors/all"); // Sử dụng api instance
     return response.data;
   } catch (error) {
     console.error("Error fetching all doctors:", error); // Log lỗi nếu có
@@ -122,11 +134,15 @@ export const addDoctor = async (data) => {
   try {
     const token = localStorage.getItem("token"); // Lấy token từ localStorage
     console.log("Token:", token);
-    const response = await axios.post('http://localhost:9191/doctors/add', data, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Gửi token trong header
-      },
-    });
+    const response = await axios.post(
+      "http://localhost:9191/doctors/add",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Gửi token trong header
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("Error add doctor:", error);
@@ -134,23 +150,25 @@ export const addDoctor = async (data) => {
   }
 };
 
-export const editDoctor = async (doctorId , data) => {
+export const editDoctor = async (doctorId, data) => {
   try {
     const token = localStorage.getItem("token"); // Lấy token từ localStorage
     console.log("Token:", token);
-    const response = await axios.put(`http://localhost:9191/doctors/update/${doctorId}`, data, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Gửi token trong header
-      },
-    });
+    const response = await axios.put(
+      `http://localhost:9191/doctors/update/${doctorId}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Gửi token trong header
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("Error edit doctor:", error);
-    throw error
+    throw error;
   }
 };
-
-
 
 // receptionist
 export async function deleteDoctor(doctorId) {
@@ -164,7 +182,7 @@ export async function deleteDoctor(doctorId) {
 
 export const allReceptionists = async () => {
   try {
-    const response = await api.get('/receptionists/all'); // Sử dụng api instance
+    const response = await api.get("/receptionists/all"); // Sử dụng api instance
     return response.data;
   } catch (error) {
     console.error("Error fetching all receptionists:", error); // Log lỗi nếu có
@@ -176,11 +194,15 @@ export const addReceptionist = async (data) => {
   try {
     const token = localStorage.getItem("token"); // Lấy token từ localStorage
     console.log("Token:", token);
-    const response = await axios.post('http://localhost:9191/receptionists/add', data, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Gửi token trong header
-      },
-    });
+    const response = await axios.post(
+      "http://localhost:9191/receptionists/add",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Gửi token trong header
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("Error add receptionist:", error);
@@ -188,19 +210,23 @@ export const addReceptionist = async (data) => {
   }
 };
 
-export const editReceptionist = async (receptionistId , data) => {
+export const editReceptionist = async (receptionistId, data) => {
   try {
     const token = localStorage.getItem("token"); // Lấy token từ localStorage
     console.log("Token:", token);
-    const response = await axios.put(`http://localhost:9191/receptionists/update/${receptionistId}`, data, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Gửi token trong header
-      },
-    });
+    const response = await axios.put(
+      `http://localhost:9191/receptionists/update/${receptionistId}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Gửi token trong header
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("Error edit receptionist:", error);
-    throw error
+    throw error;
   }
 };
 
@@ -216,10 +242,10 @@ export async function deleteReceptionist(receptionistId) {
 //admin
 export const allAdmins = async () => {
   try {
-    const response = await api.get('/admin/all'); 
+    const response = await api.get("/admin/all");
     return response.data;
   } catch (error) {
-    console.error("Error fetching all admins:", error); 
+    console.error("Error fetching all admins:", error);
     throw error;
   }
 };
@@ -227,7 +253,7 @@ export const allAdmins = async () => {
 // specialty
 export const allSpecialties = async () => {
   try {
-    const response = await api.get('/specialties/all'); 
+    const response = await api.get("/specialties/all");
     return response.data;
   } catch (error) {
     console.error("Error fetching all specialties:", error);
@@ -237,13 +263,17 @@ export const allSpecialties = async () => {
 
 export const addSpecialty = async (data) => {
   try {
-    const token = localStorage.getItem("token"); 
+    const token = localStorage.getItem("token");
     console.log("Token:", token);
-    const response = await axios.post('http://localhost:9191/specialties/add', data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.post(
+      "http://localhost:9191/specialties/add",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("Error add specialty:", error);
@@ -251,23 +281,27 @@ export const addSpecialty = async (data) => {
   }
 };
 
-export const editSpecialty  = async (specialtyId , data) => {
+export const editSpecialty = async (specialtyId, data) => {
   try {
-    const token = localStorage.getItem("token"); 
+    const token = localStorage.getItem("token");
     console.log("Token:", token);
-    const response = await axios.put(`http://localhost:9191/specialties/update/${specialtyId}`, data, {
-      headers: {
-        Authorization: `Bearer ${token}`, 
-      },
-    });
+    const response = await axios.put(
+      `http://localhost:9191/specialties/update/${specialtyId}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("Error edit specialty:", error);
-    throw error
+    throw error;
   }
 };
 
-export async function deleteSpecialty (specialtyId) {
+export async function deleteSpecialty(specialtyId) {
   try {
     const result = await api.delete(`/specialties/delete/${specialtyId}`);
     return result.data;
@@ -279,7 +313,7 @@ export async function deleteSpecialty (specialtyId) {
 // equipment
 export const allEquipments = async () => {
   try {
-    const response = await api.get('/equipments/all'); 
+    const response = await api.get("/equipments/all");
     return response.data;
   } catch (error) {
     console.error("Error fetching all equipments:", error);
@@ -289,13 +323,17 @@ export const allEquipments = async () => {
 
 export const addEquipment = async (data) => {
   try {
-    const token = localStorage.getItem("token"); 
+    const token = localStorage.getItem("token");
     console.log("Token:", token);
-    const response = await axios.post('http://localhost:9191/equipments/add', data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.post(
+      "http://localhost:9191/equipments/add",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("Error add equipment:", error);
@@ -303,19 +341,23 @@ export const addEquipment = async (data) => {
   }
 };
 
-export const editEquipment = async (equipmentId , data) => {
+export const editEquipment = async (equipmentId, data) => {
   try {
-    const token = localStorage.getItem("token"); 
+    const token = localStorage.getItem("token");
     console.log("Token:", token);
-    const response = await axios.put(`http://localhost:9191/equipments/update/${equipmentId}`, data, {
-      headers: {
-        Authorization: `Bearer ${token}`, 
-      },
-    });
+    const response = await axios.put(
+      `http://localhost:9191/equipments/update/${equipmentId}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("Error edit equipment:", error);
-    throw error
+    throw error;
   }
 };
 
@@ -325,12 +367,12 @@ export async function deleteEquipment(equipmentId) {
     // Trả về toàn bộ response.data thay vì throw error
     return {
       success: true,
-      data: result.data
+      data: result.data,
     };
   } catch (error) {
     return {
       success: false,
-      message: error.response?.data?.message || "Unknown error"
+      message: error.response?.data?.message || "Unknown error",
     };
   }
 }
@@ -338,7 +380,7 @@ export async function deleteEquipment(equipmentId) {
 // medicine
 export const allMedicines = async () => {
   try {
-    const response = await api.get('/medicines/all'); 
+    const response = await api.get("/medicines/all");
     return response.data;
   } catch (error) {
     console.error("Error fetching all medicines:", error);
@@ -348,13 +390,17 @@ export const allMedicines = async () => {
 
 export const addMedicine = async (data) => {
   try {
-    const token = localStorage.getItem("token"); 
+    const token = localStorage.getItem("token");
     console.log("Token:", token);
-    const response = await axios.post('http://localhost:9191/medicines/add', data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.post(
+      "http://localhost:9191/medicines/add",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("Error add medicine:", error);
@@ -362,19 +408,23 @@ export const addMedicine = async (data) => {
   }
 };
 
-export const editMedicine = async (medicineId , data) => {
+export const editMedicine = async (medicineId, data) => {
   try {
-    const token = localStorage.getItem("token"); 
+    const token = localStorage.getItem("token");
     console.log("Token:", token);
-    const response = await axios.put(`http://localhost:9191/medicines/update/${medicineId}`, data, {
-      headers: {
-        Authorization: `Bearer ${token}`, 
-      },
-    });
+    const response = await axios.put(
+      `http://localhost:9191/medicines/update/${medicineId}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("Error edit medicine:", error);
-    throw error
+    throw error;
   }
 };
 
@@ -384,12 +434,140 @@ export async function deleteMedicine(medicineId) {
     // Trả về toàn bộ response.data thay vì throw error
     return {
       success: true,
-      data: result.data
+      data: result.data,
     };
   } catch (error) {
     return {
       success: false,
-      message: error.response?.data?.message || "Unknown error"
+      message: error.response?.data?.message || "Unknown error",
+    };
+  }
+}
+
+// patient
+export const allPatients = async () => {
+  try {
+    const response = await api.get("/patients/all");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching all patients:", error);
+    throw error;
+  }
+};
+
+export const addPatient = async (data) => {
+  try {
+    const token = localStorage.getItem("token");
+    console.log("Token:", token);
+    const response = await axios.post(
+      "http://localhost:9191/patients/add",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error add patient:", error);
+    throw error;
+  }
+};
+
+export const editPatient = async (patientId, data) => {
+  try {
+    const token = localStorage.getItem("token");
+    console.log("Token:", token);
+    const response = await axios.put(
+      `http://localhost:9191/patients/update/${patientId}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error edit medicine:", error);
+    throw error;
+  }
+};
+
+export async function deletePatient(patientId) {
+  try {
+    const result = await api.delete(`/patients/delete/${patientId}`);
+    return {
+      success: true,
+      data: result.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.response?.data?.message || "Unknown error",
+    };
+  }
+}
+
+// news
+export const allNews = async () => {
+  try {
+    const response = await api.get("/news/all");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching all news:", error);
+    throw error;
+  }
+};
+
+export const addNews = async (data) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.post("http://localhost:9191/news/add", data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`, // Thêm token vào Authorization
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error add news:", error);
+    throw error;
+  }
+};
+
+export const editNews = async (newsId, data) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.put(
+      `http://localhost:9191/news/update/${newsId}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error edit news:", error);
+    throw error;
+  }
+};
+
+export async function deleteNews(newsId) {
+  try {
+    const result = await api.delete(`/news/delete/${newsId}`);
+    // Trả về toàn bộ response.data thay vì throw error
+    return {
+      success: true,
+      data: result.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.response?.data?.message || "Unknown error",
     };
   }
 }

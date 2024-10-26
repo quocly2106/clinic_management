@@ -2,32 +2,32 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./EditDoctor.css"; // Import CSS
+import "./EditPatient.css"; // Import CSS
 
-const EditDoctor = () => {
-  const { doctorId } = useParams();
-  const [doctor, setDoctor] = useState(null);
+const EditPatient = () => {
+  const { patientId } = useParams();
+  const [patient, setPatient] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [specialties, setSpecialties] = useState([]);
-  const [selectedSpecialty, setSelectedSpecialty] = useState("");
+  const [doctors, setDoctors] = useState([]);
+  const [selectedDoctor, setSelectedDoctor] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchDoctorById = async (id) => {
+    const fetchPatientById = async (id) => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch(`http://localhost:9191/doctors/${id}`, {
+        const response = await fetch(`http://localhost:9191/patients/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
         if (!response.ok) {
-          throw new Error("Failed to fetch doctor");
+          throw new Error("Failed to fetch patient");
         }
         const data = await response.json();
-        setDoctor(data);
-        setSelectedSpecialty(data.specialtyId);
+        setPatient(data);
+        setSelectedDoctor(data.doctorId);
       } catch (err) {
         setError(err.message);
         toast.error(err.message);
@@ -36,63 +36,66 @@ const EditDoctor = () => {
       }
     };
 
-    const fetchSpecialties = async () => {
+    const fetchDoctors = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch(`http://localhost:9191/specialties/all`, {
+        const response = await fetch(`http://localhost:9191/doctors/all`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
         if (!response.ok) {
-          throw new Error("Failed to fetch specialties");
+          throw new Error("Failed to fetch doctors");
         }
         const data = await response.json();
-        setSpecialties(data);
+        setDoctors(data);
       } catch (err) {
         setError(err.message);
         toast.error(err.message);
       }
     };
 
-    fetchDoctorById(doctorId);
-    fetchSpecialties();
-  }, [doctorId]);
+    fetchPatientById(patientId);
+    fetchDoctors();
+  }, [patientId]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const updatedDoctor = {
-        firstName: doctor.firstName,
-        lastName: doctor.lastName,
-        specialtyId: selectedSpecialty, // Chỉ cập nhật specialty nếu nó có sự thay đổi
+    const updatedPatient = {
+        firstName: patient.firstName,
+        lastName: patient.lastName,
+        gender :patient.gender,
+        phone: patient.phone,
+        dateOfBirth : patient.dateOfBirth,
+        doctorId: selectedDoctor, // Chỉ cập nhật doctor nếu nó có sự thay đổi
     };
 
     try {
         const token = localStorage.getItem("token");
         const response = await fetch(
-            `http://localhost:9191/doctors/update/${doctorId}`,
+            `http://localhost:9191/patients/update/${patientId}`,
             {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify(updatedDoctor),
+                body: JSON.stringify(updatedPatient),
             }
         );
 
         if (!response.ok) {
             const errorMessage = await response.text(); // Lấy thông báo lỗi từ server
             console.error("Update failed:", errorMessage);
-            throw new Error("Failed to update doctor: " + errorMessage);
+            throw new Error("Failed to update patient: " + errorMessage);
         }
 
         // Nếu cập nhật thành công, hiển thị toast và sau đó chuyển hướng
-        toast.success("Doctor updated successfully");
+        toast.success("Patient updated successfully");
 
         // Chuyển hướng sau 2 giây
         setTimeout(() => {
-            navigate('/doctor'); 
+            navigate('/patient'); 
         }, 2000);
     } catch (error) {
         setError(error.message);
@@ -111,12 +114,12 @@ const EditDoctor = () => {
     );
   }
 
-  if (!doctor) {
+  if (!patient) {
     return (
       <div className="container-fluid h-100">
         <div className="error-message">
           <i className="bi bi-exclamation-circle me-2"></i>
-          No doctor found
+          No patient found
         </div>
       </div>
     );
@@ -126,7 +129,7 @@ const EditDoctor = () => {
     <div className="container">
       <ToastContainer position="top-right" autoClose={3000} />
       <div className="form-container">
-        <h2 className="form-title">Edit Doctor</h2>
+        <h2 className="form-title">Edit Patient</h2>
         <form onSubmit={handleSubmit}>
           <div className="row">
             <div className="col-md-6 mb-3">
@@ -134,9 +137,9 @@ const EditDoctor = () => {
               <input
                 type="text"
                 className="form-control"
-                value={doctor.firstName || ""}
+                value={patient.firstName || ""}
                 onChange={(e) =>
-                  setDoctor({ ...doctor, firstName: e.target.value })
+                  setPatient({ ...patient, firstName: e.target.value })
                 }
               />
             </div>
@@ -145,44 +148,59 @@ const EditDoctor = () => {
               <input
                 type="text"
                 className="form-control"
-                value={doctor.lastName || ""}
+                value={patient.lastName || ""}
                 onChange={(e) =>
-                  setDoctor({ ...doctor, lastName: e.target.value })
+                  setPatient({ ...patient, lastName: e.target.value })
                 }
               />
             </div>
             <div className="col-md-6 mb-3">
-              <label className="form-label">Email</label>
+              <label className="form-label">Gender</label>
               <input
                 type="text"
                 className="form-control"
-                value={doctor.email || ""}
-                readOnly
+                value={patient.gender || ""}
+                onChange={(e) =>
+                  setPatient({ ...patient, gender: e.target.value })
+                }
               />
             </div>
             <div className="col-md-6 mb-3">
-              <label className="form-label">Specialty</label>
+              <label className="form-label">Phone</label>
+              <input
+                type="number"
+                className="form-control"
+                value={patient.phone || ""}
+                onChange={(e) =>
+                  setPatient({ ...patient, phone: e.target.value })
+                }
+              />
+            </div>
+            <div className="col-md-6 mb-3">
+              <label className="form-label">Date Of Birth</label>
+              <input
+                type="date"
+                className="form-control"
+                value={patient.dateOfBirth || ""}
+                onChange={(e) =>
+                  setPatient({ ...patient, dateOfBirth: e.target.value })
+                }
+              />
+            </div>
+            <div className="col-md-6 mb-3">
+              <label className="form-label">Doctor Name</label>
               <select
                 className="form-select"
-                value={selectedSpecialty || ""}
-                onChange={(e) => setSelectedSpecialty(e.target.value)}
+                value={selectedDoctor || ""}
+                onChange={(e) => setSelectedDoctor(e.target.value)}
               >
-                <option value="">Select Specialty</option>
-                {specialties.map((specialty) => (
-                  <option key={specialty.id} value={specialty.id}>
-                    {specialty.name}
+                <option value="">Select Doctor</option>
+                {doctors.map((doctor) => (
+                  <option key={doctor.id} value={doctor.id}>
+                    {doctor.firstName} {doctor.lastName} ({doctor.specialty.name})
                   </option>
                 ))}
               </select>
-            </div>
-            <div className="col-md-6 mb-3">
-              <label className="form-label">Role</label>
-              <input
-                type="text"
-                className="form-control"
-                value={doctor.role || ""}
-                readOnly
-              />
             </div>
           </div>
           <div className="mt-4">
@@ -196,4 +214,4 @@ const EditDoctor = () => {
   );
 };
 
-export default EditDoctor;
+export default EditPatient;
