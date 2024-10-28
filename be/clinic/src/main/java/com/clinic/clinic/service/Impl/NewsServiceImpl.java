@@ -52,11 +52,12 @@ public class NewsServiceImpl implements NewsService {
         news.setViews(0);
 
         if (imageFile != null && !imageFile.isEmpty()) {
-            boolean isUploaded = imageUpload.uploadImage(imageFile);
-            if (isUploaded) {
-                news.setImage("/static/img/" + imageFile.getOriginalFilename()); // URL ảnh
+            String fileName = imageUpload.uploadImage(imageFile);
+            if (fileName != null) {
+                news.setImage("/static/img/" + fileName); // Lưu URL ảnh
             }
         }
+
 
         return newsRepository.save(news);
     }

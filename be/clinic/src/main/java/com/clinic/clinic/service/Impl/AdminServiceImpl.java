@@ -3,13 +3,16 @@ package com.clinic.clinic.service.Impl;
 import com.clinic.clinic.dto.AdminDto;
 import com.clinic.clinic.dto.ChangePasswordDto;
 import com.clinic.clinic.dto.LoginDto;
+import com.clinic.clinic.dto.ReceptionistDto;
 import com.clinic.clinic.exception.ResourceNotFoundException;
 import com.clinic.clinic.model.Admin;
 import com.clinic.clinic.model.Doctor;
+import com.clinic.clinic.model.Receptionist;
 import com.clinic.clinic.model.Role;
 import com.clinic.clinic.repository.AdminRepository;
 import com.clinic.clinic.service.AdminService;
 import com.clinic.clinic.utils.JWTUtils;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -94,6 +97,25 @@ public class AdminServiceImpl implements AdminService {
         admin.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
         adminRepository.save(admin);
         return true;
+    }
+
+    @Transactional
+    @Override
+    public Admin updateAdmin(Long id, AdminDto AdminDto) {
+        Admin existingAdmin = adminRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Receptionist not found"));
+
+        existingAdmin.setFirstName(AdminDto.getFirstName());
+        existingAdmin.setLastName(AdminDto.getLastName());
+
+        if (AdminDto.getEmail() != null && !AdminDto.getEmail().isEmpty()) {
+            existingAdmin.setEmail(AdminDto.getEmail());
+        }
+        if (AdminDto.getPassword() != null && !AdminDto.getPassword().isEmpty()) {
+            existingAdmin.setPassword(passwordEncoder.encode(AdminDto.getPassword()));
+        }
+        existingAdmin.setImage(AdminDto.getImage());
+        return adminRepository.save(existingAdmin);
     }
 
     @Override

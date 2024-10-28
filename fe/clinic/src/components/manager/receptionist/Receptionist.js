@@ -22,11 +22,13 @@ function Receptionist() {
   const fetchReceptionists = useCallback(async () => {
     try {
       const receptionistsData = await allReceptionists();
-      setReceptionists(receptionistsData);
+      // Ensure receptionistsData is an array
+      setReceptionists(Array.isArray(receptionistsData) ? receptionistsData : []);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching receptionists:", error);
       setLoading(false);
+      setReceptionists([]); // Set empty array on error
       showToastMessage("Error fetching receptionists data", "error");
     }
   }, []);
@@ -65,19 +67,19 @@ function Receptionist() {
     setSearch(event.target.value.toLowerCase());
   };
 
-  const filteredReceptionist = receptionists.filter((receptionist) => {
-    const fullName = `${receptionist.firstName} ${receptionist.lastName}`.toLowerCase();
+  const filteredReceptionists = Array.isArray(receptionists) ? receptionists.filter((receptionist) => {
+    const fullName = `${receptionist?.firstName || ''} ${receptionist?.lastName || ''}`.toLowerCase();
     return fullName.includes(search);
-  });
+  }) : [];
 
   // Tính toán các receptionist cần hiển thị
   const indexOfLastReceptionist = currentPage * itemsPerPage;
   const indexOfFirstReceptionist = indexOfLastReceptionist - itemsPerPage;
-  const currentReceptionists = filteredReceptionist.slice(indexOfFirstReceptionist, indexOfLastReceptionist);
+  const currentReceptionists = filteredReceptionists.slice(indexOfFirstReceptionist, indexOfLastReceptionist);
 
   // Tạo số trang
   const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(filteredReceptionist.length / itemsPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(filteredReceptionists.length / itemsPerPage); i++) {
     pageNumbers.push(i);
   }
 
@@ -148,7 +150,7 @@ function Receptionist() {
                       </div>
                     </td>
                   </tr>
-                ) : currentReceptionists.length === 0 ? (
+                ) : filteredReceptionists.length === 0 ? (
                   <tr>
                     <td colSpan="6" className="no-data">
                       No receptionists found

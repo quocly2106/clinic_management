@@ -159,6 +159,7 @@ export const editDoctor = async (doctorId, data) => {
       data,
       {
         headers: {
+          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`, // Gửi token trong header
         },
       }

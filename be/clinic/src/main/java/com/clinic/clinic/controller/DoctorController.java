@@ -1,6 +1,5 @@
 package com.clinic.clinic.controller;
 
-
 import com.clinic.clinic.dto.ChangePasswordDto;
 import com.clinic.clinic.dto.DoctorDto;
 import com.clinic.clinic.model.Doctor;
@@ -11,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,15 +29,14 @@ public class DoctorController {
         return ResponseEntity.ok(createdDoctor);
     }
 
-
     @PreAuthorize("hasRole('ADMIN') or (hasRole('DOCTOR') and #id == authentication.principal.id)")
     @PutMapping("/update/{id}")
-    public ResponseEntity<Doctor> updateDoctor(@PathVariable Long id, @RequestBody DoctorDto doctorDto) {
-
-        Doctor updatedDoctor = doctorService.updateDoctor(id, doctorDto);
+    public ResponseEntity<Doctor> updateDoctor(@PathVariable Long id,
+                                               @RequestPart("doctorDto") DoctorDto doctorDto,
+                                               @RequestPart(value = "imageFile", required = false) MultipartFile file) {
+        Doctor updatedDoctor = doctorService.updateDoctor(id, doctorDto, file);
         return ResponseEntity.ok(updatedDoctor);
     }
-
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
@@ -59,7 +59,6 @@ public class DoctorController {
         Doctor doctor = doctorService.getDoctorById(id);
         return ResponseEntity.ok(doctor);
     }
-
 
     @PreAuthorize("hasRole('ADMIN') or (hasRole('DOCTOR') and #id == authentication.principal.id)")
     @PutMapping("/{id}/change-password")

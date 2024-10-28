@@ -2,6 +2,7 @@ package com.clinic.clinic.controller;
 
 import com.clinic.clinic.dto.AdminDto;
 import com.clinic.clinic.dto.ChangePasswordDto;
+import com.clinic.clinic.dto.DoctorDto;
 import com.clinic.clinic.model.Admin;
 import com.clinic.clinic.model.Doctor;
 import com.clinic.clinic.service.AdminService;
@@ -57,6 +58,13 @@ public class AdminController {
         System.out.println("Fetching all admins");
         List<Admin> admins = adminService.getAllAdmins();
         return ResponseEntity.ok(admins);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Admin> updateAdmin(@PathVariable Long id, @RequestBody AdminDto adminDto) {
+
+        Admin updatedAdmin = adminService.updateAdmin(id, adminDto);
+        return ResponseEntity.ok(updatedAdmin);
     }
 
 }

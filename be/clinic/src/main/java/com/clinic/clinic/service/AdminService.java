@@ -2,6 +2,7 @@ package com.clinic.clinic.service;
 
 import com.clinic.clinic.dto.AdminDto;
 import com.clinic.clinic.dto.ChangePasswordDto;
+import com.clinic.clinic.dto.DoctorDto;
 import com.clinic.clinic.dto.LoginDto;
 import com.clinic.clinic.model.Admin;
 import com.clinic.clinic.model.Doctor;
@@ -21,4 +22,6 @@ public interface AdminService {
     boolean changePassword(Long id, ChangePasswordDto changePasswordDto);
 
     List<Admin> getAllAdmins();
+
+    Admin updateAdmin(Long id, AdminDto AdminDto);
 }

@@ -4,7 +4,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
@@ -12,18 +14,23 @@ import java.nio.file.StandardCopyOption;
 public class ImageUpload {
     private final String UPLOAD_FOLDER ="D:\\Quoc\\clinic\\clinic\\be\\clinic\\src\\main\\resources\\static\\img";
 
-    public boolean uploadImage(MultipartFile imageProduct){
-        boolean isUpload = false;
-        try {
-            Files.copy(imageProduct.getInputStream(),
-                    Paths.get(UPLOAD_FOLDER + File.separator,imageProduct.getOriginalFilename()),
-                    StandardCopyOption.REPLACE_EXISTING);
-            isUpload = true;
-        }catch (Exception e){
-            e.printStackTrace();
+    public String uploadImage(MultipartFile imageFile) {
+        if (imageFile == null || imageFile.isEmpty()) {
+            return null;
         }
-        return isUpload;
+
+        try {
+            String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
+            Path targetLocation = Paths.get(UPLOAD_FOLDER).resolve(fileName);
+            Files.copy(imageFile.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("Image saved at: " + targetLocation.toString());
+            return fileName;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
+
 
     public boolean checkExisted(MultipartFile imageFile) {
         boolean isExisted = false;

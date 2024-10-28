@@ -6,8 +6,7 @@ import './SideBar.css';
 const SideBar = ({ userName, onLogout }) => {
   const navigate = useNavigate();
 
-  const handleLogout = (e) => {
-    e.preventDefault();
+  const handleLogout = () => {;
     localStorage.removeItem('token');
     onLogout();
     toast.success('Successfully logged out!');

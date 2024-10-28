@@ -13,6 +13,9 @@ const EditDoctor = () => {
   const [selectedSpecialty, setSelectedSpecialty] = useState("");
   const navigate = useNavigate();
 
+  // Lấy role từ localStorage
+  const userRole = localStorage.getItem("role");
+
   useEffect(() => {
     const fetchDoctorById = async (id) => {
       try {
@@ -62,44 +65,41 @@ const EditDoctor = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const updatedDoctor = {
-        firstName: doctor.firstName,
-        lastName: doctor.lastName,
-        specialtyId: selectedSpecialty, // Chỉ cập nhật specialty nếu nó có sự thay đổi
+      firstName: doctor.firstName,
+      lastName: doctor.lastName,
+      specialtyId: selectedSpecialty,
     };
 
     try {
-        const token = localStorage.getItem("token");
-        const response = await fetch(
-            `http://localhost:9191/doctors/update/${doctorId}`,
-            {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(updatedDoctor),
-            }
-        );
-
-        if (!response.ok) {
-            const errorMessage = await response.text(); // Lấy thông báo lỗi từ server
-            console.error("Update failed:", errorMessage);
-            throw new Error("Failed to update doctor: " + errorMessage);
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `http://localhost:9191/doctors/update/${doctorId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(updatedDoctor),
         }
+      );
 
-        // Nếu cập nhật thành công, hiển thị toast và sau đó chuyển hướng
-        toast.success("Doctor updated successfully");
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        console.error("Update failed:", errorMessage);
+        throw new Error("Failed to update doctor: " + errorMessage);
+      }
 
-        // Chuyển hướng sau 2 giây
-        setTimeout(() => {
-            navigate('/doctor'); 
-        }, 2000);
+      toast.success("Doctor updated successfully");
+
+      setTimeout(() => {
+        navigate("/doctor");
+      }, 2000);
     } catch (error) {
-        setError(error.message);
-        toast.error(error.message);
+      setError(error.message);
+      toast.error(error.message);
     }
-};
-
+  };
 
   if (loading) {
     return (
@@ -162,18 +162,31 @@ const EditDoctor = () => {
             </div>
             <div className="col-md-6 mb-3">
               <label className="form-label">Specialty</label>
-              <select
-                className="form-select"
-                value={selectedSpecialty || ""}
-                onChange={(e) => setSelectedSpecialty(e.target.value)}
-              >
-                <option value="">Select Specialty</option>
-                {specialties.map((specialty) => (
-                  <option key={specialty.id} value={specialty.id}>
-                    {specialty.name}
-                  </option>
-                ))}
-              </select>
+              {userRole === "admin" ? (
+                <select
+                  className="form-select"
+                  value={selectedSpecialty || ""}
+                  onChange={(e) => setSelectedSpecialty(e.target.value)}
+                >
+                  <option value="">Select Specialty</option>
+                  {specialties.map((specialty) => (
+                    <option key={specialty.id} value={specialty.id}>
+                      {specialty.name}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type="text"
+                  className="form-control"
+                  value={
+                    specialties.find(
+                      (specialty) => specialty.id === selectedSpecialty
+                    )?.name || ""
+                  }
+                  readOnly
+                />
+              )}
             </div>
             <div className="col-md-6 mb-3">
               <label className="form-label">Role</label>

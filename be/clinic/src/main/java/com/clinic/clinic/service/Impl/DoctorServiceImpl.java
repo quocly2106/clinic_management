@@ -11,12 +11,14 @@ import com.clinic.clinic.model.Role;
 import com.clinic.clinic.repository.SpecialtyRepository;
 import com.clinic.clinic.repository.DoctorRepository;
 import com.clinic.clinic.service.DoctorService;
+import com.clinic.clinic.utils.ImageUpload;
 import com.clinic.clinic.utils.JWTUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +33,10 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Autowired
     private SpecialtyRepository specialtyRepository;
+
+    @Autowired
+    private ImageUpload imageUpload;
+
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -75,7 +81,7 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Transactional
     @Override
-    public Doctor updateDoctor(Long id, DoctorDto doctorDto) {
+    public Doctor updateDoctor(Long id, DoctorDto doctorDto, MultipartFile imageFile) {
         Doctor existingDoctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Doctor not found"));
         existingDoctor.setFirstName(doctorDto.getFirstName());
@@ -86,7 +92,13 @@ public class DoctorServiceImpl implements DoctorService {
         if (doctorDto.getPassword() != null && !doctorDto.getPassword().isEmpty()) {
             existingDoctor.setPassword(passwordEncoder.encode(doctorDto.getPassword()));
         }
-        existingDoctor.setImage(doctorDto.getImage());
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String fileName = imageUpload.uploadImage(imageFile);
+            if (fileName != null) {
+                existingDoctor.setImage("/static/img/" + fileName); // Lưu URL ảnh
+            }
+        }
+
         if (doctorDto.getSpecialtyId() != null) {
             Specialty specialty = specialtyRepository.findById(doctorDto.getSpecialtyId())
                     .orElseThrow(() -> new ResourceNotFoundException("Specialty not found"));
