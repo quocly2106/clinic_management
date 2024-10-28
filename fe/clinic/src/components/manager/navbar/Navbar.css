@@ -72,3 +72,39 @@
   top: 10%;
   left: 10%;
 }
+
+@media (max-width: 768px) {
+  .custom-navbar {
+    padding: 0.5rem;
+    border-width: 5px;
+  }
+
+  .logo-container {
+    width: 60px;
+    height: 60px;
+  }
+
+  .text {
+    font-size: 0.9rem;
+    margin-left: 1px;
+  }
+
+  .navbar-nav {
+    margin-top: 1rem;
+  }
+
+  .cross-horizontal {
+    width: 26px;
+    height: 7px;
+    top: 27px;
+    left: 17px;
+  }
+
+  .cross-vertical {
+    width: 7px;
+    height: 26px;
+    top: 17px;
+    left: 27px;
+  }
+
+}

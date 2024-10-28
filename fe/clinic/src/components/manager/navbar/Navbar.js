@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Toast, ToastContainer } from "react-bootstrap";
 import "./Navbar.css";
 
-function Navbar({ userName, userRole, onLogout, toggleSidebar }) {
+function Navbar({ userName, userRole, onLogout}) {
   const navigate = useNavigate();
   const [showToast, setShowToast] = useState(false);
 

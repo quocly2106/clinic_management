@@ -203,13 +203,15 @@
   }
   
   /* Responsive Design */
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     .doctor-wrapper {
-      padding: 10px;
+      padding: 15px;
     }
   
     .search-add-wrapper {
-      flex-direction: column;
+      flex-direction: column; /* Chuyển nút Add xuống dưới ô tìm kiếm */
+      align-items: stretch;
+      gap: 10px;
     }
   
     .search-container {
@@ -218,17 +220,54 @@
   
     .add-button {
       width: 100%;
-      justify-content: center;
+      justify-content: center; /* Căn giữa nút Add */
     }
   
-    .modern-table {
-      font-size: 14px;
+    .modern-table th, .modern-table td {
+      padding: 12px; /* Giảm khoảng cách trong bảng */
+    }
+  
+    .table-container {
+      padding: 10px;
+    }
+  }
+  
+  /* Đối với màn hình nhỏ hơn 768px */
+  @media (max-width: 768px) {
+    .doctor-wrapper {
+      padding: 10px;
+    }
+  
+    .search-section {
+      padding: 15px;
+    }
+  
+    .search-add-wrapper {
+      flex-direction: column;
+    }
+  
+    .add-button {
+      width: 100%; /* Nút Add chiếm 100% chiều rộng */
+      font-size: 14px; /* Thu nhỏ kích thước chữ */
+      padding: 10px 20px;
+    }
+  
+    .modern-table th, .modern-table td {
+      padding: 10px;
+    }
+  
+    .search-input {
+      padding: 10px 10px 10px 40px;
     }
   
     .edit-button, .delete-button {
       width: 30px;
       height: 30px;
       font-size: 16px;
+    }
+  
+    .no-data {
+      font-size: 14px;
     }
   }
   
