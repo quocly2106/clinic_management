@@ -82,18 +82,20 @@ function AddPatient() {
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="gender" className="form-label">
-            Gender
-          </label>
-          <input
-            type="text"
+          <label htmlFor="gender" className="form-label">Gender</label>
+          <select
             className="form-control rounded-3"
             id="gender"
             name="gender"
             value={patientData.gender}
             onChange={handleChange}
             required
-          />
+          >
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
         </div>
         <div className="mb-3">
           <label htmlFor="dateOfBirth" className="form-label">

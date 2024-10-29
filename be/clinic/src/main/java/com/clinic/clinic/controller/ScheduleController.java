@@ -21,8 +21,8 @@ public class ScheduleController {
 
     @PostMapping("/add")
     public ResponseEntity<Schedule> createSchedule(@RequestBody ScheduleDto scheduleDto) {
-        Schedule createdDepartment = scheduleService.addSchedule(scheduleDto);
-        return ResponseEntity.ok(createdDepartment);
+        Schedule createdschedule = scheduleService.addSchedule(scheduleDto);
+        return ResponseEntity.ok(createdschedule);
     }
 
     @PutMapping("/update/{id}")

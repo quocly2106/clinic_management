@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ScheduleDto {
-    private LocalDateTime dateTime;
     private Long doctorId;
     private PatientDto patient;
+    private Long ReceptionistId;
 }

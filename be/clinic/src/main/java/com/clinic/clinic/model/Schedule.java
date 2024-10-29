@@ -19,7 +19,10 @@ public class Schedule {
     @Column(name = "schedule_id")
     private Long id;
     @Column(nullable = false)
-    private LocalDateTime dateTime;
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
 
     // Mối quan hệ n-1 với Doctor
     @ManyToOne(fetch = FetchType.LAZY)

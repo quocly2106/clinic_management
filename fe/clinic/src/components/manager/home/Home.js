@@ -30,6 +30,8 @@ import News from "../news/News";
 import AddNews from "../news/AddNews";
 import EditNews from "../news/EditNews";
 import "./Home.css";
+import Appointment from "../appointment/Appointment";
+import AddAppointment from "../appointment/AddAppointment";
 
 function Home({ userRole, onLogout }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -84,6 +86,8 @@ function Home({ userRole, onLogout }) {
             <Route path="/news" element={<News />} />
             <Route path="/add-news" element={<AddNews />} />
             <Route path="/edit-news/:newsId" element={<EditNews />} />
+            <Route path="/appointment" element={<Appointment />} />
+            <Route path="/add-appointment" element={<AddAppointment />} />
             <Route
               path="/doctor/profile"
               element={

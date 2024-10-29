@@ -511,6 +511,68 @@ export async function deletePatient(patientId) {
 }
 
 // news
+export const allAppointments = async () => {
+  try {
+    const response = await api.get("/schedules/all");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching all appointments:", error);
+    throw error;
+  }
+};
+
+export const addAppointment = async (data) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.post("http://localhost:9191/schedules/add", data, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Thêm token vào Authorization
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error add appointment:", error);
+    throw error;
+  }
+};
+
+export const editAppointment = async (newsId, data) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.put(
+      `http://localhost:9191/schedules/update/${newsId}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error edit appointment:", error);
+    throw error;
+  }
+};
+
+export async function deleteAppointment(newsId) {
+  try {
+    const result = await api.delete(`/schedules/delete/${newsId}`);
+    // Trả về toàn bộ response.data thay vì throw error
+    return {
+      success: true,
+      data: result.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.response?.data?.message || "Unknown error",
+    };
+  }
+}
+
+
+// news
 export const allNews = async () => {
   try {
     const response = await api.get("/news/all");

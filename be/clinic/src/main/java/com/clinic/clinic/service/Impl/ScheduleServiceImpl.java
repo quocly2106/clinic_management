@@ -2,10 +2,7 @@ package com.clinic.clinic.service.Impl;
 
 import com.clinic.clinic.dto.ScheduleDto;
 import com.clinic.clinic.exception.ResourceNotFoundException;
-import com.clinic.clinic.model.Doctor;
-import com.clinic.clinic.model.Patient;
-import com.clinic.clinic.model.Role;
-import com.clinic.clinic.model.Schedule;
+import com.clinic.clinic.model.*;
 import com.clinic.clinic.repository.DoctorRepository;
 import com.clinic.clinic.repository.PatientRepository;
 import com.clinic.clinic.repository.ScheduleRepository;
@@ -30,18 +27,23 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public Schedule addSchedule(ScheduleDto scheduleDto) {
-        // Tạo lịch khám mới với dateTime
+        Doctor doctor = doctorRepository.findById(scheduleDto.getDoctorId())
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor not found with ID: " + scheduleDto.getDoctorId()));
+        Patient patient = new Patient();
+        patient.setFirstName(scheduleDto.getPatient().getFirstName());
+        patient.setLastName(scheduleDto.getPatient().getLastName());
+        patient.setGender(scheduleDto.getPatient().getGender());
+        patient.setDateOfBirth(scheduleDto.getPatient().getDateOfBirth());
+        patient.setPhone(scheduleDto.getPatient().getPhone());
+        patient.setDoctor(doctor);  // Gán bác sĩ cho bệnh nhân
+        patient.setRole(Role.PATIENT); // Gán role là 'PATIENT'
+        Patient savedPatient = patientRepository.save(patient);
+
         Schedule schedule = new Schedule();
-        // Nếu không có dateTime từ client, sử dụng LocalDateTime.now()
-        schedule.setDateTime(scheduleDto.getDateTime() != null ? scheduleDto.getDateTime() : LocalDateTime.now());
-
-        // Gán bác sĩ cho lịch khám
-        if (scheduleDto.getDoctorId() != null) {
-            Doctor doctor = new Doctor();
-            doctor.setId(scheduleDto.getDoctorId());
-            schedule.setDoctor(doctor);
-        }
-
+        schedule.setCreatedAt(LocalDateTime.now()); // Sử dụng LocalDateTime.now() làm giá trị mặc định
+        schedule.setUpdatedAt(LocalDateTime.now());
+        schedule.setDoctor(doctor); // Gán bác sĩ vào lịch khám
+        schedule.setPatient(savedPatient);
         return scheduleRepository.save(schedule);
     }
 
@@ -51,7 +53,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + id));
 
         // Cập nhật dateTime cho lịch khám
-        existingSchedule.setDateTime(scheduleDto.getDateTime() != null ? scheduleDto.getDateTime() : LocalDateTime.now());
+        existingSchedule.setUpdatedAt(LocalDateTime.now());
 
         // Cập nhật bác sĩ nếu có
         if (scheduleDto.getDoctorId() != null) {
@@ -90,6 +92,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         patient.setFirstName(scheduleDto.getPatient().getFirstName());
         patient.setLastName(scheduleDto.getPatient().getLastName());
         patient.setGender(scheduleDto.getPatient().getGender());
+        patient.setPhone(scheduleDto.getPatient().getPhone());
         patient.setDateOfBirth(scheduleDto.getPatient().getDateOfBirth());
         patient.setDoctor(doctor);  // Gán bác sĩ cho bệnh nhân
         patient.setRole(Role.PATIENT); // Gán role là 'PATIENT'
@@ -99,7 +102,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // Tạo lịch khám
         Schedule schedule = new Schedule();
-        schedule.setDateTime(LocalDateTime.now()); // Sử dụng LocalDateTime.now() làm giá trị mặc định
+        schedule.setCreatedAt(LocalDateTime.now()); // Sử dụng LocalDateTime.now() làm giá trị mặc định
+        schedule.setUpdatedAt(LocalDateTime.now());
         schedule.setDoctor(doctor); // Gán bác sĩ vào lịch khám
         schedule.setPatient(savedPatient); // Gán bệnh nhân vừa tạo vào lịch khám
 

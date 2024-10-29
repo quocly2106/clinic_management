@@ -1,15 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { allPatients, deletePatient } from "../../utils/ApiFunction";
+import { allAppointments, deleteAppointment } from "../../utils/ApiFunction";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, Toast } from "react-bootstrap";
-import "./Patient.css";
+import "./Appointment.css";
 import { MdAdd, MdDelete, MdEdit } from "react-icons/md";
 import { BiSearchAlt } from "react-icons/bi";
 import colors from "../../../config/color";
 
-function Patient() {
+function Appointment() {
   const navigate = useNavigate();
-  const [patients, setPatients] = useState([]);
+  const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -18,15 +18,15 @@ function Patient() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const fetchPatients = useCallback(async () => {
+  const fetchAppointments = useCallback(async () => {
     try {
-      const patientsData = await allPatients();
-      setPatients(patientsData);
+      const appointmentsData = await allAppointments();
+      setAppointments(appointmentsData);
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching patients:", error);
+      console.error("Error fetching appointments:", error);
       setLoading(false);
-      showToastMessage("Error fetching patients data", "error");
+      showToastMessage("Error fetching appointments data", "error");
     }
   }, []);
 
@@ -37,23 +37,23 @@ function Patient() {
     setTimeout(() => setShowToast(false), 3000);
   };
 
-  const handleDelete = async (patientId) => {
+  const handleDelete = async (appointmentId) => {
     const confirmDelete = window.confirm(
-      `Are you sure you want to delete Patient No ${patientId}?`
+      `Are you sure you want to delete Appointment No ${appointmentId}?`
     );
     if (!confirmDelete) return;
   
     try {
-      const result = await deletePatient(patientId);
+      const result = await deleteAppointment(appointmentId);
       if (result.success) {
         showToastMessage(
-          `Patient No ${patientId} was deleted successfully.`,
+          `Appointment No ${appointmentId} was deleted successfully.`,
           "success"
         );
-        fetchPatients(); // Refresh danh sách sau khi xóa thành công
+        fetchAppointments(); // Refresh danh sách sau khi xóa thành công
       } else {
         showToastMessage(
-          `Error deleting patient: ${result.message}`,
+          `Error deleting appointment: ${result.message}`,
           "error"
         );
       }
@@ -67,34 +67,64 @@ function Patient() {
   
 
   useEffect(() => {
-    fetchPatients();
-  }, [fetchPatients]);
+    fetchAppointments();
+  }, [fetchAppointments]);
 
   const handleSearch = (event) => {
     setSearch(event.target.value.toLowerCase());
   };
 
-  const filteredPatients = patients.filter((patient) => {
-    const fullName = `${patient.phone}`.toLowerCase();
-    return fullName.includes(search);
+  const filteredAppointments = appointments.filter((appointment) => {
+    if (appointment.patient) {
+      const fullName = `${appointment.patient.phone}`.toLowerCase();
+      return fullName.includes(search);
+    }
+    return false; // Nếu không có bệnh nhân, không bao gồm trong kết quả
   });
+  
 
-  const indexOfLastPatient = currentPage * itemsPerPage;
-  const indexOfFirstPatient = indexOfLastPatient - itemsPerPage;
-  const currentPatients = filteredPatients.slice(
-    indexOfFirstPatient,
-    indexOfLastPatient
+  const indexOfLastAppointment = currentPage * itemsPerPage;
+  const indexOfFirstAppointment = indexOfLastAppointment - itemsPerPage;
+  const currentAppointments = filteredAppointments.slice(
+    indexOfFirstAppointment,
+    indexOfLastAppointment
   );
 
   // Tạo số trang
   const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(filteredPatients.length / itemsPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(filteredAppointments.length / itemsPerPage); i++) {
     pageNumbers.push(i);
   }
 
+
+  const convertToLocalTime = (dateString) => {
+    const date = new Date(dateString);
+  
+    const timeOptions = {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+      timeZone: "Asia/Bangkok", 
+    };
+    
+    const timePart = date.toLocaleTimeString("vi-VN", timeOptions);
+    
+    const dateOptions = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      timeZone: "Asia/Bangkok",
+    };
+    
+    const datePart = date.toLocaleDateString("vi-VN", dateOptions);
+  
+    return `${timePart} ${datePart}`;
+  };
+
   return (
-    <div className="patient-wrapper">
-      <div className="patient-container">
+    <div className="appointment-wrapper">
+      <div className="appointment-container">
         <ToastContainer position="top-end" className="custom-toast">
           <Toast
             show={showToast}
@@ -132,7 +162,7 @@ function Patient() {
               style={{
                 background: colors.background,
               }}
-              onClick={() => navigate("/add-patient")}
+              onClick={() => navigate("/add-appointment")}
             >
               <MdAdd className="add-icon" />
               <span>Add</span>
@@ -146,11 +176,10 @@ function Patient() {
               <thead>
                 <tr>
                   <th>STT</th>
-                  <th>Frist Name</th>
-                  <th>Last Name</th>
-                  <th>Gender</th>
-                  <th>Phone</th>
-                  <th>Date Of Birth</th>
+                  <th>Patient Name</th>
+                  <th>Patient Phone</th>
+                  <th>CreatedAt</th>
+                  <th>UpdatedAt</th>
                   <th>Doctor Name</th>
                   <th>Action</th>
                 </tr>
@@ -164,26 +193,25 @@ function Patient() {
                       </div>
                     </td>
                   </tr>
-                ) : filteredPatients.length === 0 ? (
+                ) : filteredAppointments.length === 0 ? (
                   <tr>
                     <td colSpan="6" className="no-data">
-                      No patients found
+                      No appointments found
                     </td>
                   </tr>
                 ) : (
-                  currentPatients.map((patient, index) => (
-                    <tr key={patient.id}>
+                  currentAppointments.map((appointment, index) => (
+                    <tr key={appointment.id}>
                       <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-                      <td>{patient.firstName}</td>
-                      <td>{patient.lastName}</td>
-                      <td>{patient.gender}</td>
-                      <td>{patient.phone}</td>
-                      <td>{patient.dateOfBirth}</td> 
-                      <td>{patient.doctor ? patient.doctor.firstName + " " +  patient.doctor.lastName : "N/A"}</td> 
+                      <td>{appointment.patient ? appointment.patient.firstName + " " +  appointment.patient.lastName : "N/A"}</td> 
+                      <td>{appointment.patient ? appointment.patient.phone  : "N/A"}</td> 
+                      <td>{convertToLocalTime(appointment.createdAt)}</td>
+                      <td>{convertToLocalTime(appointment.updatedAt)}</td>
+                      <td>{appointment.doctor ? appointment.doctor.firstName + " " +  appointment.doctor.lastName : "N/A"}</td> 
                       <td>
                         <div className="action-buttons">
                           <Link
-                            to={`/edit-patient/${patient.id}`}
+                            to={`/edit-appointment/${appointment.id}`}
                             className="edit-button"
                             title="Edit"
                           >
@@ -191,7 +219,7 @@ function Patient() {
                           </Link>
                           <button
                             className="delete-button"
-                            onClick={() => handleDelete(patient.id)}
+                            onClick={() => handleDelete(appointment.id)}
                             title="Delete"
                           >
                             <MdDelete />
@@ -225,4 +253,4 @@ function Patient() {
   );
 }
 
-export default Patient;
+export default Appointment;
