@@ -1,15 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { allEquipments, deleteEquipment } from "../../utils/ApiFunction";
+import { allServices, deleteService } from "../../utils/ApiFunction";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, Toast } from "react-bootstrap";
-import "./Equipment.css";
+import "./Service.css";
 import { MdAdd, MdDelete, MdEdit } from "react-icons/md";
 import { BiSearchAlt } from "react-icons/bi";
 import colors from "../../../config/color";
 
-function Equipment() {
+function Service() {
   const navigate = useNavigate();
-  const [equipments, setEquipments] = useState([]);
+  const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -18,15 +18,15 @@ function Equipment() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const fetchEquipments = useCallback(async () => {
+  const fetchServices = useCallback(async () => {
     try {
-      const equipmentsData = await allEquipments();
-      setEquipments(equipmentsData);
+      const servicesData = await allServices();
+      setServices(servicesData);
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching equipments:", error);
+      console.error("Error fetching services:", error);
       setLoading(false);
-      showToastMessage("Error fetching equipments data", "error");
+      showToastMessage("Error fetching services data", "error");
     }
   }, []);
 
@@ -37,23 +37,23 @@ function Equipment() {
     setTimeout(() => setShowToast(false), 3000);
   };
 
-  const handleDelete = async (equipmentId) => {
+  const handleDelete = async (serviceId) => {
     const confirmDelete = window.confirm(
-      `Are you sure you want to delete Equipment No ${equipmentId}?`
+      `Are you sure you want to delete Service No ${serviceId}?`
     );
     if (!confirmDelete) return;
   
     try {
-      const result = await deleteEquipment(equipmentId);
+      const result = await deleteService(serviceId);
       if (result.success) {
         showToastMessage(
-          `Equipment No ${equipmentId} was deleted successfully.`,
+          `Service No ${serviceId} was deleted successfully.`,
           "success"
         );
-        fetchEquipments(); // Refresh danh sách sau khi xóa thành công
+        fetchServices(); // Refresh danh sách sau khi xóa thành công
       } else {
         showToastMessage(
-          `Error deleting equipment: ${result.message}`,
+          `Error deleting service: ${result.message}`,
           "error"
         );
       }
@@ -67,34 +67,59 @@ function Equipment() {
   
 
   useEffect(() => {
-    fetchEquipments();
-  }, [fetchEquipments]);
+    fetchServices();
+  }, [fetchServices]);
 
   const handleSearch = (event) => {
     setSearch(event.target.value.toLowerCase());
   };
 
-  const filteredEquipments = equipments.filter((equipment) => {
-    const fullName = `${equipment.name}`.toLowerCase();
+  const filteredServices = services.filter((service) => {
+    const fullName = `${service.name}`.toLowerCase();
     return fullName.includes(search);
   });
 
-  const indexOfLastEquipment = currentPage * itemsPerPage;
-  const indexOfFirstEquipment = indexOfLastEquipment - itemsPerPage;
-  const currentEquipments = filteredEquipments.slice(
-    indexOfFirstEquipment,
-    indexOfLastEquipment
+  const indexOfLastService = currentPage * itemsPerPage;
+  const indexOfFirstService = indexOfLastService - itemsPerPage;
+  const currentServices = filteredServices.slice(
+    indexOfFirstService,
+    indexOfLastService
   );
 
   // Tạo số trang
   const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(filteredEquipments.length / itemsPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(filteredServices.length / itemsPerPage); i++) {
     pageNumbers.push(i);
   }
 
+  const convertToLocalTime = (dateString) => {
+    const date = new Date(dateString);
+  
+    const timeOptions = {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+      timeZone: "Asia/Bangkok", 
+    };
+    
+    const timePart = date.toLocaleTimeString("vi-VN", timeOptions);
+    
+    const dateOptions = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      timeZone: "Asia/Bangkok",
+    };
+    
+    const datePart = date.toLocaleDateString("vi-VN", dateOptions);
+  
+    return `${timePart} ${datePart}`;
+  };
+
   return (
-    <div className="equipment-wrapper">
-      <div className="equipment-container">
+    <div className="service-wrapper">
+      <div className="service-container">
         <ToastContainer position="top-end" className="custom-toast">
           <Toast
             show={showToast}
@@ -132,7 +157,7 @@ function Equipment() {
               style={{
                 background: colors.background,
               }}
-              onClick={() => navigate("/add-equipment")}
+              onClick={() => navigate("/add-service")}
             >
               <MdAdd className="add-icon" />
               <span>Add</span>
@@ -147,41 +172,45 @@ function Equipment() {
                 <tr>
                   <th>STT</th>
                   <th>Name</th>
-                  <th>Type</th>
-                  <th>Quantity</th>
-                  <th>Manufacturer</th>
-                  <th>Maintenance Date</th>
+                  <th>Description</th>
+                  <th>Price</th>
+                  <th>Duration</th>
+                  <th>Status</th>
+                  <th>CreatedAt</th>
+                  <th>UpdatedAt</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="6" className="text-center">
+                    <td colSpan="12" className="text-center">
                       <div className="loading-spinner">
                         <div className="spinner"></div>
                       </div>
                     </td>
                   </tr>
-                ) : filteredEquipments.length === 0 ? (
+                ) : filteredServices.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="no-data">
-                      No equipments found
+                    <td colSpan="12" className="no-data">
+                      No services found
                     </td>
                   </tr>
                 ) : (
-                  currentEquipments.map((equipment, index) => (
-                    <tr key={equipment.id}>
+                  currentServices.map((service, index) => (
+                    <tr key={service.id}>
                       <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-                      <td>{equipment.name}</td>
-                      <td>{equipment.type}</td>
-                      <td>{equipment.quantity}</td> 
-                      <td>{equipment.manufacturer}</td> 
-                      <td>{equipment.maintenanceDate}</td> 
+                      <td>{service.name}</td>
+                      <td>{service.description}</td>
+                      <td>{service.price}</td> 
+                      <td>{service.duration}</td> 
+                      <td>{service.status}</td> 
+                      <td>{convertToLocalTime(service.createdAt)}</td>
+                      <td>{convertToLocalTime(service.updatedAt)}</td>
                       <td>
                         <div className="action-buttons">
                           <Link
-                            to={`/edit-equipment/${equipment.id}`}
+                            to={`/edit-service/${service.id}`}
                             className="edit-button"
                             title="Edit"
                           >
@@ -189,7 +218,7 @@ function Equipment() {
                           </Link>
                           <button
                             className="delete-button"
-                            onClick={() => handleDelete(equipment.id)}
+                            onClick={() => handleDelete(service.id)}
                             title="Delete"
                           >
                             <MdDelete />
@@ -223,4 +252,4 @@ function Equipment() {
   );
 }
 
-export default Equipment;
+export default Service;

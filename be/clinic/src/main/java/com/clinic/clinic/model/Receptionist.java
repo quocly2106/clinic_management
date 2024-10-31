@@ -1,5 +1,6 @@
 package com.clinic.clinic.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,9 +38,11 @@ public class Receptionist {
 
     // Quan hệ 1-n với Patient: Receptionist có thể quản lý nhiều bệnh nhân trong quy trình đặt lịch hoặc thanh toán
     @OneToMany(mappedBy = "receptionist", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("receptionist")
     private Collection<Patient> patients;
 
     // Quan hệ 1-n với Schedule: Receptionist có thể hỗ trợ trong việc quản lý lịch hẹn của bác sĩ
     @OneToMany(mappedBy = "receptionist", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Collection<Schedule> schedules;
+    @JsonIgnoreProperties("receptionist")
+    private Collection<Appointment> appointments;
 }

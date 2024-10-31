@@ -44,7 +44,7 @@ public class Treatment {
             joinColumns = @JoinColumn(name = "treatment_id"),
             inverseJoinColumns = @JoinColumn(name = "equipment_id")
     )
-    private Set<Equipment> equipments;
+    private Set<Service> services;
 
     // Quan hệ N-1 với Doctor
     @ManyToOne(fetch = FetchType.LAZY)

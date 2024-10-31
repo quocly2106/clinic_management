@@ -1,10 +1,10 @@
-.equipment-wrapper {
+.service-wrapper {
     min-height: 100vh;
     background: #f5f7fb;
     padding: 20px;
   }
   
-  .equipment-container {
+  .service-container {
     max-width: 100%;
     margin: 0 auto;
   }
@@ -204,7 +204,7 @@
   
   /* Responsive Design */
   @media (max-width: 1024px) {
-    .equipment-wrapper {
+    .service-wrapper {
       padding: 15px;
     }
   
@@ -234,7 +234,7 @@
   
   /* Đối với màn hình nhỏ hơn 768px */
   @media (max-width: 768px) {
-    .equipment-wrapper {
+    .service-wrapper {
       padding: 10px;
     }
   

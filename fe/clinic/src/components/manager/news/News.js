@@ -176,7 +176,7 @@ function News() {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="6" className="text-center">
+                    <td colSpan="12" className="text-center">
                       <div className="loading-spinner">
                         <div className="spinner"></div>
                       </div>
@@ -184,7 +184,7 @@ function News() {
                   </tr>
                 ) : filteredNews.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="no-data">
+                    <td colSpan="12" className="no-data">
                       No news found
                     </td>
                   </tr>

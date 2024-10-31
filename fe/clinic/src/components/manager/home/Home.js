@@ -17,9 +17,6 @@ import Admin from "../admin/Admin";
 import Specialty from "../specialty/Specialty";
 import AddSpecialty from "../specialty/AddSpecialty";
 import EditSpecialty from "../specialty/EditSpecialty";
-import Equipment from "../equipment/Equipment";
-import AddEquipment from "../equipment/AddEquipment";
-import EditEquipment from "../equipment/EditEquipment";
 import Medicine from "../medicine/Medicine";
 import EditMedicine from "../medicine/EditMedicine";
 import AddMedicine from "../medicine/AddMedicine";
@@ -32,6 +29,9 @@ import EditNews from "../news/EditNews";
 import "./Home.css";
 import Appointment from "../appointment/Appointment";
 import AddAppointment from "../appointment/AddAppointment";
+import Service from "../service/Service";
+import AddService from "../service/AddService";
+import EditService from "../service/EditService";
 
 function Home({ userRole, onLogout }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -68,11 +68,11 @@ function Home({ userRole, onLogout }) {
               path="/edit-specialty/:specialtyId"
               element={<EditSpecialty />}
             />
-            <Route path="/equipment" element={<Equipment />} />
-            <Route path="/add-equipment" element={<AddEquipment />} />
+            <Route path="/service" element={<Service />} />
+            <Route path="/add-service" element={<AddService />} />
             <Route
-              path="/edit-equipment/:equipmentId"
-              element={<EditEquipment />}
+              path="/edit-service/:serviceId"
+              element={<EditService />}
             />
             <Route path="/medicine" element={<Medicine />} />
             <Route path="/add-medicine" element={<AddMedicine />} />

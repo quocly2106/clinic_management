@@ -53,9 +53,9 @@ const SideBar = ({ userName, onLogout }) => {
           <i className="bi bi-capsule fs-5 me-2"></i>
           <span className="small-font">Medicine</span>
         </Link>
-        <Link className="list-group-item py-2" to="/equipment">
+        <Link className="list-group-item py-2" to="/service">
           <i className="bi bi-tools fs-5 me-2"></i>
-          <span className="small-font">Equipment</span>
+          <span className="small-font">Service</span>
         </Link>
         <Link className="list-group-item py-2" to="/news">
           <i className="bi bi-file-earmark-text-fill fs-5 me-2"></i>

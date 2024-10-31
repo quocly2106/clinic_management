@@ -2,26 +2,26 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./EditEquipment.css"; // Import CSS
+import "./EditService.css"; // Import CSS
 import { api } from '../../utils/ApiFunction'; // Import your Axios instance
 
-const EditEquipment = () => {
-  const {equipmentId } = useParams();
-  const [equipment, setEquipment] = useState({ name: '', description: '' });
+const EditService = () => {
+  const {serviceId } = useParams();
+  const [service, setService] = useState({ name: '', description: '' });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate(); // For navigation after success
 
   useEffect(() => {
-    const fetchEquipmentById = async (id) => {
+    const fetchServiceById = async (id) => {
       try {
-        const response = await api.get(`/equipments/${id}`);
+        const response = await api.get(`/services/${id}`);
         const data = response.data;
 
         if (data.name && data.type) {
-          setEquipment({ name: data.name, type: data.type ,quantity: data.quantity , manufacturer: data.manufacturer, maintenanceDate: data.maintenanceDate});
+          setService({ name: data.name, description: data.description ,price: data.price , duration: data.duration, status: data.status});
         } else {
-          toast.error("Fetched equipment data is incomplete");
+          toast.error("Fetched service data is incomplete");
         }
       } catch (err) {
         setError(err.message);
@@ -31,40 +31,40 @@ const EditEquipment = () => {
       }
     };
 
-    fetchEquipmentById(equipmentId);
-  }, [equipmentId]);
+    fetchServiceById(serviceId);
+  }, [serviceId]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const token = localStorage.getItem('token');
   
-    const updatedEquipment = {
-      name: equipment.name,
-      type: equipment.type,
-      quantity : equipment.quantity,
-      manufacturer: equipment.manufacturer,
-      maintenanceDate : equipment.maintenanceDate,
+    const updatedService = {
+      name: service.name,
+      description: service.description,
+      price : service.price,
+      duration: service.duration,
+      status : service.status,
     };
     
     try {
-      const response = await fetch(`http://localhost:9191/equipments/update/${equipmentId}`, {
+      const response = await fetch(`http://localhost:9191/services/update/${serviceId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
         },
-        body: JSON.stringify(updatedEquipment),
+        body: JSON.stringify(updatedService),
       });
   
       if (!response.ok) {
         const errorMessage = await response.text();
-        throw new Error("Failed to update equipment: " + errorMessage);
+        throw new Error("Failed to update service: " + errorMessage);
       }
   
       // Nếu cập nhật thành công
-      toast.success("Equipment updated successfully");
+      toast.success("Service updated successfully");
         setTimeout(() => {
-          navigate('/equipment'); 
+          navigate('/service'); 
       }, 2000);
     } catch (error) {
       setError(error.message);
@@ -99,7 +99,7 @@ const EditEquipment = () => {
     <div className="container">
       <ToastContainer position="top-right" autoClose={3000} />
       <div className="form-container">
-        <h2 className="form-title">Edit Equipment</h2>
+        <h2 className="form-title">Edit Service</h2>
         <form onSubmit={handleSubmit}>
           <div className="row">
             <div className="col-md-6 mb-3">
@@ -107,55 +107,55 @@ const EditEquipment = () => {
               <input
                 type="text"
                 className="form-control"
-                value={equipment.name}
+                value={service.name}
                 onChange={(e) =>
-                  setEquipment({ ...equipment, name: e.target.value })
+                  setService({ ...service, name: e.target.value })
                 }
               />
             </div>
             <div className="col-md-6 mb-3">
-              <label className="form-label">Type</label>
+              <label className="form-label">Description</label>
               <input
                 type="text"
                 className="form-control"
-                value={equipment.type}
+                value={service.description}
                 onChange={(e) =>
-                  setEquipment({ ...equipment, type: e.target.value })
+                  setService({ ...service, description: e.target.value })
                 }
               />
             </div>
             <div className="col-md-6 mb-3">
-              <label className="form-label">Quantity</label>
+              <label className="form-label">Price</label>
+              <input
+                type="number" step={0.01}
+                className="form-control"
+                value={service.price}
+                onChange={(e) =>
+                  setService({ ...service, price: e.target.value })
+                }
+              />
+            </div>
+            <div className="col-md-6 mb-3">
+              <label className="form-label">Duration</label>
               <input
                 type="number"
                 className="form-control"
-                value={equipment.quantity}
+                value={service.duration}
                 onChange={(e) =>
-                  setEquipment({ ...equipment, quantity: e.target.value })
+                  setService({ ...service, duration: e.target.value })
                 }
               />
             </div>
             <div className="col-md-6 mb-3">
-              <label className="form-label">Manufacturer</label>
-              <input
-                type="text"
-                className="form-control"
-                value={equipment.manufacturer}
-                onChange={(e) =>
-                  setEquipment({ ...equipment, manufacturer: e.target.value })
-                }
-              />
-            </div>
-            <div className="col-md-6 mb-3">
-              <label className="form-label">maintenance Date</label>
-              <input
-                type="date"
-                className="form-control"
-                value={equipment.maintenanceDate}
-                onChange={(e) =>
-                  setEquipment({ ...equipment, maintenanceDate: e.target.value })
-                }
-              />
+              <label className="form-label">Status</label>
+              <select
+                className="form-select"
+                value={service.status}
+                onChange={(e) => setService({ ...service, status: e.target.value })}
+              >
+                <option value="Draft">Draft</option>
+                <option value="Published">Published</option>
+              </select>
             </div>
             <div className="mt-4">
               <button type="submit" className="btn btn-save">
@@ -169,4 +169,4 @@ const EditEquipment = () => {
   );
 };
 
-export default EditEquipment;
+export default EditService;

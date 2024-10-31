@@ -310,23 +310,23 @@ export async function deleteSpecialty(specialtyId) {
   }
 }
 
-// equipment
-export const allEquipments = async () => {
+// service
+export const allServices = async () => {
   try {
-    const response = await api.get("/equipments/all");
+    const response = await api.get("/services/all");
     return response.data;
   } catch (error) {
-    console.error("Error fetching all equipments:", error);
+    console.error("Error fetching all services:", error);
     throw error;
   }
 };
 
-export const addEquipment = async (data) => {
+export const addService = async (data) => {
   try {
     const token = localStorage.getItem("token");
     console.log("Token:", token);
     const response = await axios.post(
-      "http://localhost:9191/equipments/add",
+      "http://localhost:9191/services/add",
       data,
       {
         headers: {
@@ -336,17 +336,17 @@ export const addEquipment = async (data) => {
     );
     return response.data;
   } catch (error) {
-    console.error("Error add equipment:", error);
+    console.error("Error add service:", error);
     throw error;
   }
 };
 
-export const editEquipment = async (equipmentId, data) => {
+export const editService = async (serviceId, data) => {
   try {
     const token = localStorage.getItem("token");
     console.log("Token:", token);
     const response = await axios.put(
-      `http://localhost:9191/equipments/update/${equipmentId}`,
+      `http://localhost:9191/services/update/${serviceId}`,
       data,
       {
         headers: {
@@ -356,14 +356,14 @@ export const editEquipment = async (equipmentId, data) => {
     );
     return response.data;
   } catch (error) {
-    console.error("Error edit equipment:", error);
+    console.error("Error edit service:", error);
     throw error;
   }
 };
 
-export async function deleteEquipment(equipmentId) {
+export async function deleteService(serviceId) {
   try {
-    const result = await api.delete(`/equipments/delete/${equipmentId}`);
+    const result = await api.delete(`/services/delete/${serviceId}`);
     // Trả về toàn bộ response.data thay vì throw error
     return {
       success: true,
@@ -510,10 +510,10 @@ export async function deletePatient(patientId) {
   }
 }
 
-// news
+// appointment
 export const allAppointments = async () => {
   try {
-    const response = await api.get("/schedules/all");
+    const response = await api.get("/appointments/all");
     return response.data;
   } catch (error) {
     console.error("Error fetching all appointments:", error);
@@ -524,7 +524,7 @@ export const allAppointments = async () => {
 export const addAppointment = async (data) => {
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.post("http://localhost:9191/schedules/add", data, {
+    const response = await axios.post("http://localhost:9191/appointments/add", data, {
       headers: {
         Authorization: `Bearer ${token}`, // Thêm token vào Authorization
       },
@@ -540,7 +540,7 @@ export const editAppointment = async (newsId, data) => {
   try {
     const token = localStorage.getItem("token");
     const response = await axios.put(
-      `http://localhost:9191/schedules/update/${newsId}`,
+      `http://localhost:9191/appointments/update/${newsId}`,
       data,
       {
         headers: {
@@ -557,7 +557,7 @@ export const editAppointment = async (newsId, data) => {
 
 export async function deleteAppointment(newsId) {
   try {
-    const result = await api.delete(`/schedules/delete/${newsId}`);
+    const result = await api.delete(`/appointments/delete/${newsId}`);
     // Trả về toàn bộ response.data thay vì throw error
     return {
       success: true,
