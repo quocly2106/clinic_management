@@ -42,10 +42,11 @@ public class SecurityConfig {
                         .requestMatchers("/doctors/all", "/receptionists/all","/specialties/all","/services/all" , "/medicines/all").permitAll()
                         .requestMatchers("/doctors/update/{id}","/doctors/{id}","/doctors/{id}/change-password").hasAnyRole("DOCTOR", "ADMIN")
                         .requestMatchers("/receptionists/update/{id}","/receptionists/{id}","/receptionists/{id}/change-password").hasAnyRole("RECEPTIONIST", "ADMIN")
+                        .requestMatchers("/patients/check-phone").permitAll()
                         .requestMatchers("/patients/**").hasAnyRole("ADMIN", "RECEPTIONIST")
                         .requestMatchers("/news/add", "/news/update/", "news/delete/{id}").hasAnyRole("ADMIN")
                         .requestMatchers("/news/all", "/news/{id}", "/news/increment-views/{id}","/doctors/all","/receptionists/all").permitAll()
-                        .requestMatchers("/appointments/book-appointment").permitAll()
+                        .requestMatchers("/appointments/book-appointment" , "appointments/all").permitAll()
                         .requestMatchers("/doctors/**", "/receptionists/**", "/departments/**",
                                 "/appointments/**", "services/**", "/medicines/**","specialties/**").hasRole("ADMIN")
 

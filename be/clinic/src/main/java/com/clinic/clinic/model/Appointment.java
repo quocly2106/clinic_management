@@ -24,6 +24,15 @@ public class Appointment {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    @Column(nullable = false)
+    private LocalDateTime dateTime;
+
+    @Column(nullable = false)
+    private String reason;
+
+    @Column(nullable = false)
+    private String status;
+
     // Mối quan hệ n-1 với Doctor
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id", nullable = false)

@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; 
-import { addAppointment, allDoctors, allPatients } from '../../utils/ApiFunction';
+import { addAppointment, allDoctors, allPatients, allReceptionists } from '../../utils/ApiFunction';
 import "./AddAppointment.css"
 
 function AddAppointment() {
   const [appointmentData, setAppointmentData] = useState({
     dateTime: '',
+    reason: '',
     doctorId: '',
     patientId: '', // Thay đổi từ patient object sang patientId
     receptionistId: ''
   });
+
+  const [receptionists, setReceptionists] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [patients, setPatients] = useState([]); // State lưu danh sách patients
   const [error, setError] = useState('');
@@ -37,8 +40,18 @@ function AddAppointment() {
         setError('Failed to load doctors list');
       }
     };
+    const fetchReceptionists = async () => {
+      try {
+        const data = await allReceptionists();
+        setReceptionists(data);
+      } catch (error) {
+        console.error("Error fetching receptionists:", error);
+        setError('Failed to load receptionist list');
+      }
+    };
     fetchPatients();
     fetchDoctors();
+    fetchReceptionists();
   }, []);
 
   const handleChange = (e) => {
@@ -55,6 +68,8 @@ function AddAppointment() {
       setShowToast(true);
       // Reset form
       setAppointmentData({
+        dateTime: '',
+        reason: '',
         doctorId: '',
         patientId: '',
         receptionistId: ''
@@ -111,14 +126,47 @@ function AddAppointment() {
           </select>
         </div>
 
+
         <div className="mb-3">
-          <label htmlFor="receptionistId" className="form-label">Receptionist ID</label>
-          <input
-            type="number"
+          <label htmlFor="receptionistId" className="form-label">Select Receptionist</label>
+          <select
             className="form-control rounded-3"
             id="receptionistId"
             name="receptionistId"
             value={appointmentData.receptionistId}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select a Receptionist</option>
+            {receptionists.map(receptionist => (
+              <option key={receptionist.id} value={receptionist.id}>
+                {`${receptionist.firstName} ${receptionist.lastName}`}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="dateTime" className="form-label"> Date & Time</label>
+          <input
+            type="datetime-local"
+            className="form-control rounded-3"
+            id="dateTime"
+            name="dateTime"
+            value={appointmentData.dateTime}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="reason" className="form-label"> Reason</label>
+          <input
+            type="text"
+            className="form-control rounded-3"
+            id="reason"
+            name="reason"
+            value={appointmentData.reason}
             onChange={handleChange}
             required
           />

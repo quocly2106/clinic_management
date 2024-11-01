@@ -45,6 +45,9 @@ public class AppointmentServiceImpl implements AppointmentService {
         Appointment appointment = new Appointment();
         appointment.setCreatedAt(LocalDateTime.now()); // Sử dụng LocalDateTime.now() làm giá trị mặc định
         appointment.setUpdatedAt(LocalDateTime.now());
+        appointment.setDateTime(appointmentDto.getDateTime());
+        appointment.setReason(appointmentDto.getReason());
+        appointment.setStatus("Confirmed");
         appointment.setDoctor(doctor); // Gán bác sĩ vào lịch khám
         appointment.setPatient(patient);
         appointment.setReceptionist(receptionist);
@@ -58,6 +61,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         // Cập nhật dateTime cho lịch khám
         existingAppointment.setUpdatedAt(LocalDateTime.now());
+        existingAppointment.setDateTime(appointmentDto.getDateTime());
+        existingAppointment.setReason(appointmentDto.getReason());
+        existingAppointment.setStatus(appointmentDto.getStatus());
 
         // Cập nhật bác sĩ nếu có
         if (appointmentDto.getDoctorId() != null) {
@@ -108,6 +114,9 @@ public class AppointmentServiceImpl implements AppointmentService {
         Appointment appointment = new Appointment();
         appointment.setCreatedAt(LocalDateTime.now()); // Sử dụng LocalDateTime.now() làm giá trị mặc định
         appointment.setUpdatedAt(LocalDateTime.now());
+        appointment.setDateTime(appointmentDto.getDateTime());
+        appointment.setReason(appointmentDto.getReason());
+        appointment.setStatus("Waiting");
         appointment.setDoctor(doctor); // Gán bác sĩ vào lịch khám
         appointment.setPatient(savedPatient); // Gán bệnh nhân vừa tạo vào lịch khám
 

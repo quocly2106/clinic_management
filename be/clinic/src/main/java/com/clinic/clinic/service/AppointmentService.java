@@ -12,4 +12,6 @@ public interface AppointmentService {
     List<Appointment> getAllAppointment();
     Appointment getAppointmentById(Long id);
     void bookAppointment(AppointmentDto appointmentDto);
+
+
 }

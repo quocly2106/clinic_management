@@ -6,6 +6,7 @@ import com.clinic.clinic.model.Appointment;
 import com.clinic.clinic.service.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +38,8 @@ public class AppointmentController {
         return ResponseEntity.ok("Appointment deleted successfully");
     }
 
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'RECEPTIONIST')")
     @GetMapping("/all")
     public ResponseEntity<List<Appointment>> getAllAppointments() {
         List<Appointment> appointments = appointmentService.getAllAppointment();
@@ -54,4 +57,6 @@ public class AppointmentController {
         appointmentService.bookAppointment(appointmentDto);
         return ResponseEntity.ok("Appointment booked successfully");
     }
+
+
 }

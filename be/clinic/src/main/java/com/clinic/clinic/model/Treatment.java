@@ -28,6 +28,12 @@ public class Treatment {
     @PastOrPresent
     private LocalDate treatmentDate; // Ngày điều trị
 
+    @Column(nullable = false)
+    private String status; // Trạng thái điều trị (ví dụ: "Đang thực hiện", "Hoàn thành", "Huỷ bỏ")
+
+    @Column(length = 500) // Tùy chỉnh độ dài theo nhu cầu
+    private String notes;
+
     // Quan hệ N-N với Medicine
     @ManyToMany
     @JoinTable(
@@ -40,9 +46,9 @@ public class Treatment {
     // Quan hệ N-N với Equipment
     @ManyToMany
     @JoinTable(
-            name = "treatment_equipment",
+            name = "treatment_service",
             joinColumns = @JoinColumn(name = "treatment_id"),
-            inverseJoinColumns = @JoinColumn(name = "equipment_id")
+            inverseJoinColumns = @JoinColumn(name = "service_id")
     )
     private Set<Service> services;
 

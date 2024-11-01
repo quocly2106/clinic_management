@@ -178,9 +178,12 @@ function Appointment() {
                   <th>STT</th>
                   <th>Patient Name</th>
                   <th>Patient Phone</th>
+                  <th>Date Time</th>
+                  <th>Reason</th>
                   <th>CreatedAt</th>
                   <th>UpdatedAt</th>
                   <th>Doctor Name</th>
+                  <th>Status</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -205,9 +208,12 @@ function Appointment() {
                       <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                       <td>{appointment.patient ? appointment.patient.firstName + " " +  appointment.patient.lastName : "N/A"}</td> 
                       <td>{appointment.patient ? appointment.patient.phone  : "N/A"}</td> 
+                      <td>{convertToLocalTime(appointment.dateTime)}</td> 
+                      <td>{appointment.reason}</td> 
                       <td>{convertToLocalTime(appointment.createdAt)}</td>
                       <td>{convertToLocalTime(appointment.updatedAt)}</td>
-                      <td>{appointment.doctor ? appointment.doctor.firstName + " " +  appointment.doctor.lastName : "N/A"}</td> 
+                      <td>{appointment.doctor ? appointment.doctor.firstName + " " +  appointment.doctor.lastName + "(" + appointment.doctor.specialty.name +  ")" : "N/A"}</td> 
+                      <td>{appointment.status}</td> 
                       <td>
                         <div className="action-buttons">
                           <Link

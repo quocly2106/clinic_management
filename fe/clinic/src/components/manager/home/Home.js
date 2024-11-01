@@ -32,6 +32,7 @@ import AddAppointment from "../appointment/AddAppointment";
 import Service from "../service/Service";
 import AddService from "../service/AddService";
 import EditService from "../service/EditService";
+import EditAppointment from "../appointment/EditAppointment";
 
 function Home({ userRole, onLogout }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -88,6 +89,7 @@ function Home({ userRole, onLogout }) {
             <Route path="/edit-news/:newsId" element={<EditNews />} />
             <Route path="/appointment" element={<Appointment />} />
             <Route path="/add-appointment" element={<AddAppointment />} />
+            <Route path="/edit-appointment/:appointmentId" element={<EditAppointment />} />
             <Route
               path="/doctor/profile"
               element={

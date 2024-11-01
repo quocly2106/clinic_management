@@ -13,5 +13,6 @@ public interface NewsService {
     List<News> getAllNews();
     News getNewsById(Long id);
 
+    News getNewsByIdProfile(Long id);
     void incrementViews(Long id);
 }
