@@ -132,7 +132,7 @@ function Patient() {
               style={{
                 background: colors.background,
               }}
-              onClick={() => navigate("/add-patient")}
+              onClick={() => navigate("/admin/add-patient")}
             >
               <MdAdd className="add-icon" />
               <span>Add</span>
@@ -183,7 +183,7 @@ function Patient() {
                       <td>
                         <div className="action-buttons">
                           <Link
-                            to={`/edit-patient/${patient.id}`}
+                            to={`/admin/edit-patient/${patient.id}`}
                             className="edit-button"
                             title="Edit"
                           >

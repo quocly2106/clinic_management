@@ -70,7 +70,7 @@ const EditNews = () => {
       // Nếu cập nhật thành công
       toast.success("News updated successfully");
       setTimeout(() => {
-        navigate("/news");
+        navigate("/admin/news");
       }, 2000);
     } catch (error) {
       setError(error.message);

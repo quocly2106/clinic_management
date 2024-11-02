@@ -39,7 +39,7 @@ function AddDoctor() {
         specialtyId: '',
         role: 'DOCTOR',
       });
-      navigate('/doctor'); 
+      navigate('/admin/doctor'); 
     } catch (error) {
       console.error("Error adding doctor:", error);
       setError('Failed to add doctor. Please try again.');

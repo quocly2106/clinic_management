@@ -4,6 +4,8 @@ import com.clinic.clinic.dto.NewsDto;
 import com.clinic.clinic.model.News;
 import com.clinic.clinic.service.NewsService;
 import com.clinic.clinic.utils.ImageUpload;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,7 +24,7 @@ public class NewsController {
     @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')") // Chỉ cho phép Admin thêm bài viết
     public ResponseEntity<News> createNews(
-            @RequestPart("news") NewsDto newsDto,  // Sử dụng @RequestPart để nhận dữ liệu JSON
+            @RequestPart("news") @Valid NewsDto newsDto,  // Sử dụng @RequestPart để nhận dữ liệu JSON
             @RequestPart("imageFile") MultipartFile imageFile) { // Sử dụng @RequestPart cho tệp tin
 
         News createdNews = newsService.addNews(newsDto, imageFile);
@@ -32,14 +34,14 @@ public class NewsController {
 
     @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('ADMIN')") // Chỉ cho phép Admin cập nhật bài viết
-    public ResponseEntity<News> updateNews(@PathVariable Long id, @RequestBody NewsDto newsDto) {
+    public ResponseEntity<News> updateNews(@PathVariable @NotNull Long id, @RequestBody NewsDto newsDto) {
         News updatedNews = newsService.updateNews(id, newsDto);
         return ResponseEntity.ok(updatedNews);
     }
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')") // Chỉ cho phép Admin xóa bài viết
-    public ResponseEntity<String> deleteNews(@PathVariable Long id) {
+    public ResponseEntity<String> deleteNews(@PathVariable @NotNull Long id) {
         newsService.deleteNews(id);
         return ResponseEntity.ok("News deleted successfully");
     }
@@ -51,7 +53,7 @@ public class NewsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<News> getNewsById(@PathVariable Long id) {
+    public ResponseEntity<News> getNewsById(@PathVariable @NotNull Long id) {
         newsService.incrementViews(id); // Tăng lượt xem trước khi lấy bài viết
         News news = newsService.getNewsByIdProfile(id);
         return ResponseEntity.ok(news);
@@ -65,7 +67,7 @@ public class NewsController {
 //    }
 
     @GetMapping("/increment-views/{id}")
-    public ResponseEntity<String> incrementNewsViews(@PathVariable Long id) {
+    public ResponseEntity<String> incrementNewsViews(@PathVariable @NotNull Long id) {
         newsService.incrementViews(id);
         return ResponseEntity.ok("Views incremented successfully");
     }

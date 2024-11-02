@@ -34,23 +34,14 @@ public class Treatment {
     @Column(length = 500) // Tùy chỉnh độ dài theo nhu cầu
     private String notes;
 
-    // Quan hệ N-N với Medicine
-    @ManyToMany
-    @JoinTable(
-            name = "treatment_medicine",
-            joinColumns = @JoinColumn(name = "treatment_id"),
-            inverseJoinColumns = @JoinColumn(name = "medicine_id")
-    )
-    private Set<Medicine> medicines;
+    // Quan hệ 1-N với TreatmentMedicine
+    @OneToMany(mappedBy = "treatment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TreatmentMedicine> treatmentMedicines;
 
     // Quan hệ N-N với Equipment
-    @ManyToMany
-    @JoinTable(
-            name = "treatment_service",
-            joinColumns = @JoinColumn(name = "treatment_id"),
-            inverseJoinColumns = @JoinColumn(name = "service_id")
-    )
-    private Set<Service> services;
+    // Quan hệ 1-N với TreatmentEquipment
+    @OneToMany(mappedBy = "treatment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TreatmentService> treatmentServices;
 
     // Quan hệ N-1 với Doctor
     @ManyToOne(fetch = FetchType.LAZY)

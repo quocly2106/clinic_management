@@ -157,7 +157,7 @@ function Service() {
               style={{
                 background: colors.background,
               }}
-              onClick={() => navigate("/add-service")}
+              onClick={() => navigate("/admin/add-service")}
             >
               <MdAdd className="add-icon" />
               <span>Add</span>
@@ -210,7 +210,7 @@ function Service() {
                       <td>
                         <div className="action-buttons">
                           <Link
-                            to={`/edit-service/${service.id}`}
+                            to={`/admin/edit-service/${service.id}`}
                             className="edit-button"
                             title="Edit"
                           >

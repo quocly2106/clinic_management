@@ -3,16 +3,20 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./EditAppointment.css";
-import { allDoctors, allPatients, allReceptionists } from "../../utils/ApiFunction";
+import {
+  allDoctors,
+  allPatients,
+  allReceptionists,
+} from "../../utils/ApiFunction";
 
 const EditAppointment = () => {
   const { appointmentId } = useParams();
   const [appointment, setAppointment] = useState({
-    doctorId: '',
-    receptionistId: '',
-    dateTime: '',
-    reason: '',
-    status: '',
+    doctorId: "",
+    receptionistId: "",
+    dateTime: "",
+    reason: "",
+    status: "",
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -24,13 +28,16 @@ const EditAppointment = () => {
     const fetchAppointmentById = async (id) => {
       const token = localStorage.getItem("token");
       try {
-        const response = await fetch(`http://localhost:9191/appointments/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          `http://localhost:9191/appointments/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         if (!response.ok) throw new Error("Failed to fetch appointment");
-        
+
         const data = await response.json();
         setAppointment({
           doctorId: data.doctor.id,
@@ -56,8 +63,8 @@ const EditAppointment = () => {
         setDoctors(doctorsData);
         setReceptionists(receptionistsData);
       } catch (error) {
-        setError('Failed to load data');
-        toast.error('Failed to load data');
+        setError("Failed to load data");
+        toast.error("Failed to load data");
       }
     };
 
@@ -75,6 +82,25 @@ const EditAppointment = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (
+      !appointment.doctorId ||
+      !appointment.dateTime ||
+      !appointment.reason ||
+      !appointment.receptionistId
+    ) {
+      setError("Please fill in all required fields.");
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+
+    const selectedDateTime = new Date(appointment.dateTime);
+    const now = new Date();
+    if (selectedDateTime <= now) {
+      setError("Date and Time must be in the future.");
+      toast.error("Date and Time must be in the future.");
+      return;
+    }
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
@@ -95,7 +121,7 @@ const EditAppointment = () => {
       }
 
       toast.success("Appointment updated successfully");
-      setTimeout(() => navigate("/appointment"), 2000);
+      setTimeout(() => navigate("/admin/appointment"), 2000);
     } catch (error) {
       setError(error.message);
       toast.error(error.message);
@@ -130,7 +156,9 @@ const EditAppointment = () => {
         <h2 className="form-title">Edit Appointment</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="doctorId" className="form-label">Select Doctor</label>
+            <label htmlFor="doctorId" className="form-label">
+              Select Doctor
+            </label>
             <select
               className="form-control rounded-3"
               id="doctorId"
@@ -140,7 +168,7 @@ const EditAppointment = () => {
               required
             >
               <option value="">Select a Doctor</option>
-              {doctors.map(doctor => (
+              {doctors.map((doctor) => (
                 <option key={doctor.id} value={doctor.id}>
                   {`${doctor.firstName} ${doctor.lastName} - ${doctor.specialty.name}`}
                 </option>
@@ -187,7 +215,9 @@ const EditAppointment = () => {
           </div>
 
           <div className="mb-3">
-            <label htmlFor="receptionistId" className="form-label">Select Receptionist</label>
+            <label htmlFor="receptionistId" className="form-label">
+              Select Receptionist
+            </label>
             <select
               className="form-control rounded-3"
               id="receptionistId"
@@ -197,7 +227,7 @@ const EditAppointment = () => {
               required
             >
               <option value="">Select a Receptionist</option>
-              {receptionists.map(receptionist => (
+              {receptionists.map((receptionist) => (
                 <option key={receptionist.id} value={receptionist.id}>
                   {`${receptionist.firstName} ${receptionist.lastName}`}
                 </option>
@@ -205,7 +235,9 @@ const EditAppointment = () => {
             </select>
           </div>
 
-          <button type="submit" className="btn btn-save">Save Changes</button>
+          <button type="submit" className="btn btn-save">
+            Save Changes
+          </button>
         </form>
       </div>
     </div>

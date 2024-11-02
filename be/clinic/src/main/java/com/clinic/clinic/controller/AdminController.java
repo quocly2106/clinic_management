@@ -6,6 +6,7 @@ import com.clinic.clinic.model.Admin;
 import com.clinic.clinic.model.Doctor;
 import com.clinic.clinic.service.AdminService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,7 +24,7 @@ public class AdminController {
     private AdminService adminService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody AdminDto adminDto) {
+    public ResponseEntity<String> register(@Valid @RequestBody AdminDto adminDto) {
         adminService.register(adminDto);
         return ResponseEntity.ok("Admin registered successfully");
     }
@@ -36,14 +37,14 @@ public class AdminController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
-    public ResponseEntity<Admin> getAdminById(@PathVariable Long id) {
+    public ResponseEntity<Admin> getAdminById(@PathVariable @NotNull Long id) {
         Admin admin = adminService.getAdminById(id);
         return ResponseEntity.ok(admin);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}/change-password")
-    public ResponseEntity<String> changePassword(@PathVariable Long id,
+    public ResponseEntity<String> changePassword(@PathVariable @NotNull Long id,
                                                  @Valid @RequestBody ChangePasswordDto changePasswordDto) {
         try {
             adminService.changePassword(id, changePasswordDto);

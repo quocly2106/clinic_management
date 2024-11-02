@@ -149,7 +149,7 @@ function News() {
               style={{
                 background: colors.background,
               }}
-              onClick={() => navigate("/add-news")}
+              onClick={() => navigate("/admin/add-news")}
             >
               <MdAdd className="add-icon" />
               <span>Add</span>
@@ -202,7 +202,7 @@ function News() {
                       <td>
                         <div className="action-buttons">
                           <Link
-                            to={`/edit-news/${news.id}`}
+                            to={`/admin/edit-news/${news.id}`}
                             className="edit-button"
                             title="Edit"
                           >

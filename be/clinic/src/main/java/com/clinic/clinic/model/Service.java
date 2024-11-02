@@ -43,12 +43,12 @@ public class Service {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    // Mối quan hệ N-N với Treatment
-    @ManyToMany(mappedBy = "services")
-    private Set<Treatment> treatments;
-
     // Mối quan hệ n-1 với Admin
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id", nullable = false)
     private Admin admin;
+
+    // Mối quan hệ N-N với Treatment qua TreatmentService
+    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TreatmentService> treatmentServices; // Thêm ánh xạ ngược
 }

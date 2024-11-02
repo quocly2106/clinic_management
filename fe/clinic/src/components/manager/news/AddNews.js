@@ -47,7 +47,7 @@ function AddNews() {
         views: 0,
       });
       setImage(null);
-      navigate("/news");
+      navigate("/admin/news");
     } catch (error) {
       console.error("Error adding news:", error);
       setError("Failed to add news.");

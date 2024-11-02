@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addService } from "../../utils/ApiFunction";
-import "./AddService.css"
+import "./AddService.css";
 
 function AddService() {
   const [serviceData, setServiceData] = useState({
@@ -9,7 +9,7 @@ function AddService() {
     description: "",
     price: "",
     duration: "",
-    status: "Draft",
+    status: "Active",
   });
 
   const [error, setError] = useState("");
@@ -24,7 +24,17 @@ function AddService() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Service Data:", serviceData);
+    // Kiểm tra giá trị price và duration
+    if (serviceData.price < 0 ) {
+      setError("Price  must be non-negative.");
+      setShowToast(true);
+      return; 
+    }
+    if (serviceData.duration < 0 ) {
+      setError("Duration must be non-negative.");
+      setShowToast(true);
+      return; 
+    }
     try {
       await addService(serviceData);
       setSuccessMessage("Service added successfully!");
@@ -35,9 +45,9 @@ function AddService() {
         description: "",
         price: "",
         duration: "",
-        status: "Draft",
+        status: "Active",
       });
-      navigate("/service");
+      navigate("/admin/service");
     } catch (error) {
       console.error("Error adding service:", error);
       setError("Failed to add service. Please try again.");
@@ -84,7 +94,8 @@ function AddService() {
             Price
           </label>
           <input
-            type="number" step={0.01}
+            type="number"
+            step={0.01}
             className="form-control rounded-3"
             id="price"
             name="price"
@@ -95,7 +106,7 @@ function AddService() {
         </div>
         <div className="mb-3">
           <label htmlFor="duration" className="form-label">
-            Duration
+            Duration(minutes)
           </label>
           <input
             type="number"
@@ -108,7 +119,9 @@ function AddService() {
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="status" className="form-label">Status</label>
+          <label htmlFor="status" className="form-label">
+            Status
+          </label>
           <select
             className="form-select"
             id="status"
@@ -116,8 +129,8 @@ function AddService() {
             value={serviceData.status}
             onChange={handleChange}
           >
-            <option value="Draft">Draft</option>
-            <option value="Published">Published</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
           </select>
         </div>
         <button type="submit" className="btn btn-primary">

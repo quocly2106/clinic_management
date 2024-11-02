@@ -119,7 +119,7 @@ function Receptionist() {
             <button
               className="add-button" style={{
                 background: colors.background}}
-              onClick={() => navigate("/add-receptionist")}
+              onClick={() => navigate("/admin/add-receptionist")}
             >
               <MdAdd className="add-icon" />
               <span>Add</span>
@@ -164,7 +164,7 @@ function Receptionist() {
                       <td>
                         <div className="action-buttons">
                           <Link
-                            to={`/edit-receptionist/${receptionist.id}`}
+                            to={`/admin/edit-receptionist/${receptionist.id}`}
                             className="edit-button"
                             title="Edit"
                           >

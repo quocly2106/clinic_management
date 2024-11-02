@@ -61,48 +61,62 @@ const EditPatient = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    // Kiểm tra số điện thoại có đủ 10 số không
+    const phoneRegex = /^\d{10}$/;
+    if (!phoneRegex.test(patient.phone)) {
+      toast.error("Phone number must be exactly 10 digits");
+      return; 
+    }
+
+    // Kiểm tra ngày sinh phải là ngày trong quá khứ
+    const birthDate = new Date(patient.dateOfBirth);
+    const today = new Date();
+    if (birthDate >= today) {
+      toast.error("Date of Birth must be in the past");
+      return; 
+    }
+
     const updatedPatient = {
-        firstName: patient.firstName,
-        lastName: patient.lastName,
-        gender :patient.gender,
-        phone: patient.phone,
-        dateOfBirth : patient.dateOfBirth,
-        doctorId: selectedDoctor, // Chỉ cập nhật doctor nếu nó có sự thay đổi
+      firstName: patient.firstName,
+      lastName: patient.lastName,
+      gender: patient.gender,
+      phone: patient.phone,
+      dateOfBirth: patient.dateOfBirth,
+      doctorId: selectedDoctor, // Chỉ cập nhật doctor nếu nó có sự thay đổi
     };
 
     try {
-        const token = localStorage.getItem("token");
-        const response = await fetch(
-            `http://localhost:9191/patients/update/${patientId}`,
-            {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(updatedPatient),
-            }
-        );
-
-        if (!response.ok) {
-            const errorMessage = await response.text(); // Lấy thông báo lỗi từ server
-            console.error("Update failed:", errorMessage);
-            throw new Error("Failed to update patient: " + errorMessage);
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `http://localhost:9191/patients/update/${patientId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(updatedPatient),
         }
+      );
 
-        // Nếu cập nhật thành công, hiển thị toast và sau đó chuyển hướng
-        toast.success("Patient updated successfully");
+      if (!response.ok) {
+        const errorMessage = await response.text(); // Lấy thông báo lỗi từ server
+        console.error("Update failed:", errorMessage);
+        throw new Error("Failed to update patient: " + errorMessage);
+      }
 
-        // Chuyển hướng sau 2 giây
-        setTimeout(() => {
-            navigate('/patient'); 
-        }, 2000);
+      // Nếu cập nhật thành công, hiển thị toast và sau đó chuyển hướng
+      toast.success("Patient updated successfully");
+
+      // Chuyển hướng sau 2 giây
+      setTimeout(() => {
+        navigate("/admin/patient");
+      }, 2000);
     } catch (error) {
-        setError(error.message);
-        toast.error(error.message);
+      setError(error.message);
+      toast.error(error.message);
     }
-};
-
+  };
 
   if (loading) {
     return (
@@ -155,20 +169,30 @@ const EditPatient = () => {
               />
             </div>
             <div className="col-md-6 mb-3">
-              <label className="form-label">Gender</label>
-              <input
-                type="text"
-                className="form-control"
+              <label htmlFor="gender" className="form-label">
+                Gender
+              </label>
+              <select
+                className="form-control rounded-3"
+                id="gender"
+                name="gender"
                 value={patient.gender || ""}
                 onChange={(e) =>
                   setPatient({ ...patient, gender: e.target.value })
                 }
-              />
+                required
+              >
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
+
             <div className="col-md-6 mb-3">
               <label className="form-label">Phone</label>
               <input
-                type="number"
+                type="text"
                 className="form-control"
                 value={patient.phone || ""}
                 onChange={(e) =>
@@ -197,7 +221,8 @@ const EditPatient = () => {
                 <option value="">Select Doctor</option>
                 {doctors.map((doctor) => (
                   <option key={doctor.id} value={doctor.id}>
-                    {doctor.firstName} {doctor.lastName} ({doctor.specialty.name})
+                    {doctor.firstName} {doctor.lastName} (
+                    {doctor.specialty.name})
                   </option>
                 ))}
               </select>

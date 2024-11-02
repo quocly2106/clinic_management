@@ -61,6 +61,14 @@ function AddAppointment() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+
+  const selectedDateTime = new Date(appointmentData.dateTime);
+  const now = new Date();
+  if (selectedDateTime <= now) {
+      setError('Date and Time must be in the future.');
+      return;
+  }
     try {
       await addAppointment(appointmentData);
       setSuccessMessage('Appointment added successfully!');
@@ -74,7 +82,7 @@ function AddAppointment() {
         patientId: '',
         receptionistId: ''
       });
-      navigate('/appointment'); 
+      navigate('/admin/appointment'); 
     } catch (error) {
       console.error("Error adding appointment:", error);
       setError('Failed to add appointment. Please try again.');

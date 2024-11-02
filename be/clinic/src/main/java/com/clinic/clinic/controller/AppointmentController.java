@@ -4,6 +4,8 @@ package com.clinic.clinic.controller;
 import com.clinic.clinic.dto.AppointmentDto;
 import com.clinic.clinic.model.Appointment;
 import com.clinic.clinic.service.AppointmentService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,13 +29,13 @@ public class AppointmentController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Appointment> updateAppointment(@PathVariable Long id, @RequestBody AppointmentDto appointmentDto) {
+    public ResponseEntity<Appointment> updateAppointment(@PathVariable @NotNull Long id, @RequestBody AppointmentDto appointmentDto) {
         Appointment updatedAppointment = appointmentService.updateAppointment(id, appointmentDto);
         return ResponseEntity.ok(updatedAppointment);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteAppointment(@PathVariable Long id) {
+    public ResponseEntity<String> deleteAppointment(@PathVariable @NotNull Long id) {
         appointmentService.deleteAppointment(id);
         return ResponseEntity.ok("Appointment deleted successfully");
     }
@@ -47,13 +49,13 @@ public class AppointmentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Appointment> getAppointmentById(@PathVariable Long id) {
+    public ResponseEntity<Appointment> getAppointmentById(@PathVariable @NotNull Long id) {
         Appointment appointment = appointmentService.getAppointmentById(id);
         return ResponseEntity.ok(appointment);
     }
 
     @PostMapping("/book-appointment")
-    public ResponseEntity<?> bookAppointment(@RequestBody AppointmentDto appointmentDto) {
+    public ResponseEntity<?> bookAppointment(@Valid @RequestBody AppointmentDto appointmentDto) {
         appointmentService.bookAppointment(appointmentDto);
         return ResponseEntity.ok("Appointment booked successfully");
     }

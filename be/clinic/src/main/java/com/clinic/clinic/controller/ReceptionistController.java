@@ -5,6 +5,7 @@ import com.clinic.clinic.dto.ReceptionistDto;
 import com.clinic.clinic.model.Receptionist;
 import com.clinic.clinic.service.ReceptionistService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,7 +24,7 @@ public class ReceptionistController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
-    public ResponseEntity<Receptionist> createReceptionist(@RequestBody ReceptionistDto receptionistDto) {
+    public ResponseEntity<Receptionist> createReceptionist(@Valid @RequestBody ReceptionistDto receptionistDto) {
         Receptionist createdReceptionist = receptionistService.addReceptionist(receptionistDto);
         return ResponseEntity.ok(createdReceptionist);
     }
@@ -31,7 +32,7 @@ public class ReceptionistController {
 
     @PreAuthorize("hasRole('ADMIN') or (hasRole('RECEPTIONIST') and #id == authentication.principal.id)")
     @PutMapping("/update/{id}")
-    public ResponseEntity<Receptionist> updateDoctor(@PathVariable Long id, @RequestBody ReceptionistDto receptionistDto) {
+    public ResponseEntity<Receptionist> updateDoctor(@PathVariable @NotNull Long id, @RequestBody ReceptionistDto receptionistDto) {
 
         Receptionist updatedReceptionist = receptionistService.updateReceptionist(id, receptionistDto);
         return ResponseEntity.ok(updatedReceptionist);
@@ -40,7 +41,7 @@ public class ReceptionistController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteReceptionist(@PathVariable Long id) {
+    public ResponseEntity<String> deleteReceptionist(@PathVariable @NotNull Long id) {
         receptionistService.deleteReceptionist(id);
         return ResponseEntity.ok("Receptionist deleted successfully");
     }
@@ -53,7 +54,7 @@ public class ReceptionistController {
 
     @PreAuthorize("hasRole('ADMIN') or (hasRole('RECEPTIONIST') and #id == authentication.principal.id)")
     @GetMapping("/{id}")
-    public ResponseEntity<Receptionist> getReceptionistById(@PathVariable Long id) {
+    public ResponseEntity<Receptionist> getReceptionistById(@PathVariable @NotNull Long id) {
         Receptionist receptionist = receptionistService.getReceptionistById(id);
         return ResponseEntity.ok(receptionist);
     }
@@ -61,7 +62,7 @@ public class ReceptionistController {
 
     @PreAuthorize("hasRole('ADMIN') or (hasRole('RECEPTIONIST') and #id == authentication.principal.id)")
     @PutMapping("/{id}/change-password")
-    public ResponseEntity<String> changePassword(@PathVariable Long id,
+    public ResponseEntity<String> changePassword(@PathVariable @NotNull Long id,
                                                  @Valid @RequestBody ChangePasswordDto changePasswordDto) {
         try {
             receptionistService.changePassword(id, changePasswordDto);

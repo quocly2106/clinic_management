@@ -4,6 +4,7 @@ import com.clinic.clinic.dto.ServiceDto;
 import com.clinic.clinic.model.Service;
 import com.clinic.clinic.service.ServiceService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,13 +27,13 @@ public class ServiceController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Service> updateService(@PathVariable Long id, @Valid @RequestBody ServiceDto serviceDto) {
+    public ResponseEntity<Service> updateService(@PathVariable @NotNull Long id, @Valid @RequestBody ServiceDto serviceDto) {
         Service updatedService = serviceService.updateService(id, serviceDto);
         return ResponseEntity.ok(updatedService);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteService(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteService(@PathVariable @NotNull Long id) {
         serviceService.deleteService(id);
         return ResponseEntity.noContent().build();
     }
@@ -45,7 +46,7 @@ public class ServiceController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Service> getServiceById(@PathVariable Long id) {
+    public ResponseEntity<Service> getServiceById(@PathVariable @NotNull Long id) {
         Service service = serviceService.getServiceById(id);
         return ResponseEntity.ok(service);
     }

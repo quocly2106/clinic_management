@@ -33,12 +33,11 @@ public class Medicine {
     @Min(0)
     private Integer quantity;
 
-    // Mối quan hệ N-N với Treatment
-    @ManyToMany(mappedBy = "medicines")
-    private Set<Treatment> treatments;
-
     // Mối quan hệ n-1 với Admin
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id", nullable = false)
     private Admin admin;
+
+    @OneToMany(mappedBy = "medicine", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TreatmentMedicine> treatmentMedicines; // Thêm ánh xạ ngược
 }

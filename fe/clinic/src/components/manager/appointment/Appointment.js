@@ -162,7 +162,7 @@ function Appointment() {
               style={{
                 background: colors.background,
               }}
-              onClick={() => navigate("/add-appointment")}
+              onClick={() => navigate("/admin/add-appointment")}
             >
               <MdAdd className="add-icon" />
               <span>Add</span>
@@ -198,7 +198,7 @@ function Appointment() {
                   </tr>
                 ) : filteredAppointments.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="no-data">
+                    <td colSpan="12" className="no-data">
                       No appointments found
                     </td>
                   </tr>
@@ -217,7 +217,7 @@ function Appointment() {
                       <td>
                         <div className="action-buttons">
                           <Link
-                            to={`/edit-appointment/${appointment.id}`}
+                            to={`/admin/edit-appointment/${appointment.id}`}
                             className="edit-button"
                             title="Edit"
                           >

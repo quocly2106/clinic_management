@@ -31,7 +31,7 @@ function AddSpecialty() {
         name: "",
         description: "",
       });
-      navigate("/specialty");
+      navigate("/admin/specialty");
     } catch (error) {
       console.error("Error adding specialty:", error);
       setError("Failed to add specialty. Please try again.");

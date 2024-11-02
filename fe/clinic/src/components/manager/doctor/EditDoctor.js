@@ -92,7 +92,7 @@ const EditDoctor = () => {
 
         // Chuyển hướng sau 2 giây
         setTimeout(() => {
-            navigate('/doctor'); 
+            navigate('/admin/doctor'); 
         }, 2000);
     } catch (error) {
         setError(error.message);
