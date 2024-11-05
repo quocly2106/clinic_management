@@ -34,6 +34,8 @@ public class Service {
     @Column(nullable = false)
     private Integer duration;
 
+    private String image;
+
     @Column(nullable = false)
     private String status;
 

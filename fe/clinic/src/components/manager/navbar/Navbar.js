@@ -22,7 +22,7 @@ function Navbar({ userName, userRole, onLogout}) {
       <nav className="custom-navbar navbar navbar-expand-md">
         <div className="container-fluid">
 
-          <Link className="navbar-brand" to="/">
+          <Link className="navbar-brand" to="/admin">
             <div className="brand-container">
               <div className="logo-container">
                 <div className="logo-circle">
@@ -38,7 +38,7 @@ function Navbar({ userName, userRole, onLogout}) {
           <div className="collapse navbar-collapse">
             <ul className="navbar-nav ms-auto">
               <li className="nav-item dropdown">
-                <Link className="nav-link dropdown-toggle user-profile" to="/" id="dropdownId" data-bs-toggle="dropdown">
+                <Link className="nav-link dropdown-toggle user-profile"  id="dropdownId" data-bs-toggle="dropdown">
                   <i className="fas fa-user-circle me-2"></i>
                   <span>{userName || "Guest"}</span>
                 </Link>
@@ -53,10 +53,10 @@ function Navbar({ userName, userRole, onLogout}) {
                       <i className="fas fa-id-card me-2"></i>Profile
                     </button>
                   )}
-                  <Link className="dropdown-item" to="/change-password">
+                  <Link className="dropdown-item" to="/admin/change-password">
                     <i className="fas fa-key me-2"></i>Change Password
                   </Link>
-                  <Link className="dropdown-item" to="/setting">
+                  <Link className="dropdown-item" to="/admin/setting">
                     <i className="fas fa-cog me-2"></i>Settings
                   </Link>
                   <div className="dropdown-divider"></div>

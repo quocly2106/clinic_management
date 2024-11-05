@@ -3,3 +3,12 @@ html, body {
   margin: 0;
   padding: 0;
 }
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Chiều cao tối thiểu cho toàn bộ trang */
+}
+
+.container-fluid {
+  flex: 1; /* Giúp cho nội dung chiếm không gian còn lại */
+}
