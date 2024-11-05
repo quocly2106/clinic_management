@@ -28,23 +28,20 @@ public class Treatment {
     @PastOrPresent
     private LocalDate treatmentDate; // Ngày điều trị
 
-    // Quan hệ N-N với Medicine
-    @ManyToMany
-    @JoinTable(
-            name = "treatment_medicine",
-            joinColumns = @JoinColumn(name = "treatment_id"),
-            inverseJoinColumns = @JoinColumn(name = "medicine_id")
-    )
-    private Set<Medicine> medicines;
+    @Column(nullable = false)
+    private String status; // Trạng thái điều trị (ví dụ: "Đang thực hiện", "Hoàn thành", "Huỷ bỏ")
+
+    @Column(length = 500) // Tùy chỉnh độ dài theo nhu cầu
+    private String notes;
+
+    // Quan hệ 1-N với TreatmentMedicine
+    @OneToMany(mappedBy = "treatment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TreatmentMedicine> treatmentMedicines;
 
     // Quan hệ N-N với Equipment
-    @ManyToMany
-    @JoinTable(
-            name = "treatment_equipment",
-            joinColumns = @JoinColumn(name = "treatment_id"),
-            inverseJoinColumns = @JoinColumn(name = "equipment_id")
-    )
-    private Set<Equipment> equipments;
+    // Quan hệ 1-N với TreatmentEquipment
+    @OneToMany(mappedBy = "treatment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TreatmentService> treatmentServices;
 
     // Quan hệ N-1 với Doctor
     @ManyToOne(fetch = FetchType.LAZY)

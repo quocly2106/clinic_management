@@ -57,7 +57,7 @@ const EditReceptionist = () => {
       }
       toast.success("Receptionist updated successfully");
         setTimeout(() => {
-          navigate('/receptionist'); 
+          navigate('/admin/receptionist'); 
       }, 2000);
     } catch (error) {
       setError(error.message);

@@ -49,7 +49,7 @@ function Navbar({ userName, userRole, onLogout}) {
                     </div>
                   )}
                   {userRole && (
-                    <button className="dropdown-item" onClick={() => navigate(`/${userRole}/profile`)}>
+                    <button className="dropdown-item" onClick={() => navigate(`/admin/${userRole}/profile`)}>
                       <i className="fas fa-id-card me-2"></i>Profile
                     </button>
                   )}

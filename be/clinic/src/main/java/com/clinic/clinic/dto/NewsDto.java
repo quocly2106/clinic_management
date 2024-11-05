@@ -29,5 +29,6 @@ public class NewsDto {
 
     private String category;
 
+    @NotNull(message = "Views must not be null")
     private Integer views;
 }

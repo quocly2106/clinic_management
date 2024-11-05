@@ -23,9 +23,21 @@ function AddPatient() {
     setPatientData({ ...patientData, [name]: value });
   };
 
+  const today = new Date();
+  const dob = new Date(patientData.dateOfBirth);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Patient Data:", patientData);
+    if (dob >= today) {
+      setError("Date of Birth must be in the past.");
+      setShowToast(true);
+      return;
+    }
+
+    if (patientData.phone.length !== 10) {
+      setError("Phone number must be exactly 10 digits.");
+      setShowToast(true);
+      return;
+    }
     try {
       await addPatient(patientData);
       setSuccessMessage("Patient added successfully!");
@@ -39,7 +51,7 @@ function AddPatient() {
         phone: "",
         doctorId: "",
       });
-      navigate("/patient");
+      navigate("/admin/patient");
     } catch (error) {
       console.error("Error adding patient:", error);
       setError("Failed to add patient. Please try again.");
@@ -82,18 +94,20 @@ function AddPatient() {
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="gender" className="form-label">
-            Gender
-          </label>
-          <input
-            type="text"
+          <label htmlFor="gender" className="form-label">Gender</label>
+          <select
             className="form-control rounded-3"
             id="gender"
             name="gender"
             value={patientData.gender}
             onChange={handleChange}
             required
-          />
+          >
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
         </div>
         <div className="mb-3">
           <label htmlFor="dateOfBirth" className="form-label">
@@ -114,7 +128,7 @@ function AddPatient() {
             Phone
           </label>
           <input
-            type="number"
+            type="text"
             className="form-control rounded-3"
             id="phone"
             name="phone"

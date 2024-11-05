@@ -6,42 +6,49 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "equipments")
-public class Equipment {
+@Table(name = "services")
+public class Service {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "equipment_id")
+    @Column(name = "service_id")
     private Long id;
 
     @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
-    private String type;
-
-    @Min(0)
-    @Column(nullable = false)
-    private Integer quantity;
+    private String description;
 
     @Column(nullable = false)
-    private String manufacturer;
+    private BigDecimal price;
 
     @Column(nullable = false)
-    private LocalDate maintenanceDate;
+    private Integer duration;
 
-    // Mối quan hệ N-N với Treatment
-    @ManyToMany(mappedBy = "equipments")
-    private Set<Treatment> treatments;
+    @Column(nullable = false)
+    private String status;
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
 
     // Mối quan hệ n-1 với Admin
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id", nullable = false)
     private Admin admin;
+
+    // Mối quan hệ N-N với Treatment qua TreatmentService
+    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TreatmentService> treatmentServices; // Thêm ánh xạ ngược
 }

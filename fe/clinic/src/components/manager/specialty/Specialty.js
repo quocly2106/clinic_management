@@ -130,7 +130,7 @@ function Specialty() {
               style={{
                 background: colors.background,
               }}
-              onClick={() => navigate("/add-specialty")}
+              onClick={() => navigate("/admin/add-specialty")}
             >
               <MdAdd className="add-icon" />
               <span>Add</span>
@@ -175,7 +175,7 @@ function Specialty() {
                       <td>
                         <div className="action-buttons">
                           <Link
-                            to={`/edit-specialty/${specialty.id}`}
+                            to={`/admin/edit-specialty/${specialty.id}`}
                             className="edit-button"
                             title="Edit"
                           >

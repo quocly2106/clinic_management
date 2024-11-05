@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addMedicine } from "../../utils/ApiFunction";
-import "./AddMedicine.css"
+import "./AddMedicine.css";
 
 function AddMedicine() {
   const [medicineData, setMedicineData] = useState({
@@ -23,7 +23,20 @@ function AddMedicine() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Medicine Data:", medicineData);
+    // Kiểm tra price và quantity không được là số âm
+    if (medicineData.price < 0) {
+      setError("Price cannot be negative");
+      setSuccessMessage("");
+      setShowToast(true);
+      return; // Dừng lại nếu price không hợp lệ
+    }
+
+    if (medicineData.quantity < 0) {
+      setError("Quantity cannot be negative");
+      setSuccessMessage("");
+      setShowToast(true);
+      return; // Dừng lại nếu quantity không hợp lệ
+    }
     try {
       await addMedicine(medicineData);
       setSuccessMessage("Medicine added successfully!");
@@ -35,7 +48,7 @@ function AddMedicine() {
         price: "",
         quantity: "",
       });
-      navigate("/medicine");
+      navigate("/admin/medicine");
     } catch (error) {
       console.error("Error adding medicine:", error);
       setError("Failed to add medicine. Please try again.");
@@ -82,7 +95,8 @@ function AddMedicine() {
             Price
           </label>
           <input
-            type="number" step="0.01"
+            type="number"
+            step="0.01"
             className="form-control rounded-3"
             id="price"
             name="price"

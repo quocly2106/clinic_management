@@ -17,9 +17,6 @@ import Admin from "../admin/Admin";
 import Specialty from "../specialty/Specialty";
 import AddSpecialty from "../specialty/AddSpecialty";
 import EditSpecialty from "../specialty/EditSpecialty";
-import Equipment from "../equipment/Equipment";
-import AddEquipment from "../equipment/AddEquipment";
-import EditEquipment from "../equipment/EditEquipment";
 import Medicine from "../medicine/Medicine";
 import EditMedicine from "../medicine/EditMedicine";
 import AddMedicine from "../medicine/AddMedicine";
@@ -30,6 +27,12 @@ import News from "../news/News";
 import AddNews from "../news/AddNews";
 import EditNews from "../news/EditNews";
 import "./Home.css";
+import Appointment from "../appointment/Appointment";
+import AddAppointment from "../appointment/AddAppointment";
+import Service from "../service/Service";
+import AddService from "../service/AddService";
+import EditService from "../service/EditService";
+import EditAppointment from "../appointment/EditAppointment";
 
 function Home({ userRole, onLogout }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -47,51 +50,66 @@ function Home({ userRole, onLogout }) {
         <div className={`col-2 bg-light ${sidebarOpen ? "" : "d-none"}`}>
           <SideBar onLogout={onLogout} />
         </div>
-        <div className={`content-wrapper col-${sidebarOpen ? '10' : '12'}`}>
+        <div className={`content-wrapper col-${sidebarOpen ? "10" : "12"}`}>
           <Routes>
-            <Route path="*" element={<Dashboard />} />
-            <Route path="/doctor" element={<Doctor />} />
-            <Route path="/add-doctor" element={<AddDoctor />} />
-            <Route path="/edit-doctor/:doctorId" element={<EditDoctor />} />
-            <Route path="/receptionist" element={<Receptionist />} />
-            <Route path="/add-receptionist" element={<AddReceptionist />} />
+            <Route path="/admin/dashboard" element={<Dashboard />} />
+            <Route path="/admin/doctor" element={<Doctor />} />
+            <Route path="/admin/add-doctor" element={<AddDoctor />} />
             <Route
-              path="/edit-receptionist/:receptionistId"
+              path="/admin/edit-doctor/:doctorId"
+              element={<EditDoctor />}
+            />
+            <Route path="/admin/receptionist" element={<Receptionist />} />
+            <Route
+              path="/admin/add-receptionist"
+              element={<AddReceptionist />}
+            />
+            <Route
+              path="/admin/edit-receptionist/:receptionistId"
               element={<EditReceptionist />}
             />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/specialty" element={<Specialty />} />
-            <Route path="/add-specialty" element={<AddSpecialty />} />
+            <Route path="/admin/admin" element={<Admin />} />
+            <Route path="/admin/specialty" element={<Specialty />} />
+            <Route path="/admin/add-specialty" element={<AddSpecialty />} />
             <Route
-              path="/edit-specialty/:specialtyId"
+              path="/admin/edit-specialty/:specialtyId"
               element={<EditSpecialty />}
             />
-            <Route path="/equipment" element={<Equipment />} />
-            <Route path="/add-equipment" element={<AddEquipment />} />
+            <Route path="/admin/service" element={<Service />} />
+            <Route path="/admin/add-service" element={<AddService />} />
             <Route
-              path="/edit-equipment/:equipmentId"
-              element={<EditEquipment />}
+              path="/admin/edit-service/:serviceId"
+              element={<EditService />}
             />
-            <Route path="/medicine" element={<Medicine />} />
-            <Route path="/add-medicine" element={<AddMedicine />} />
+            <Route path="/admin/medicine" element={<Medicine />} />
+            <Route path="/admin/add-medicine" element={<AddMedicine />} />
             <Route
-              path="/edit-medicine/:medicineId"
+              path="/admin/edit-medicine/:medicineId"
               element={<EditMedicine />}
             />
-            <Route path="/patient" element={<Patient />} />
-            <Route path="/add-patient" element={<AddPatient />} />
-            <Route path="/edit-patient/:patientId" element={<EditPatient />} />
-            <Route path="/news" element={<News />} />
-            <Route path="/add-news" element={<AddNews />} />
-            <Route path="/edit-news/:newsId" element={<EditNews />} />
+            <Route path="/admin/patient" element={<Patient />} />
+            <Route path="/admin/add-patient" element={<AddPatient />} />
             <Route
-              path="/doctor/profile"
+              path="/admin/edit-patient/:patientId"
+              element={<EditPatient />}
+            />
+            <Route path="/admin/news" element={<News />} />
+            <Route path="/admin/add-news" element={<AddNews />} />
+            <Route path="/admin/edit-news/:newsId" element={<EditNews />} />
+            <Route path="/admin/appointment" element={<Appointment />} />
+            <Route path="/admin/add-appointment" element={<AddAppointment />} />
+            <Route
+              path="/admin/edit-appointment/:appointmentId"
+              element={<EditAppointment />}
+            />
+            <Route
+              path="/admin/doctor/profile"
               element={
                 userRole === "doctor" ? <DoctorProfile /> : <Navigate to="/" />
               }
             />
             <Route
-              path="/receptionist/profile"
+              path="/admin/receptionist/profile"
               element={
                 userRole === "receptionist" ? (
                   <ReceptionistProfile />
@@ -101,12 +119,12 @@ function Home({ userRole, onLogout }) {
               }
             />
             <Route
-              path="/admin/profile"
+              path="/admin/admin/profile"
               element={
                 userRole === "admin" ? <AdminProfile /> : <Navigate to="/" />
               }
             />
-            <Route path="/change-password" element={<ChangePassword />} />
+            <Route path="/admin/change-password" element={<ChangePassword />} />
           </Routes>
         </div>
       </div>

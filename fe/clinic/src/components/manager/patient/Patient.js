@@ -75,7 +75,7 @@ function Patient() {
   };
 
   const filteredPatients = patients.filter((patient) => {
-    const fullName = `${patient.firstName} + ${patient.lastName}`.toLowerCase();
+    const fullName = `${patient.phone}`.toLowerCase();
     return fullName.includes(search);
   });
 
@@ -132,7 +132,7 @@ function Patient() {
               style={{
                 background: colors.background,
               }}
-              onClick={() => navigate("/add-patient")}
+              onClick={() => navigate("/admin/add-patient")}
             >
               <MdAdd className="add-icon" />
               <span>Add</span>
@@ -149,6 +149,7 @@ function Patient() {
                   <th>Frist Name</th>
                   <th>Last Name</th>
                   <th>Gender</th>
+                  <th>Phone</th>
                   <th>Date Of Birth</th>
                   <th>Doctor Name</th>
                   <th>Action</th>
@@ -157,7 +158,7 @@ function Patient() {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="6" className="text-center">
+                    <td colSpan="12" className="text-center">
                       <div className="loading-spinner">
                         <div className="spinner"></div>
                       </div>
@@ -165,7 +166,7 @@ function Patient() {
                   </tr>
                 ) : filteredPatients.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="no-data">
+                    <td colSpan="12" className="no-data">
                       No patients found
                     </td>
                   </tr>
@@ -176,12 +177,13 @@ function Patient() {
                       <td>{patient.firstName}</td>
                       <td>{patient.lastName}</td>
                       <td>{patient.gender}</td>
+                      <td>{patient.phone}</td>
                       <td>{patient.dateOfBirth}</td> 
                       <td>{patient.doctor ? patient.doctor.firstName + " " +  patient.doctor.lastName : "N/A"}</td> 
                       <td>
                         <div className="action-buttons">
                           <Link
-                            to={`/edit-patient/${patient.id}`}
+                            to={`/admin/edit-patient/${patient.id}`}
                             className="edit-button"
                             title="Edit"
                           >

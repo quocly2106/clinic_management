@@ -46,7 +46,7 @@ function Login({ onLogin }) {
         }
 
         onLogin(email, token, role.toUpperCase());
-        navigate("/");
+        navigate("/admin/dashboard");
       } else {
         throw new Error("Invalid login response");
       }

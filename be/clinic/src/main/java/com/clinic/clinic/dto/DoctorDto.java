@@ -11,15 +11,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DoctorDto {
 
-    @NotBlank(message = "FirstName is required ")
+    @NotBlank(message = "First Name is required")
     private String firstName;
-    @NotBlank(message = "LastName is required ")
+
+    @NotBlank(message = "Last Name is required")
     private String lastName;
+
     @Email(message = "Email should be valid")
     @NotBlank(message = "Email is required")
     private String email;
+
     @NotBlank(message = "Password is required")
     private String password;
+
     private String image;
-    private Long specialtyId;
+
+    private Long specialtyId; // ID của chuyên khoa
 }

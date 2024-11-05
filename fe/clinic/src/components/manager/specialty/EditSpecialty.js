@@ -61,7 +61,7 @@ const EditSpecialty = () => {
       // Nếu cập nhật thành công
       toast.success("Specialty updated successfully");
         setTimeout(() => {
-          navigate('/specialty'); 
+          navigate('/admin/specialty'); 
       }, 2000);
     } catch (error) {
       setError(error.message);

@@ -1,5 +1,6 @@
 package com.clinic.clinic.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
@@ -47,5 +48,6 @@ public class Patient {
     // Quan hệ n-1 với Receptionist (nếu cần theo dõi ai quản lý thanh toán hoặc đặt lịch)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receptionist_id")
+    @JsonBackReference
     private Receptionist receptionist;
 }

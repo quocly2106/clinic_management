@@ -90,11 +90,11 @@ const EditDoctor = () => {
         throw new Error("Failed to update doctor: " + errorMessage);
       }
 
-      toast.success("Doctor updated successfully");
 
-      setTimeout(() => {
-        navigate("/doctor");
-      }, 2000);
+        // Chuyển hướng sau 2 giây
+        setTimeout(() => {
+            navigate('/admin/doctor'); 
+        }, 2000);
     } catch (error) {
       setError(error.message);
       toast.error(error.message);

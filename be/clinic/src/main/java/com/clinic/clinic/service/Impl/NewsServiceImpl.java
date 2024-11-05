@@ -97,6 +97,12 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
+    public News getNewsByIdProfile(Long id) {
+        return newsRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("News not found with ID: " + id));
+    }
+
+    @Override
     public void incrementViews(Long id) {
         newsRepository.incrementViews(id);
     }

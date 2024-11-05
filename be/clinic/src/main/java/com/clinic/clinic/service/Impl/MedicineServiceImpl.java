@@ -1,10 +1,8 @@
 package com.clinic.clinic.service.Impl;
 
-import com.clinic.clinic.dto.EquipmentDto;
 import com.clinic.clinic.dto.MedicineDto;
 import com.clinic.clinic.exception.ResourceNotFoundException;
 import com.clinic.clinic.model.Admin;
-import com.clinic.clinic.model.Equipment;
 import com.clinic.clinic.model.Medicine;
 import com.clinic.clinic.repository.AdminRepository;
 import com.clinic.clinic.repository.MedicineRepository;

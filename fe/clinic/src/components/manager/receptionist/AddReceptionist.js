@@ -37,7 +37,7 @@ function AddReceptionist() {
         password: '',
         role: 'RECEPTIONIST',
       });
-      navigate('/receptionist'); 
+      navigate('/admin/receptionist'); 
     } catch (error) {
       console.error("Error adding receptionist:", error);
       setError('Failed to add receptionist. Please try again.');

@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { addEquipment } from "../../utils/ApiFunction";
-import "./AddEquipment.css"
+import { addService } from "../../utils/ApiFunction";
+import "./AddService.css";
 
-function AddEquipment() {
-  const [equipmentData, setEquipmentData] = useState({
+function AddService() {
+  const [serviceData, setServiceData] = useState({
     name: "",
-    type: "",
-    quantity: "",
-    manafacturer: "",
-    maintenanceDate: "",
+    description: "",
+    price: "",
+    duration: "",
+    status: "Active",
   });
 
   const [error, setError] = useState("");
@@ -19,28 +19,38 @@ function AddEquipment() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEquipmentData({ ...equipmentData, [name]: value });
+    setServiceData({ ...serviceData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Equipment Data:", equipmentData);
+    // Kiểm tra giá trị price và duration
+    if (serviceData.price < 0 ) {
+      setError("Price  must be non-negative.");
+      setShowToast(true);
+      return; 
+    }
+    if (serviceData.duration < 0 ) {
+      setError("Duration must be non-negative.");
+      setShowToast(true);
+      return; 
+    }
     try {
-      await addEquipment(equipmentData);
-      setSuccessMessage("Equipment added successfully!");
+      await addService(serviceData);
+      setSuccessMessage("Service added successfully!");
       setError("");
       setShowToast(true);
-      setEquipmentData({
+      setServiceData({
         name: "",
-        type: "",
-        quantity: "",
-        manafacturer: "",
-        maintenanceDate: "",
+        description: "",
+        price: "",
+        duration: "",
+        status: "Active",
       });
-      navigate("/equipment");
+      navigate("/admin/service");
     } catch (error) {
-      console.error("Error adding equipment:", error);
-      setError("Failed to add equipment. Please try again.");
+      console.error("Error adding service:", error);
+      setError("Failed to add service. Please try again.");
       setSuccessMessage("");
       setShowToast(true);
     }
@@ -48,7 +58,7 @@ function AddEquipment() {
 
   return (
     <div className="container mt-5">
-      <h2 className="text-center">Add Equipment</h2>
+      <h2 className="text-center">Add Service</h2>
       {error && <div className="alert alert-danger rounded-3">{error}</div>}
       <form onSubmit={handleSubmit} className="rounded-3 shadow p-4 bg-light">
         <div className="mb-3">
@@ -60,69 +70,71 @@ function AddEquipment() {
             className="form-control rounded-3"
             id="name"
             name="name"
-            value={equipmentData.name}
+            value={serviceData.name}
             onChange={handleChange}
             required
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="type" className="form-label">
-            Type
+          <label htmlFor="description" className="form-label">
+            Description
           </label>
           <input
             type="text"
             className="form-control rounded-3"
-            id="type"
-            name="type"
-            value={equipmentData.type}
+            id="description"
+            name="description"
+            value={serviceData.description}
             onChange={handleChange}
             required
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="quantity" className="form-label">
-            Quantity
+          <label htmlFor="price" className="form-label">
+            Price
+          </label>
+          <input
+            type="number"
+            step={0.01}
+            className="form-control rounded-3"
+            id="price"
+            name="price"
+            value={serviceData.price}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="duration" className="form-label">
+            Duration(minutes)
           </label>
           <input
             type="number"
             className="form-control rounded-3"
-            id="quantity"
-            name="quantity"
-            value={equipmentData.quantity}
+            id="duration"
+            name="duration"
+            value={serviceData.duration}
             onChange={handleChange}
             required
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="manufacturer" className="form-label">
-          Manufacturer
+          <label htmlFor="status" className="form-label">
+            Status
           </label>
-          <input
-            type="text"
-            className="form-control rounded-3"
-            id="manufacturer"
-            name="manufacturer"
-            value={equipmentData.manufacturer}
+          <select
+            className="form-select"
+            id="status"
+            name="status"
+            value={serviceData.status}
             onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="maintenanceDate" className="form-label">
-            Maintenance Date
-          </label>
-          <input
-            type="date"
-            className="form-control rounded-3"
-            id="maintenanceDate"
-            name="maintenanceDate"
-            value={equipmentData.maintenanceDate}
-            onChange={handleChange}
-            required
-          />
+          >
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
         </div>
         <button type="submit" className="btn btn-primary">
-          Add Equipment
+          Add Service
         </button>
       </form>
 
@@ -151,4 +163,4 @@ function AddEquipment() {
   );
 }
 
-export default AddEquipment;
+export default AddService;

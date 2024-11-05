@@ -77,6 +77,11 @@ public class PatientServiceImpl implements PatientService {
         return patientRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Patient not found"));
     }
 
+    @Override
+    public Patient findByPhone(String phone) {
+        return patientRepository.findByPhone(phone);
+    }
+
     private Patient convertToEntity(PatientDto patientDto) {
         Patient patient = new Patient();
         patient.setFirstName(patientDto.getFirstName());
@@ -100,4 +105,5 @@ public class PatientServiceImpl implements PatientService {
 
         return patient;
     }
+
 }

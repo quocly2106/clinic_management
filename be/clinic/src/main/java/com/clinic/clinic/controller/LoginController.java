@@ -5,6 +5,7 @@ import com.clinic.clinic.service.AdminService;
 import com.clinic.clinic.service.DoctorService;
 import com.clinic.clinic.service.ReceptionistService;
 import com.clinic.clinic.utils.JWTUtils;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,7 +37,7 @@ public class LoginController {
     private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginDto loginDto) {
         Map<String, String> response = authenticateUser(loginDto);
         if (response != null) {
             return ResponseEntity.ok(response);

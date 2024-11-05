@@ -12,15 +12,21 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PatientDto {
-    @NotBlank(message = "FirstName is required ")
+    @NotBlank(message = "First Name is required")
     private String firstName;
-    @NotBlank(message = "LastName is required ")
+
+    @NotBlank(message = "Last Name is required")
     private String lastName;
+
     private String gender;
+
     private LocalDate dateOfBirth;
+
     @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be 10 digits")
     private String phone;
+
     private Long doctorId;  // Sẽ sử dụng để liên kết với bác sĩ
     private Long receptionistId;
-    private String role;// Sử dụng nếu có liên kết với lễ tân
+
+    private String role; // Sử dụng nếu có liên kết với lễ tân
 }

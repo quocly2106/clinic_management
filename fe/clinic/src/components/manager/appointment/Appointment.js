@@ -1,15 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { allEquipments, deleteEquipment } from "../../utils/ApiFunction";
+import { allAppointments, deleteAppointment } from "../../utils/ApiFunction";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, Toast } from "react-bootstrap";
-import "./Equipment.css";
+import "./Appointment.css";
 import { MdAdd, MdDelete, MdEdit } from "react-icons/md";
 import { BiSearchAlt } from "react-icons/bi";
 import colors from "../../../config/color";
 
-function Equipment() {
+function Appointment() {
   const navigate = useNavigate();
-  const [equipments, setEquipments] = useState([]);
+  const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -18,15 +18,15 @@ function Equipment() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const fetchEquipments = useCallback(async () => {
+  const fetchAppointments = useCallback(async () => {
     try {
-      const equipmentsData = await allEquipments();
-      setEquipments(equipmentsData);
+      const appointmentsData = await allAppointments();
+      setAppointments(appointmentsData);
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching equipments:", error);
+      console.error("Error fetching appointments:", error);
       setLoading(false);
-      showToastMessage("Error fetching equipments data", "error");
+      showToastMessage("Error fetching appointments data", "error");
     }
   }, []);
 
@@ -37,23 +37,23 @@ function Equipment() {
     setTimeout(() => setShowToast(false), 3000);
   };
 
-  const handleDelete = async (equipmentId) => {
+  const handleDelete = async (appointmentId) => {
     const confirmDelete = window.confirm(
-      `Are you sure you want to delete Equipment No ${equipmentId}?`
+      `Are you sure you want to delete Appointment No ${appointmentId}?`
     );
     if (!confirmDelete) return;
   
     try {
-      const result = await deleteEquipment(equipmentId);
+      const result = await deleteAppointment(appointmentId);
       if (result.success) {
         showToastMessage(
-          `Equipment No ${equipmentId} was deleted successfully.`,
+          `Appointment No ${appointmentId} was deleted successfully.`,
           "success"
         );
-        fetchEquipments(); // Refresh danh sách sau khi xóa thành công
+        fetchAppointments(); // Refresh danh sách sau khi xóa thành công
       } else {
         showToastMessage(
-          `Error deleting equipment: ${result.message}`,
+          `Error deleting appointment: ${result.message}`,
           "error"
         );
       }
@@ -67,34 +67,64 @@ function Equipment() {
   
 
   useEffect(() => {
-    fetchEquipments();
-  }, [fetchEquipments]);
+    fetchAppointments();
+  }, [fetchAppointments]);
 
   const handleSearch = (event) => {
     setSearch(event.target.value.toLowerCase());
   };
 
-  const filteredEquipments = equipments.filter((equipment) => {
-    const fullName = `${equipment.name}`.toLowerCase();
-    return fullName.includes(search);
+  const filteredAppointments = appointments.filter((appointment) => {
+    if (appointment.patient) {
+      const fullName = `${appointment.patient.phone}`.toLowerCase();
+      return fullName.includes(search);
+    }
+    return false; // Nếu không có bệnh nhân, không bao gồm trong kết quả
   });
+  
 
-  const indexOfLastEquipment = currentPage * itemsPerPage;
-  const indexOfFirstEquipment = indexOfLastEquipment - itemsPerPage;
-  const currentEquipments = filteredEquipments.slice(
-    indexOfFirstEquipment,
-    indexOfLastEquipment
+  const indexOfLastAppointment = currentPage * itemsPerPage;
+  const indexOfFirstAppointment = indexOfLastAppointment - itemsPerPage;
+  const currentAppointments = filteredAppointments.slice(
+    indexOfFirstAppointment,
+    indexOfLastAppointment
   );
 
   // Tạo số trang
   const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(filteredEquipments.length / itemsPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(filteredAppointments.length / itemsPerPage); i++) {
     pageNumbers.push(i);
   }
 
+
+  const convertToLocalTime = (dateString) => {
+    const date = new Date(dateString);
+  
+    const timeOptions = {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+      timeZone: "Asia/Bangkok", 
+    };
+    
+    const timePart = date.toLocaleTimeString("vi-VN", timeOptions);
+    
+    const dateOptions = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      timeZone: "Asia/Bangkok",
+    };
+    
+    const datePart = date.toLocaleDateString("vi-VN", dateOptions);
+  
+    return `${timePart} ${datePart}`;
+  };
+
   return (
-    <div className="equipment-wrapper">
-      <div className="equipment-container">
+    <div className="appointment-wrapper">
+      <div className="appointment-container">
         <ToastContainer position="top-end" className="custom-toast">
           <Toast
             show={showToast}
@@ -132,7 +162,7 @@ function Equipment() {
               style={{
                 background: colors.background,
               }}
-              onClick={() => navigate("/add-equipment")}
+              onClick={() => navigate("/admin/add-appointment")}
             >
               <MdAdd className="add-icon" />
               <span>Add</span>
@@ -146,11 +176,14 @@ function Equipment() {
               <thead>
                 <tr>
                   <th>STT</th>
-                  <th>Name</th>
-                  <th>Type</th>
-                  <th>Quantity</th>
-                  <th>Manufacturer</th>
-                  <th>Maintenance Date</th>
+                  <th>Patient Name</th>
+                  <th>Patient Phone</th>
+                  <th>Date Time</th>
+                  <th>Reason</th>
+                  <th>CreatedAt</th>
+                  <th>UpdatedAt</th>
+                  <th>Doctor Name</th>
+                  <th>Status</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -163,25 +196,28 @@ function Equipment() {
                       </div>
                     </td>
                   </tr>
-                ) : filteredEquipments.length === 0 ? (
+                ) : filteredAppointments.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="no-data">
-                      No equipments found
+                    <td colSpan="12" className="no-data">
+                      No appointments found
                     </td>
                   </tr>
                 ) : (
-                  currentEquipments.map((equipment, index) => (
-                    <tr key={equipment.id}>
+                  currentAppointments.map((appointment, index) => (
+                    <tr key={appointment.id}>
                       <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-                      <td>{equipment.name}</td>
-                      <td>{equipment.type}</td>
-                      <td>{equipment.quantity}</td> 
-                      <td>{equipment.manufacturer}</td> 
-                      <td>{equipment.maintenanceDate}</td> 
+                      <td>{appointment.patient ? appointment.patient.firstName + " " +  appointment.patient.lastName : "N/A"}</td> 
+                      <td>{appointment.patient ? appointment.patient.phone  : "N/A"}</td> 
+                      <td>{convertToLocalTime(appointment.dateTime)}</td> 
+                      <td>{appointment.reason}</td> 
+                      <td>{convertToLocalTime(appointment.createdAt)}</td>
+                      <td>{convertToLocalTime(appointment.updatedAt)}</td>
+                      <td>{appointment.doctor ? appointment.doctor.firstName + " " +  appointment.doctor.lastName + "(" + appointment.doctor.specialty.name +  ")" : "N/A"}</td> 
+                      <td>{appointment.status}</td> 
                       <td>
                         <div className="action-buttons">
                           <Link
-                            to={`/edit-equipment/${equipment.id}`}
+                            to={`/admin/edit-appointment/${appointment.id}`}
                             className="edit-button"
                             title="Edit"
                           >
@@ -189,7 +225,7 @@ function Equipment() {
                           </Link>
                           <button
                             className="delete-button"
-                            onClick={() => handleDelete(equipment.id)}
+                            onClick={() => handleDelete(appointment.id)}
                             title="Delete"
                           >
                             <MdDelete />
@@ -223,4 +259,4 @@ function Equipment() {
   );
 }
 
-export default Equipment;
+export default Appointment;
