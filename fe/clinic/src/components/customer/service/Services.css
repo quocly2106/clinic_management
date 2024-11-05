@@ -1,0 +1,155 @@
+/* Services.css */
+.services-page {
+    background-color: #f8f9fa;
+}
+
+/* Hero Section */
+.services-hero {
+
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 100px 0;
+    text-align: center;
+}
+
+.services-hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+}
+
+/* Services List Section */
+.services-list {
+    padding: 80px 0;
+}
+
+.service-card {
+    margin-bottom: 30px;
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+}
+
+.service-image {
+    height: 200px;
+    object-fit: cover;
+}
+
+.service-card .card-body {
+    padding: 1.5rem;
+}
+
+.service-card .card-title {
+    color: #2c3e50;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.service-details {
+    margin: 1rem 0;
+    padding: 0.5rem 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.service-price {
+    color: #6EC2F7;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.service-duration {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.book-button {
+    background-color: #6EC2F7;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.book-button:hover {
+    background-color: #5ba8db;
+}
+
+/* Call to Action Section */
+.cta-section {
+    background-color: #6EC2F7;
+    color: white;
+    padding: 60px 0;
+    text-align: center;
+}
+
+.cta-content h2 {
+    margin-bottom: 20px;
+}
+
+.contact-button {
+    background-color: white;
+    color: #6EC2F7;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 5px;
+    margin-top: 20px;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+}
+
+.contact-button:hover {
+    transform: scale(1.05);
+}
+
+/* Loading State */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+}
+
+/* Error State */
+.error-container {
+    text-align: center;
+    padding: 50px;
+}
+
+.error-message {
+    color: #dc3545;
+    margin-bottom: 20px;
+}
+
+.retry-button {
+    background-color: #6EC2F7;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .services-hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .services-list {
+        padding: 40px 0;
+    }
+
+    .service-card {
+        margin-bottom: 20px;
+    }
+}

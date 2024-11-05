@@ -4,6 +4,7 @@
   padding: 1rem 1.5rem;
   border: 10px solid rgba(110, 194, 247, 0.2);
   margin-bottom: 20px;
+  position: relative;
 }
 
 .navbar-brand {

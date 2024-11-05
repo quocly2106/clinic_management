@@ -1,0 +1,85 @@
+.custom-navbar {
+    padding: 0.5rem 1rem;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center; /* Căn giữa nội dung trong navbar */
+}
+
+.brand-container {
+    display: flex;
+    align-items: center;
+    margin-right: auto; /* Đẩy phần thương hiệu sang bên trái */
+}
+
+.navbar {
+    border: none !important; /* Bỏ border xung quanh navbar */
+}
+
+.navbar-light .navbar-nav {
+    display: flex;
+    gap: 10px;
+}
+
+.custom-navbar .navbar-light .navbar-nav .nav-link {
+    color: #6EC2F7 !important; /* Chỉnh màu chữ thành #6EC2F7 */
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.navbar-toggler {
+    border-color: #ffffff;
+}
+
+.navbar-collapse {
+    display: flex;
+    justify-content: center; /* Căn giữa danh mục trong navbar khi mở rộng */
+}
+
+.nav-link:hover {
+    color: #6EC2F7 !important;
+}
+
+/* Media query cho màn hình nhỏ hơn 768px */
+@media (max-width: 768px) {
+    .custom-navbar {
+        justify-content: space-between; /* Căn giữa các phần tử khi ở màn hình nhỏ */
+        padding: 0.5rem; /* Điều chỉnh padding nếu cần */
+    }
+
+    .brand-container {
+        margin-right: 0; /* Không đẩy sang bên phải nữa */
+        justify-content: flex-start; /* Căn logo sang bên trái */
+    }
+
+    .navbar-collapse {
+        display: none; /* Ẩn menu theo mặc định */
+        flex-direction: column; /* Danh sách menu thành cột */
+        position: absolute; /* Để nó có thể nằm bên dưới logo */
+        top: 100%; /* Vị trí dưới logo */
+        left: 0; /* Căn trái */
+        right: 0; /* Chiếm toàn bộ chiều rộng */
+        background-color: white; /* Có thể thêm màu nền cho menu */
+        padding: 0.5rem 0; /* Padding cho menu */
+        z-index: 1001; /* Đảm bảo menu nằm trên các phần tử khác */
+    }
+
+    .navbar-toggler.collapsed + .navbar-collapse {
+        display: flex; /* Hiện menu khi nút được nhấn */
+        align-items: flex-start; /* Căn trái các mục menu */
+    }
+
+    .navbar-nav {
+        align-items: flex-start; /* Căn các mục menu về bên trái */
+        width: 100%; /* Chiếm toàn bộ chiều rộng */
+    }
+
+    .navbar-nav .nav-link {
+        width: 100%; /* Đảm bảo link chiếm toàn bộ chiều rộng */
+        text-align: left; /* Căn trái các link */
+    }
+}

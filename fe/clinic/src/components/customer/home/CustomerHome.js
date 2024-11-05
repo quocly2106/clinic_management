@@ -1,24 +1,28 @@
-import React from 'react'
-import { Routes, Route } from 'react-router-dom';
-import CustomerNavbar from '../navbar/CustomerNavbar';
-import Index from '../index/Index';
+import React from "react";
+import { Route, Routes } from "react-router-dom";
+import CustomerNavbar from "../navbar/CustomerNavbar";
+import CustomerFooter from "../footer/CustomerFooter";
+import "./CustomerHome.css";
+import Banner from "../banner/Banner";
+import Services from "../service/Services";
+;
+
 
 function CustomerHome() {
-    return (
-        <>
-          <CustomerNavbar />
-          <div className="container-fluid mt-4">
-            <Routes>
-              <Route path="/" element={<Index />} />
-              {/* <Route path="/services" element={<Services />} />
-              <Route path="/doctors" element={<Doctors />} />
-              <Route path="/appointment" element={<Appointment />} />
-              <Route path="/news" element={<News />} />
-              <Route path="/contact" element={<Contact />} /> */}
-            </Routes>
-          </div>
-        </>
-      );
-    }
+  return (
+    <div className="page-container">
+      <CustomerNavbar />
+      <div className="content-wrap">
+        <Banner />
+        <div className="container-fluid">
+          <Routes>
+            <Route path="/services" element={<Services />} />
+          </Routes>
+        </div>
+      </div>
+      <CustomerFooter />
+    </div>
+  );
+}
 
-export default CustomerHome
+export default CustomerHome;
