@@ -1,99 +1,226 @@
-.custom-footer {
-    background-color: #ffffff;
-    border-radius: 10px;
-    padding: 2rem;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-    margin-top: auto; /* Thêm dòng này */
-    width: 100%; /* Thêm dòng này */
+.footer-section {
+  background-color: #1c374d;
+  color: white;
+  padding: 40px 0 20px;
 }
 
-
-.footer-title {
-    color: #6EC2F7; 
-    font-weight: bold;
-    font-size: 1.5rem; 
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 30px;
 }
 
-.footer-description {
-    max-width: 75%; 
-    color: #6a6a6a;
-    font-size: 1rem;
-    margin-top: 20px;
-    line-height: 1.5;
+.ft-info {
+  max-width: 100%;
 }
 
-.footer-links {
-    margin-bottom: 1rem; /* Khoảng cách giữa phần danh mục và liên hệ */
+.brand-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
-.footer-links h5 {
-    color: #6EC2F7; /* Màu tiêu đề danh mục */
-    font-weight: bold;
+.logo-container {
+  margin-right: 10px;
 }
 
-.footer-links ul {
-    list-style-type: none; /* Bỏ dấu chấm đầu dòng */
-    padding: 0; /* Bỏ padding */
+.logo-circle {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.footer-links ul li {
-    margin: 0.5rem 0; /* Khoảng cách giữa các mục */
+.circle-border {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border: 2px solid #1c374d;
+  border-radius: 50%;
 }
 
-.footer-links a {
-    text-decoration: none; /* Bỏ gạch chân */
-    color: #6a6a6a; /* Màu chữ của các link */
+.cross {
+  position: absolute;
+  background: #1c374d;
 }
 
-.footer-links a:hover {
-    color: #6EC2F7 /* Màu chữ khi hover */
+.cross-vertical {
+  width: 2px;
+  height: 20px;
 }
 
-.contact-info h5 {
-    color: #6EC2F7; /* Màu tiêu đề liên hệ */
-    font-weight: bold;
+.cross-horizontal {
+  width: 20px;
+  height: 2px;
 }
 
-.contact-info p {
-    color: #6a6a6a; /* Màu chữ liên hệ */
+.text {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
 }
 
-
-.social-icons {
-    display: flex;
-    gap: 20px; /* Khoảng cách giữa các icon */
-    margin-top: 20px;
+.ft-description {
+  color: #cbd5e1;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-top: 15px;
 }
 
-.social-icons a {
-    text-decoration: none;
-    transition: transform 0.3s ease;
+.ft-title{
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #6EC2F7;
+}
+.ft-list-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #6EC2F7;
 }
 
-.social-icons a:hover {
-    transform: translateY(-3px);
+.ft-list-items {
+  list-style: none;
+  padding: 0;
 }
 
-/* Màu sắc cụ thể cho từng icon mạng xã hội */
-.social-icons a:nth-child(1) svg { /* Facebook */
-    color: #1877F2;
-
+.ft-list-items li {
+  margin-bottom: 12px;
 }
 
-.social-icons a:nth-child(2) svg { /* Zalo */
-    color: #0068FF;
+.ft-list-items li a {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
 }
 
-.social-icons a:nth-child(3) svg { /* Gmail */
-    color: #EA4335;
+.ft-list-items li a:hover {
+  color: #6EC2F7;
 }
 
-.social-icons a:nth-child(4) svg { /* Instagram */
-    color: #E4405F;
+.ft-list-items li a svg {
+  fill: currentColor;
+  margin-right: 8px;
 }
 
+.ft-copyright {
+  max-width: 1200px;
+  margin: 20px auto 0;
+  padding: 20px 20px 0;
+  border-top: 1px solid rgba(203, 213, 225, 0.3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #cbd5e1;
+  font-size: 0.9rem;
+}
+
+.ft-social-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+}
+
+.ft-social-links li a {
+  color: #cbd5e1;
+  transition: color 0.3s ease;
+}
+
+.ft-social-links li a:hover {
+  color: white;
+}
+
+.ft-social-links svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-    .footer-links {
-        margin-top: 30px; /* Khoảng cách giữa danh mục và logo/description */
-    }
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .ft-copyright {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .ft-social-links {
+    justify-content: center;
+  }
+}
+
+/* Hover effects for links */
+.navbar-brand:hover .text {
+  color: #cbd5e1;
+}
+
+.ft-list-items li a:hover svg {
+  transform: scale(1.1);
+}
+
+/* Animation for social icons */
+.icon {
+  margin-right: 8px;
+}
+.ft-social-links li a svg {
+  transition: transform 0.3s ease;
+}
+
+.ft-social-links li a:hover svg {
+  transform: scale(1.2);
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Contact section specific styles */
+#contact .ft-list-items li a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#contact .ft-list-items li a svg {
+  min-width: 16px;
+}
+
+/* Additional hover effects */
+.ft-list-items li a {
+  position: relative;
+  padding-left: 0;
+  transition: padding-left 0.3s ease;
+}
+
+.ft-list-items li a:hover {
+  padding-left: 5px;
+}
+
+/* Improve accessibility */ 
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -1,70 +1,129 @@
-import React from "react";
+import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCommentDots,
+  faBars,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
+import "./CustomerNavbar.css";
 import { Link } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./CustomerNavbar.css"
+import { toast } from "react-toastify";
 
 function CustomerNavbar() {
+  const [nav, setNav] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+  const openNav = () => {
+    setNav(!nav);
+  };
+
+  const handleChatBtnClick = () => {
+    if (!isButtonDisabled) {
+      toast.info("Experiencing high traffic, Please wait a moment.", {
+        position: toast.POSITION.TOP_CENTER,
+        onOpen: () => setIsButtonDisabled(true),
+        onClose: () => setIsButtonDisabled(false),
+      });
+    }
+  };
+
   return (
-    <nav className="navbar navbar-expand-lg navbar-light custom-navbar">
-      <Link className="navbar-brand" to="/">
-        <div className="brand-container">
-          <div className="logo-container">
-            <div className="logo-circle">
-              <div className="circle-border"></div>
-              <div className="cross cross-vertical"></div>
-              <div className="cross cross-horizontal"></div>
-            </div>
-          </div>
-          <div className="text">Nhân Tâm</div>
-        </div>
-      </Link>
+    <div className="navbar-section">
+      <h1 className="navbar-title">
+        <Link to="/">
+          Nhân Tâm <span className="navbar-sign">+</span>
+        </Link>
+      </h1>
+
+      {/* Desktop */}
+      <ul className="navbar-items">
+        <li>
+          <Link to="/" className="navbar-links">
+            Trang chủ
+          </Link>
+        </li>
+        <li>
+          <a href="/about" className="navbar-links">
+            Về chúng tôi
+          </a>
+        </li>
+        <li>
+          <a href="/services" className="navbar-links">
+            Dịch vụ
+          </a>
+        </li>
+        <li>
+          <a href="/doctors" className="navbar-links">
+            Bác sĩ
+          </a>
+        </li>
+        <li>
+          <a href="/appointment" className="navbar-links">
+            Đặt lịch
+          </a>
+        </li>
+      </ul>
+
       <button
-        className="navbar-toggler"
+        className="navbar-btn"
         type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
+        disabled={isButtonDisabled}
+        onClick={handleChatBtnClick}
       >
-        <span className="navbar-toggler-icon"></span>
+        <FontAwesomeIcon icon={faCommentDots} /> Chat trực tiếp
       </button>
-      <div className="collapse navbar-collapse justify-content-center" id="navbarNav">
-        <ul className="navbar-nav">
-          <li className="nav-item">
-            <Link className="nav-link" to="/">
-              Trang chủ
+
+      {/* Mobile */}
+      <div className={`mobile-navbar ${nav ? "open-nav" : ""}`}>
+        <div onClick={openNav} className="mobile-navbar-close">
+          <FontAwesomeIcon icon={faXmark} className="hamb-icon" />
+        </div>
+
+        <ul className="mobile-navbar-links">
+          <li>
+            <Link onClick={openNav} to="/">
+              Home
             </Link>
           </li>
-          <li className="nav-item">
-            <Link className="nav-link" to="/about">
-              Về chúng tôi
-            </Link>
+          <li>
+            <a onClick={openNav} href="#services">
+              Services
+            </a>
           </li>
-          <li className="nav-item">
-            <Link className="nav-link" to="/services">
-              Dịch vụ 
-            </Link>
+          <li>
+            <a onClick={openNav} href="#about">
+              About
+            </a>
           </li>
-          <li className="nav-item">
-            <Link className="nav-link" to="/doctors">
-              Bác sĩ
-            </Link>
+          <li>
+            <a onClick={openNav} href="#reviews">
+              Reviews
+            </a>
           </li>
-          <li className="nav-item">
-            <Link className="nav-link" to="/appointment">
-              Đặt lịch 
-            </Link>
+          <li>
+            <a onClick={openNav} href="#doctors">
+              Doctors
+            </a>
           </li>
-          <li className="nav-item">
-            <Link className="nav-link" to="/contact">
-              Liên Hệ
-            </Link>
+          <li>
+            <a onClick={openNav} href="#contact">
+              Contact
+            </a>
           </li>
         </ul>
       </div>
-    </nav>
+
+      {/* Hamburger Icon */}
+      <div className="mobile-nav">
+        <FontAwesomeIcon
+          icon={faBars}
+          onClick={openNav}
+          className="hamb-icon"
+        />
+      </div>
+    </div>
   );
 }
+
 
 export default CustomerNavbar;
