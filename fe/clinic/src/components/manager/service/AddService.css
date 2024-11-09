@@ -14,3 +14,26 @@ body {
     border-radius: 10px; /* Bo tròn các góc cho toast */
   }
   
+  .modern-table img:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease-in-out;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+/* Đảm bảo các cột có độ rộng phù hợp */
+.modern-table th,
+.modern-table td {
+  min-width: 100px;
+  padding: 12px 8px;
+}
+
+/* Cột hình ảnh */
+.modern-table th:nth-child(3),
+.modern-table td:nth-child(3) {
+  min-width: 80px;
+  text-align: center;
+}

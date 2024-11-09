@@ -7,6 +7,8 @@ import Banner from "../banner/Banner";
 import Services from "../service/Services";
 import About from "../about/About";
 import Info from "../info/Info";
+import BookAppointment from "../book-appointment/BookAppointment";
+import Reviews from "../review/Reviews";
 
 
 function CustomerHome() {
@@ -17,9 +19,12 @@ function CustomerHome() {
         <Banner />
         <Info/>
         <About/>
+        <BookAppointment/>
+        <Reviews/>
         <div className="container-fluid">
           <Routes>
             <Route path="/services" element={<Services />} />
+            <Route path="/appointment" element={<BookAppointment />} />
             {/* <Route path="/about" element={<About />} /> */}
           </Routes>
         </div>

@@ -92,6 +92,12 @@ function Medicine() {
     pageNumbers.push(i);
   }
 
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(price);
+  };
   return (
     <div className="medicine-wrapper">
       <div className="medicine-container">
@@ -174,7 +180,7 @@ function Medicine() {
                       <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                       <td>{medicine.name}</td>
                       <td>{medicine.description}</td>
-                      <td>{medicine.price}</td> 
+                      <td>{formatPrice(medicine.price)}</td>
                       <td>{medicine.quantity}</td> 
                       <td>
                         <div className="action-buttons">

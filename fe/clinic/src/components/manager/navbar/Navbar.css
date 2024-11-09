@@ -37,23 +37,21 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.cross {
-  position: absolute;
-  background: white;
+.navbar-title a {
+  color: #6EC2F7; /* Blue color for brand title */
+  letter-spacing: 0.6px;
+  text-decoration: none;
+  margin-left: 30px;
 }
-
-.cross-vertical {
-  width: 14px;
-  height: 42px;
-  top: 19px;
-  left: 33px;
+.navbar-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: bold;
 }
-
-.cross-horizontal {
-  width: 42px;
-  height: 14px;
-  top: 33px;
-  left: 19px;
+.navbar-sign {
+  color: #6EC2F7; /* Keep the green for health symbol */
+  font-family: Cambria, sans-serif;
+  font-size: 40px;
+  font-weight: bold;
 }
 
 .text {

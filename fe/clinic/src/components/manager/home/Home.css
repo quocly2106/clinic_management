@@ -1,5 +1,6 @@
 /* Home.css */
 
+/* General Styles */
 .toggle-sidebar {
     display: none;
     position: absolute;
@@ -31,12 +32,14 @@
     margin-left: 0; /* Khi sidebar đóng */
 }
 
-/* Media queries cho kích thước màn hình nhỏ hơn 768px */
+
+
+/* Media queries cho kích thước màn hình nhỏ hơn hoặc bằng 768px */
 @media (max-width: 768px) {
     .toggle-sidebar {
         display: block;
-        margin-left: 170px;
-        margin-top: 12px;
+        margin-left: 240px;
+        margin-top: 8px;
     }
 
     .sidebar-wrapper {
@@ -58,17 +61,15 @@
     }
 }
 
-/* Media queries cho kích thước màn hình từ 769px đến 1024px */
-@media (min-width: 769px) and (max-width: 1024px) {
+/* Media queries cho kích thước màn hình lớn hơn 768px */
+@media (min-width: 769px) {
     .toggle-sidebar {
-        display: block;
-        margin-left: 260px;
-        margin-top: 32px;
+        display: none; /* Ẩn nút toggle trên màn hình từ 769px trở lên */
     }
 
     .sidebar-wrapper {
         position: fixed;
-        left: -250px;
+        left: 0;
         top: 0;
         height: 100vh;
         z-index: 999;
@@ -83,10 +84,7 @@
         margin-left: 0 !important;
         width: 100%;
     }
-}
 
-/* Media queries cho kích thước màn hình lớn hơn 1024px */
-@media (min-width: 1025px) {
     .content-wrapper.with-sidebar {
         margin-left: 250px; /* Khi sidebar mở */
     }

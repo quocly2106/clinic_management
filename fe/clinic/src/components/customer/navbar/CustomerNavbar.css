@@ -130,7 +130,25 @@
 }
 
 /* Responsive */
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1024px) {
+    .navbar-section {
+        padding: 0 16px; /* Giảm padding để có thêm không gian */
+    }
+    .navbar-title a {
+        margin-left: 15px; /* Giảm margin bên trái của title */
+    }
+    .navbar-items {
+        gap: 16px; /* Giảm khoảng cách giữa các mục */
+    }
+    .navbar-links {
+        font-size: 16px; /* Giảm kích thước font để tiết kiệm không gian */
+    }
+    .navbar-btn {
+        padding: 10px 16px; /* Giảm padding của button */
+        font-size: 16px; /* Giảm kích thước font của button */
+    }
+}
+@media screen and (max-width: 768px) {
     .navbar-btn, .navbar-items {
         display: none;
     }

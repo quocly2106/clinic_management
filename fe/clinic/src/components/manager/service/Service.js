@@ -86,7 +86,6 @@ function Service() {
     indexOfLastService
   );
 
-  // Tạo số trang
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(filteredServices.length / itemsPerPage); i++) {
     pageNumbers.push(i);
@@ -94,7 +93,6 @@ function Service() {
 
   const convertToLocalTime = (dateString) => {
     const date = new Date(dateString);
-  
     const timeOptions = {
       hour: '2-digit',
       minute: '2-digit',
@@ -115,6 +113,13 @@ function Service() {
     const datePart = date.toLocaleDateString("vi-VN", dateOptions);
   
     return `${timePart} ${datePart}`;
+  };
+
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(price);
   };
 
   return (
@@ -173,6 +178,7 @@ function Service() {
                   <th>STT</th>
                   <th>Name</th>
                   <th>Description</th>
+                  <th>Image</th>
                   <th>Price</th>
                   <th>Duration</th>
                   <th>Status</th>
@@ -202,8 +208,20 @@ function Service() {
                       <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                       <td>{service.name}</td>
                       <td>{service.description}</td>
-                      <td>{service.price}</td> 
-                      <td>{service.duration}</td> 
+                      <td>
+                        {service.image ? (
+                          <img className="image-service"
+                            src={`data:image/png;base64,${service.image}`}
+                            alt={service.name}
+                          />
+                        ) : (
+                          <div className="image-service-no">
+                            No Image
+                          </div>
+                        )}
+                      </td>
+                      <td>{formatPrice(service.price)}</td>
+                      <td>{service.duration} minutes</td>
                       <td>{service.status}</td> 
                       <td>{convertToLocalTime(service.createdAt)}</td>
                       <td>{convertToLocalTime(service.updatedAt)}</td>
@@ -232,7 +250,6 @@ function Service() {
             </table>
           </div>
 
-          {/* Phân trang */}
           <div className="pagination">
             {pageNumbers.map((number) => (
               <button

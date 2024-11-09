@@ -10,7 +10,7 @@ function Banner() {
           <Col lg={6} md={12} className="banner-content">
             <div className="welcome-text">
               <h1>Chào mừng đến với phòng khám Nhân Tâm</h1>
-              <p>
+              <p className="banner-description">
                 Phòng Khám Nhân Tâm là địa chỉ chăm sóc sức khỏe uy tín, chuyên
                 nghiệp với sứ mệnh cung cấp dịch vụ y tế tiên tiến, hiệu quả và
                 nhân văn. Chúng tôi hướng tới tầm nhìn trở thành phòng khám hàng

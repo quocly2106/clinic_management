@@ -3,7 +3,13 @@
     background-color: #ffffff;
     overflow: hidden;
 }
-
+.banner-description{
+    color: rgb(77, 75, 75);
+    font-family: 'Rubik', sans-serif;
+    font-size: 18px;
+    letter-spacing: .8px;
+    line-height: 1.8rem;
+}
 .align-items-center {
     background-color: #f0f4f8; /* Nền sáng hơn bên trong */
     padding: 3rem 0;
@@ -152,7 +158,12 @@
     }
 
     .banner-image {
-        height: 300px;
-        margin-top: 2rem;
+        height: 400px;
+        margin-top: 1rem;
+    }
+    .appointment-btn{
+        display: block;
+        margin: 0 auto;
+        text-align: center;
     }
 }

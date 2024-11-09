@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Toast, ToastContainer } from "react-bootstrap";
 import "./Navbar.css";
 
-function Navbar({ userName, userRole, onLogout}) {
+function Navbar({ userName, userRole, onLogout }) {
   const navigate = useNavigate();
   const [showToast, setShowToast] = useState(false);
 
@@ -21,35 +21,39 @@ function Navbar({ userName, userRole, onLogout}) {
     <>
       <nav className="custom-navbar navbar navbar-expand-md">
         <div className="container-fluid">
-
-          <Link className="navbar-brand" to="/admin">
-            <div className="brand-container">
-              <div className="logo-container">
-                <div className="logo-circle">
-                  <div className="circle-border"></div>
-                  <div className="cross cross-vertical"></div>
-                  <div className="cross cross-horizontal"></div>
-                </div>
-              </div>
-              <div className="text">Nhân Tâm</div>
-            </div>
-          </Link>
+          <h1 className="navbar-title">
+            <Link to="/">
+              Nhân Tâm <span className="navbar-sign">+</span>
+            </Link>
+          </h1>
 
           <div className="collapse navbar-collapse">
             <ul className="navbar-nav ms-auto">
               <li className="nav-item dropdown">
-                <Link className="nav-link dropdown-toggle user-profile"  id="dropdownId" data-bs-toggle="dropdown">
+                <Link
+                  className="nav-link dropdown-toggle user-profile"
+                  id="dropdownId"
+                  data-bs-toggle="dropdown"
+                >
                   <i className="fas fa-user-circle me-2"></i>
                   <span>{userName || "Guest"}</span>
                 </Link>
-                <div className="dropdown-menu dropdown-menu-end animate slideIn" aria-labelledby="dropdownId">
+                <div
+                  className="dropdown-menu dropdown-menu-end animate slideIn"
+                  aria-labelledby="dropdownId"
+                >
                   {userRole && (
                     <div className="dropdown-header">
-                      <span className="user-role">{userRole.toUpperCase()}</span>
+                      <span className="user-role">
+                        {userRole.toUpperCase()}
+                      </span>
                     </div>
                   )}
                   {userRole && (
-                    <button className="dropdown-item" onClick={() => navigate(`/admin/${userRole}/profile`)}>
+                    <button
+                      className="dropdown-item"
+                      onClick={() => navigate(`/admin/${userRole}/profile`)}
+                    >
                       <i className="fas fa-id-card me-2"></i>Profile
                     </button>
                   )}
@@ -60,7 +64,10 @@ function Navbar({ userName, userRole, onLogout}) {
                     <i className="fas fa-cog me-2"></i>Settings
                   </Link>
                   <div className="dropdown-divider"></div>
-                  <button className="dropdown-item logout-item" onClick={handleLogout}>
+                  <button
+                    className="dropdown-item logout-item"
+                    onClick={handleLogout}
+                  >
                     <i className="fas fa-sign-out-alt me-2"></i>Logout
                   </button>
                 </div>
@@ -71,7 +78,13 @@ function Navbar({ userName, userRole, onLogout}) {
       </nav>
 
       <ToastContainer className="p-3" position="top-end">
-        <Toast show={showToast} onClose={() => setShowToast(false)} delay={3000} autohide bg="info">
+        <Toast
+          show={showToast}
+          onClose={() => setShowToast(false)}
+          delay={3000}
+          autohide
+          bg="info"
+        >
           <Toast.Header closeButton={false}>
             <i className="fas fa-sign-out-alt me-2"></i>
             <strong className="me-auto">Logging Out</strong>

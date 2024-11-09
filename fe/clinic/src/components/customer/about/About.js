@@ -1,6 +1,7 @@
 import React from "react";
 import "./About.css";
-import SolutionStep from "../solutionStep/SolutionStep";
+import SolutionStep from "./SolutionStep";
+
 
 function About() {
   return (

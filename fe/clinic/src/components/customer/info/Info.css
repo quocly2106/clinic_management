@@ -76,7 +76,7 @@
     font-size: 24px;
 }
 /* Responsive */
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 1024px) {
     .info-description {
         margin: 64px 32px;
     }
@@ -84,7 +84,8 @@
         grid-template-columns: repeat(2, 1fr);
     }
 }
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 768px) {
+
     .info-description {
         margin: 64px 8px;
     }
