@@ -50,7 +50,7 @@ function Service() {
           `Service No ${serviceId} was deleted successfully.`,
           "success"
         );
-        fetchServices(); // Refresh danh sách sau khi xóa thành công
+        fetchServices();
       } else {
         showToastMessage(
           `Error deleting service: ${result.message}`,
@@ -64,7 +64,6 @@ function Service() {
       );
     }
   };
-  
 
   useEffect(() => {
     fetchServices();
@@ -210,9 +209,15 @@ function Service() {
                       <td>{service.description}</td>
                       <td>
                         {service.image ? (
-                          <img className="image-service"
-                            src={`data:image/png;base64,${service.image}`}
+                          <img 
+                            className="image-service"
+                            src={`http://localhost:9191/img/${service.image}`}
                             alt={service.name}
+                            onError={(e) => {
+                              console.error('Image load error:', e);
+                              e.target.onerror = null;
+                              e.target.src = '/placeholder.jpg';
+                            }}
                           />
                         ) : (
                           <div className="image-service-no">

@@ -23,7 +23,6 @@ public class ImageUpload {
             String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
             Path targetLocation = Paths.get(UPLOAD_FOLDER).resolve(fileName);
             Files.copy(imageFile.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-            System.out.println("Image saved at: " + targetLocation.toString());
             return fileName;
         } catch (IOException e) {
             e.printStackTrace();

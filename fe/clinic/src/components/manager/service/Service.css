@@ -169,6 +169,8 @@
     width: 50px; /* Adjust as needed */
     height: auto;
   }
+
+
   
 
 
@@ -208,6 +210,29 @@
   
   .modern-table tbody tr:hover {
     background: #f8fafc;
+  }
+
+  .image-service {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  .image-service-no {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+  }
+  
+  .default-image {
+    width: 50px;
+    height: 50px;
+    opacity: 0.5;
   }
   
   /* Responsive Design */
