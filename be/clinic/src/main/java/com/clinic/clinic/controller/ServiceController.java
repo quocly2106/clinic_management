@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -21,14 +22,19 @@ public class ServiceController {
     private ServiceService serviceService;
 
     @PostMapping("/add")
-    public ResponseEntity<Service> addService(@Valid @RequestBody ServiceDto serviceDto) {
-        Service service = serviceService.addService(serviceDto);
+    public ResponseEntity<Service> addService(
+            @Valid @RequestPart("serviceDto") ServiceDto serviceDto,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
+        Service service = serviceService.addService(serviceDto, image);
         return ResponseEntity.status(HttpStatus.CREATED).body(service);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Service> updateService(@PathVariable @NotNull Long id, @Valid @RequestBody ServiceDto serviceDto) {
-        Service updatedService = serviceService.updateService(id, serviceDto);
+    public ResponseEntity<Service> updateService(
+            @PathVariable @NotNull Long id,
+            @Valid @RequestPart("serviceDto") ServiceDto serviceDto,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
+        Service updatedService = serviceService.updateService(id, serviceDto, image);
         return ResponseEntity.ok(updatedService);
     }
 

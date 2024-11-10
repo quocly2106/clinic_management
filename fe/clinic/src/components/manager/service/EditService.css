@@ -49,3 +49,10 @@
   border-radius: 8px;
   background: #ffe5e5;
 }
+.img-preview {
+  max-width: 200px;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+

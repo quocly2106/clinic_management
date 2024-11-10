@@ -10,8 +10,9 @@ function AddService() {
     price: "",
     duration: "",
     status: "Active",
+    image: "",
   });
-
+  const [imagePreview, setImagePreview] = useState(null);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -21,22 +22,60 @@ function AddService() {
     const { name, value } = e.target;
     setServiceData({ ...serviceData, [name]: value });
   };
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Kiểm tra kích thước file (giới hạn 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setError("Image size should not exceed 5MB");
+        setShowToast(true);
+        return;
+      }
+
+      // Kiểm tra định dạng file
+      const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+      if (!validTypes.includes(file.type)) {
+        setError("Please upload a valid image file (JPEG, PNG, or JPG)");
+        setShowToast(true);
+        return;
+      }
+
+      // Tạo URL preview cho ảnh
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+        setServiceData({ ...serviceData, image: file });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Kiểm tra giá trị price và duration
-    if (serviceData.price < 0 ) {
-      setError("Price  must be non-negative.");
+    if (serviceData.price < 0) {
+      setError("Price must be non-negative.");
       setShowToast(true);
-      return; 
+      return;
     }
-    if (serviceData.duration < 0 ) {
+    if (serviceData.duration < 0) {
       setError("Duration must be non-negative.");
       setShowToast(true);
-      return; 
+      return;
     }
+  
     try {
-      await addService(serviceData);
+      // Tạo đối tượng serviceDto
+      const serviceDto = {
+        name: serviceData.name,
+        description: serviceData.description,
+        price: parseFloat(serviceData.price),
+        duration: parseInt(serviceData.duration),
+        status: serviceData.status
+      };
+  
+      // Gọi API với serviceDto và file ảnh
+      await addService(serviceDto, serviceData.image);
+      
       setSuccessMessage("Service added successfully!");
       setError("");
       setShowToast(true);
@@ -46,11 +85,13 @@ function AddService() {
         price: "",
         duration: "",
         status: "Active",
+        image: "",
       });
+      setImagePreview(null); // Reset image preview
       navigate("/admin/service");
     } catch (error) {
       console.error("Error adding service:", error);
-      setError("Failed to add service. Please try again.");
+      setError(error.response?.data?.message || "Failed to add service. Please try again.");
       setSuccessMessage("");
       setShowToast(true);
     }
@@ -132,6 +173,29 @@ function AddService() {
             <option value="Active">Active</option>
             <option value="Inactive">Inactive</option>
           </select>
+        </div>
+        <div className="mb-3">
+          <label htmlFor="image" className="form-label">
+            Image
+          </label>
+          <input
+            type="file"
+            className="form-control rounded-3"
+            id="image"
+            name="image"
+            onChange={handleImageChange}
+            accept="image/*"
+          />
+          {imagePreview && (
+            <div className="mt-2">
+              <img
+                src={imagePreview}
+                alt="Preview"
+                style={{ maxWidth: '200px', maxHeight: '200px' }}
+                className="img-thumbnail"
+              />
+            </div>
+          )}
         </div>
         <button type="submit" className="btn btn-primary">
           Add Service

@@ -322,16 +322,25 @@ export const allServices = async () => {
   }
 };
 
-export const addService = async (data) => {
+export const addService = async (serviceDto, imageFile) => {
   try {
     const token = localStorage.getItem("token");
-    console.log("Token:", token);
+    const formData = new FormData();
+    formData.append("serviceDto", new Blob([JSON.stringify(serviceDto)], {
+      type: "application/json"
+    }));
+    
+    if (imageFile) {
+      formData.append("image", imageFile);
+    }
+
     const response = await axios.post(
       "http://localhost:9191/services/add",
-      data,
+      formData,
       {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
         },
       }
     );
@@ -342,16 +351,25 @@ export const addService = async (data) => {
   }
 };
 
-export const editService = async (serviceId, data) => {
+export const editService = async (serviceId, serviceDto, imageFile) => {
   try {
     const token = localStorage.getItem("token");
-    console.log("Token:", token);
+    const formData = new FormData();
+    formData.append("serviceDto", new Blob([JSON.stringify(serviceDto)], {
+      type: "application/json"
+    }));
+    
+    if (imageFile) {
+      formData.append("image", imageFile);
+    }
+
     const response = await axios.put(
       `http://localhost:9191/services/update/${serviceId}`,
-      data,
+      formData,
       {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
         },
       }
     );
@@ -365,7 +383,6 @@ export const editService = async (serviceId, data) => {
 export async function deleteService(serviceId) {
   try {
     const result = await api.delete(`/services/delete/${serviceId}`);
-    // Trả về toàn bộ response.data thay vì throw error
     return {
       success: true,
       data: result.data,

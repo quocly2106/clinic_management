@@ -1,85 +1,158 @@
-.custom-navbar {
-    padding: 0.5rem 1rem;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    position: sticky;
-    top: 0;
-    left: 0;
-    z-index: 1000;
+/* Main Navbar Container */
+.navbar-section {
+    padding: 0 32px;
     display: flex;
-    justify-content: center; /* Căn giữa nội dung trong navbar */
-}
-
-.brand-container {
-    display: flex;
+    justify-content: space-between;
     align-items: center;
-    margin-right: auto; /* Đẩy phần thương hiệu sang bên trái */
+    height: 120px;
+    background-color: #1c374d; /* Dark background to match footer */
 }
 
-.navbar {
-    border: none !important; /* Bỏ border xung quanh navbar */
+/* Title and Brand Colors */
+.navbar-title a {
+    color: #6EC2F7; /* Blue color for brand title */
+    letter-spacing: 0.6px;
+    text-decoration: none;
+    margin-left: 30px;
+}
+.navbar-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+}
+.navbar-sign {
+    color: #6EC2F7; /* Keep the green for health symbol */
+    font-family: Cambria, sans-serif;
+    font-size: 40px;
+    font-weight: bold;
 }
 
-.navbar-light .navbar-nav {
+/* Navbar Items */
+.navbar-items {
+    list-style-type: none;
     display: flex;
-    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+    font-family: 'Rubik', sans-serif;
+}
+.navbar-items > li {
+    list-style-type: none;
+}
+.navbar-links {
+    text-decoration: none;
+    color: #cbd5e1; /* Light color to match footer links */
+    font-size: 18px;
+    letter-spacing: 0.8px;
+    transition: color 0.3s ease;
+}
+.navbar-links:hover {
+    color: #6EC2F7; /* Hover color to match footer link hover */
 }
 
-.custom-navbar .navbar-light .navbar-nav .nav-link {
-    color: #6EC2F7 !important; /* Chỉnh màu chữ thành #6EC2F7 */
-    font-weight: 500;
-    font-size: 1rem;
+/* Navbar Button */
+.navbar-btn {
+    padding: 14px 20px;
+    color: white;
+    border: 1px solid transparent;
+    border-radius: 28px;
+    outline: transparent;
+    background-color: #6EC2F7; /* Button background to match footer blue */
+    font-size: 18px;
+    font-family: 'Rubik', sans-serif;
+    letter-spacing: 0.8px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+}
+.navbar-btn:hover {
+    color: #6EC2F7;
+    background-color: white;
+    border: 1px solid #6EC2F7;
 }
 
-.navbar-toggler {
-    border-color: #ffffff;
+/* Hamburger Icon */
+.mobile-nav {
+    display: none;
+}
+.hamb-icon {
+    width: 26px;
+    height: 26px;
+    color: #cbd5e1; /* Icon color to match footer text */
+    cursor: pointer;
+}
+.hamb-icon:hover {
+    color: #6EC2F7; /* Hover color to match footer link hover */
 }
 
-.navbar-collapse {
+/* Mobile Navbar */
+.mobile-navbar {
     display: flex;
-    justify-content: center; /* Căn giữa danh mục trong navbar khi mở rộng */
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    background-color: #1c374d; /* Dark background for mobile menu */
+    z-index: 20;
+    justify-content: center;
+    align-items: center;
+    transition: left 0.5s ease-in-out;
+}
+.mobile-navbar-close {
+    position: absolute;
+    top: 28px;
+    right: 28px;
+}
+.mobile-navbar-close .hamb-icon:hover {
+    color: #ff1616;
+}
+.open-nav {
+    left: 0;
+}
+.mobile-navbar-links {
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    font-size: 24px;
+    gap: 24px;
+    text-align: center;
+}
+.mobile-navbar-links li a {
+    text-decoration: none;
+    color: #cbd5e1; /* Light color for mobile links */
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    letter-spacing: 0.8px;
+    transition: color 0.3s ease-in-out;
+}
+.mobile-navbar-links li a:hover {
+    color: #6EC2F7;
 }
 
-.nav-link:hover {
-    color: #6EC2F7 !important;
+/* Responsive */
+@media screen and (max-width: 1024px) {
+    .navbar-section {
+        padding: 0 16px; /* Giảm padding để có thêm không gian */
+    }
+    .navbar-title a {
+        margin-left: 15px; /* Giảm margin bên trái của title */
+    }
+    .navbar-items {
+        gap: 16px; /* Giảm khoảng cách giữa các mục */
+    }
+    .navbar-links {
+        font-size: 16px; /* Giảm kích thước font để tiết kiệm không gian */
+    }
+    .navbar-btn {
+        padding: 10px 16px; /* Giảm padding của button */
+        font-size: 16px; /* Giảm kích thước font của button */
+    }
 }
-
-/* Media query cho màn hình nhỏ hơn 768px */
-@media (max-width: 768px) {
-    .custom-navbar {
-        justify-content: space-between; /* Căn giữa các phần tử khi ở màn hình nhỏ */
-        padding: 0.5rem; /* Điều chỉnh padding nếu cần */
+@media screen and (max-width: 768px) {
+    .navbar-btn, .navbar-items {
+        display: none;
     }
-
-    .brand-container {
-        margin-right: 0; /* Không đẩy sang bên phải nữa */
-        justify-content: flex-start; /* Căn logo sang bên trái */
-    }
-
-    .navbar-collapse {
-        display: none; /* Ẩn menu theo mặc định */
-        flex-direction: column; /* Danh sách menu thành cột */
-        position: absolute; /* Để nó có thể nằm bên dưới logo */
-        top: 100%; /* Vị trí dưới logo */
-        left: 0; /* Căn trái */
-        right: 0; /* Chiếm toàn bộ chiều rộng */
-        background-color: white; /* Có thể thêm màu nền cho menu */
-        padding: 0.5rem 0; /* Padding cho menu */
-        z-index: 1001; /* Đảm bảo menu nằm trên các phần tử khác */
-    }
-
-    .navbar-toggler.collapsed + .navbar-collapse {
-        display: flex; /* Hiện menu khi nút được nhấn */
-        align-items: flex-start; /* Căn trái các mục menu */
-    }
-
-    .navbar-nav {
-        align-items: flex-start; /* Căn các mục menu về bên trái */
-        width: 100%; /* Chiếm toàn bộ chiều rộng */
-    }
-
-    .navbar-nav .nav-link {
-        width: 100%; /* Đảm bảo link chiếm toàn bộ chiều rộng */
-        text-align: left; /* Căn trái các link */
+    .mobile-nav {
+        display: block;
     }
 }
