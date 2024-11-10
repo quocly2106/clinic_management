@@ -19,6 +19,8 @@ public class ServiceDto {
     @NotBlank(message = "Description is required")
     private String description;
 
+    private String image;
+
     @NotNull(message = "Price is required")
     @Positive(message = "Price must be positive")
     private BigDecimal price;

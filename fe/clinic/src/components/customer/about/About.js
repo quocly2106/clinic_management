@@ -3,6 +3,7 @@ import "./About.css";
 import SolutionStep from "./SolutionStep";
 
 
+
 function About() {
   return (
     <div className="about-section" id="about">
