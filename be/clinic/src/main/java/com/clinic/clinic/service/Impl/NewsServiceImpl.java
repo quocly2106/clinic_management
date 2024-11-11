@@ -52,10 +52,10 @@ public class NewsServiceImpl implements NewsService {
         news.setViews(0);
 
         if (imageFile != null && !imageFile.isEmpty()) {
-            String fileName = imageUpload.uploadImage(imageFile);
-            if (fileName != null) {
-                news.setImage("/static/img/" + fileName); // Lưu URL ảnh
+            if (!imageUpload.checkExisted(imageFile)) {
+                imageUpload.uploadImage(imageFile);
             }
+            news.setImage(imageFile.getOriginalFilename());
         }
 
 
@@ -63,7 +63,7 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public News updateNews(Long id, NewsDto newsDto) {
+    public News updateNews(Long id, NewsDto newsDto, MultipartFile imageFile) {
         News existingNews = newsRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("News not found with ID: " + id));
 
@@ -71,9 +71,14 @@ public class NewsServiceImpl implements NewsService {
         existingNews.setContent(newsDto.getContent());
         existingNews.setUpdatedAt(LocalDateTime.now()); // Cập nhật thời gian sửa đổi
         existingNews.setStatus(newsDto.getStatus());
-        existingNews.setImage(newsDto.getImage()); // Đảm bảo thuộc tính đúng
         existingNews.setCategory(newsDto.getCategory());
 
+        if (imageFile != null && !imageFile.isEmpty()) {
+            if (!imageUpload.checkExisted(imageFile)) {
+                imageUpload.uploadImage(imageFile);
+            }
+            existingNews.setImage(imageFile.getOriginalFilename());
+        }
         return newsRepository.save(existingNews);
     }
 

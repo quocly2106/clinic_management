@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./EditService.css"; // Import CSS
-import { api } from "../../utils/ApiFunction"; // Import your Axios instance
+import "./EditService.css";
+import { api } from "../../utils/ApiFunction";
 
 const EditService = () => {
   const { serviceId } = useParams();
@@ -17,8 +17,7 @@ const EditService = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // For navigation after success
-  const [showToast, setShowToast] = useState(false); // State to control toast visibility
+  const navigate = useNavigate();
   const [imagePreview, setImagePreview] = useState(null);
 
   useEffect(() => {
@@ -36,6 +35,7 @@ const EditService = () => {
             status: data.status,
             image: data.image,
           });
+          setImagePreview(data.image ? `http://localhost:9191/img/${data.image}` : null);
         } else {
           toast.error("Fetched service data is incomplete");
         }
@@ -54,7 +54,6 @@ const EditService = () => {
     const file = event.target.files[0];
     if (file) {
       if (file.size > 5000000) {
-        // 5MB limit
         toast.error("File size should be less than 5MB");
         return;
       }
@@ -68,7 +67,7 @@ const EditService = () => {
       setService({ ...service, image: file });
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result);
+        setImagePreview(reader.result); // Cập nhật preview ảnh
       };
       reader.readAsDataURL(file);
     }
@@ -77,29 +76,31 @@ const EditService = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const token = localStorage.getItem("token");
-  
-    if (service.price < 0) {
-      toast.error("Price must be non-negative.");
-      return;
-    }
-    if (service.duration < 0) {
-      toast.error("Duration must be non-negative.");
-      return;
-    }
-  
+
     const formData = new FormData();
-    formData.append("serviceDto[name]", service.name);
-    formData.append("serviceDto[description]", service.description);
-    formData.append("serviceDto[price]", service.price);
-    formData.append("serviceDto[duration]", service.duration);
-    formData.append("serviceDto[status]", service.status);
-  
+    // Convert service data thành JSON và thêm vào formData
+    formData.append(
+      "serviceDto",
+      new Blob(
+        [
+          JSON.stringify({
+            name: service.name,
+            description: service.description,
+            price: service.price,
+            duration: service.duration,
+            status: service.status,
+          }),
+        ],
+        { type: "application/json" }
+      )
+    );
+
     if (service.image) {
-      formData.append("serviceDto[image]", service.image);
+      formData.append("image", service.image);
     }
-  
+
     try {
-      setLoading(true); // Start loading state
+      setLoading(true);
       const response = await fetch(
         `http://localhost:9191/services/update/${serviceId}`,
         {
@@ -110,23 +111,23 @@ const EditService = () => {
           body: formData,
         }
       );
-  
+
       if (!response.ok) {
         const errorMessage = await response.text();
         throw new Error(errorMessage || "Failed to update service");
       }
-  
+
       toast.success("Service updated successfully");
       setTimeout(() => {
         navigate("/admin/service");
-      }, 2000); // Redirect after 2 seconds
+      }, 2000);
     } catch (error) {
       toast.error(error.message);
     } finally {
-      setLoading(false); // Reset loading state after API call
+      setLoading(false);
     }
   };
-  
+
   if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
@@ -190,7 +191,7 @@ const EditService = () => {
               />
             </div>
             <div className="col-md-6 mb-3">
-              <label className="form-label">Duration(minutes)</label>
+              <label className="form-label">Duration (minutes)</label>
               <input
                 type="number"
                 className="form-control"
@@ -225,7 +226,7 @@ const EditService = () => {
                 <div className="mt-2 image-preview-container">
                   <img
                     src={imagePreview}
-                    alt="Service preview"
+                    alt="Preview"
                     className="img-preview"
                   />
                 </div>
@@ -239,28 +240,6 @@ const EditService = () => {
           </div>
         </form>
       </div>
-
-      {/* Toast for success/error message */}
-      {showToast && (
-        <div className="position-fixed top-0 end-0 p-3" style={{ zIndex: 11 }}>
-          <div
-            id="liveToast"
-            className={`toast ${error ? "bg-danger" : "bg-success"}`}
-            role="alert"
-            aria-live="assertive"
-            aria-atomic="true"
-          >
-            <div className="toast-body text-white">
-              {error ? error : "Service updated successfully!"}
-              <button
-                type="button"
-                className="btn-close btn-close-white"
-                onClick={() => setShowToast(false)}
-              ></button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

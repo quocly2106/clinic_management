@@ -20,7 +20,7 @@ public class ImageUpload {
         }
 
         try {
-            String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
+            String fileName = imageFile.getOriginalFilename();
             Path targetLocation = Paths.get(UPLOAD_FOLDER).resolve(fileName);
             Files.copy(imageFile.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             return fileName;

@@ -38,6 +38,7 @@ public class ServiceController {
         return ResponseEntity.ok(updatedService);
     }
 
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteService(@PathVariable @NotNull Long id) {
         serviceService.deleteService(id);

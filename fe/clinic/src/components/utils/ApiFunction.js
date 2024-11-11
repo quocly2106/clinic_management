@@ -601,31 +601,54 @@ export const allNews = async () => {
   }
 };
 
-export const addNews = async (data) => {
+export const addNews = async (newsDto,imageFile) => {
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.post("http://localhost:9191/news/add", data, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`, // Thêm token vào Authorization
-      },
-    });
+    const formData = new FormData();
+    formData.append("newsDto", new Blob([JSON.stringify(newsDto)], {
+      type: "application/json"
+    }));
+
+    if (imageFile) {
+      formData.append("imageFile", imageFile);
+    }
+
+    const response = await axios.post(
+      "http://localhost:9191/news/add",
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        },
+      }
+    );
     return response.data;
   } catch (error) {
-    console.error("Error add news:", error);
     throw error;
   }
 };
 
-export const editNews = async (newsId, data) => {
+
+export const editNews = async (newsId, newsDto, imageFile) => {
   try {
     const token = localStorage.getItem("token");
+    const formData = new FormData();
+    formData.append("newsDto", new Blob([JSON.stringify(newsDto)], {
+      type: "application/json"
+    }));
+    
+    if (imageFile) {
+      formData.append("image", imageFile);
+    }
+
     const response = await axios.put(
       `http://localhost:9191/news/update/${newsId}`,
-      data,
+      formData,
       {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
         },
       }
     );
@@ -635,6 +658,7 @@ export const editNews = async (newsId, data) => {
     throw error;
   }
 };
+
 
 export async function deleteNews(newsId) {
   try {

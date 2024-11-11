@@ -7,6 +7,7 @@ import com.clinic.clinic.utils.ImageUpload;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -24,18 +25,21 @@ public class NewsController {
     @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')") // Chỉ cho phép Admin thêm bài viết
     public ResponseEntity<News> createNews(
-            @RequestPart("news") @Valid NewsDto newsDto,  // Sử dụng @RequestPart để nhận dữ liệu JSON
+            @Valid @RequestPart("newsDto") NewsDto newsDto,  // Sử dụng @RequestPart để nhận dữ liệu JSON
             @RequestPart("imageFile") MultipartFile imageFile) { // Sử dụng @RequestPart cho tệp tin
 
         News createdNews = newsService.addNews(newsDto, imageFile);
-        return ResponseEntity.ok(createdNews);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdNews);
     }
 
 
     @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('ADMIN')") // Chỉ cho phép Admin cập nhật bài viết
-    public ResponseEntity<News> updateNews(@PathVariable @NotNull Long id, @RequestBody NewsDto newsDto) {
-        News updatedNews = newsService.updateNews(id, newsDto);
+    public ResponseEntity<News> updateNews(
+            @PathVariable @NotNull Long id,
+            @Valid @RequestPart ("newsDto") NewsDto newsDto,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
+        News updatedNews = newsService.updateNews(id, newsDto, image);
         return ResponseEntity.ok(updatedNews);
     }
 

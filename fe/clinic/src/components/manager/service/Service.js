@@ -210,11 +210,11 @@ function Service() {
                       <td>
                         {service.image ? (
                           <img 
+                            loading="lazy"
                             className="image-service"
                             src={`http://localhost:9191/img/${service.image}`}
                             alt={service.name}
                             onError={(e) => {
-                              console.error('Image load error:', e);
                               e.target.onerror = null;
                               e.target.src = '/placeholder.jpg';
                             }}

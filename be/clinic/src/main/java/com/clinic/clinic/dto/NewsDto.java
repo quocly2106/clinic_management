@@ -27,8 +27,9 @@ public class NewsDto {
 
     private String image;
 
+    @NotBlank(message = "Category is required")
     private String category;
 
     @NotNull(message = "Views must not be null")
-    private Integer views;
+    private Integer views = 0;
 }

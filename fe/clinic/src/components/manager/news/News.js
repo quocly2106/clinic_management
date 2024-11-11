@@ -85,29 +85,28 @@ function News() {
   // Hàm chuyển đổi thời gian
   const convertToLocalTime = (dateString) => {
     const date = new Date(dateString);
-  
+
     const timeOptions = {
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
       hour12: false,
-      timeZone: "Asia/Bangkok", 
-    };
-    
-    const timePart = date.toLocaleTimeString("vi-VN", timeOptions);
-    
-    const dateOptions = {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
       timeZone: "Asia/Bangkok",
     };
-    
+
+    const timePart = date.toLocaleTimeString("vi-VN", timeOptions);
+
+    const dateOptions = {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      timeZone: "Asia/Bangkok",
+    };
+
     const datePart = date.toLocaleDateString("vi-VN", dateOptions);
-  
+
     return `${timePart} ${datePart}`;
   };
-  
 
   return (
     <div className="news-wrapper">
@@ -165,6 +164,7 @@ function News() {
                   <th>STT</th>
                   <th>Title</th>
                   <th>Content</th>
+                  <th>Image</th>
                   <th>Category</th>
                   <th>Status</th>
                   <th>CreatedAt</th>
@@ -194,6 +194,22 @@ function News() {
                       <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                       <td>{news.title}</td>
                       <td>{news.content}</td>
+                      <td>
+                        {news.image ? (
+                          <img
+                            loading="lazy"
+                            className="image-news"
+                            src={`http://localhost:9191/img/${news.image}`}
+                            alt={news.title}
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = "/placeholder.jpg";
+                            }}
+                          />
+                        ) : (
+                          <div className="image-news-no">No Image</div>
+                        )}
+                      </td>
                       <td>{news.category}</td>
                       <td>{news.status}</td>
                       <td>{convertToLocalTime(news.createdAt)}</td>

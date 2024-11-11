@@ -10,6 +10,7 @@ function AddNews() {
     status: "Draft",
     category: "",
     views: 0,
+    image: "",
   });
 
   const [image, setImage] = useState(null);
@@ -24,18 +25,56 @@ function AddNews() {
   };
 
   const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file) {
+      // Kiểm tra kích thước file (giới hạn 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setError("Image size should not exceed 5MB");
+        setShowToast(true);
+        return;
+      }
+
+      // Kiểm tra định dạng file
+      const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+      if (!validTypes.includes(file.type)) {
+        setError("Please upload a valid image file (JPEG, PNG, or JPG)");
+        setShowToast(true);
+        return;
+      }
+
+      // Tạo URL preview cho ảnh
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result);
+        setNewsData({ ...newsData, image: file });
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("news", new Blob([JSON.stringify(newsData)], { type: "application/json" }));
-    if (image) formData.append("imageFile", image);
+    // Kiểm tra dữ liệu trước khi gửi
+    if (!newsData.title || !newsData.content || !newsData.category || !newsData.status) {
+      setError("Please fill in all required fields.");
+      setShowToast(true);
+      return;
+    }
+  
 
     try {
-      await addNews(formData);
+      // Gọi API để thêm tin tức
+
+      const newsDto = {
+        title: newsData.title,
+        content: newsData.content,
+        category: newsData.category,
+        status: newsData.status,
+        views: newsData.views
+      };
+
+      await addNews(newsDto,newsData.image);
       setSuccessMessage("News added successfully!");
       setError("");
       setShowToast(true);
@@ -46,17 +85,21 @@ function AddNews() {
         category: "",
         views: 0,
       });
-      setImage(null);
+      setImage(null); // Reset image
       navigate("/admin/news");
     } catch (error) {
-      console.error("Error adding news:", error);
       setError("Failed to add news.");
+      setSuccessMessage("");
+      setShowToast(true);
     }
   };
 
   return (
     <div className="add-news-container container">
       <h2 className="mt-4">Add News</h2>
+      {error && <div className="alert alert-danger rounded-3">{error}</div>}
+      {successMessage && <div className="alert alert-success rounded-3">{successMessage}</div>}
+      
       <form onSubmit={handleSubmit} className="mt-3">
         <div className="mb-3">
           <label htmlFor="title" className="form-label">Title</label>
@@ -103,6 +146,7 @@ function AddNews() {
             name="category"
             value={newsData.category}
             onChange={handleChange}
+            required
           />
         </div>
         <div className="mb-3">
@@ -125,11 +169,21 @@ function AddNews() {
             onChange={handleImageChange}
             required
           />
+          {image && <img src={image} alt="Preview" className="mt-2" style={{ maxWidth: '200px', maxHeight: '200px' }} />}
         </div>
         <button type="submit" className="btn btn-primary">Add News</button>
       </form>
-      {error && <p className="text-danger">{error}</p>}
-      {showToast && <p className="text-success">{successMessage}</p>}
+
+      {showToast && (
+        <div className="position-fixed top-0 end-0 p-3" style={{ zIndex: 11 }}>
+          <div className={`toast ${successMessage ? "bg-success" : "bg-danger"}`} role="alert" aria-live="assertive" aria-atomic="true">
+            <div className="toast-body text-white">
+              {successMessage || error}
+              <button type="button" className="btn-close btn-close-white" onClick={() => setShowToast(false)}></button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

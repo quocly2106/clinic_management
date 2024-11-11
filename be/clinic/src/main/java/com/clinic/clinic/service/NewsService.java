@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface NewsService {
     News addNews(NewsDto newsDto, MultipartFile imageFile);
-    News updateNews(Long id, NewsDto newsDto);
+    News updateNews(Long id, NewsDto newsDto, MultipartFile imageFile);
     void deleteNews(Long id);
     List<News> getAllNews();
     News getNewsById(Long id);
