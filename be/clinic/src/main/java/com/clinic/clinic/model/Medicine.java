@@ -25,6 +25,8 @@ public class Medicine {
     @Column(nullable = false)
     private String description;
 
+    private String image;
+
     @Column(nullable = false)
     @Min(0)
     private Double price;

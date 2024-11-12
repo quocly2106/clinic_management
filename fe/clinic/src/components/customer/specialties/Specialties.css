@@ -1,0 +1,94 @@
+.specialties-page {
+    background-color: #f8f9fa;
+    padding-bottom: 80px;
+  }
+  
+  .specialties-list {
+    padding: 60px 0;
+  }
+  
+  .specialty-card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .row-specialty {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  
+  .col-specialty {
+    flex: 1 1 32%;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .image-border {
+    flex-shrink: 0;  /* Giảm khả năng co lại của ảnh */
+    height: 200px;   /* Đặt chiều cao cố định cho ảnh */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 4px;
+    background-color: white;
+  }
+  
+  .specialty-image {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+  }
+  
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 30px;  /* Đảm bảo có đủ không gian cho nội dung */
+    flex-grow: 1;  /* Cho phép phần thân của card (nội dung) chiếm không gian còn lại */
+    overflow: hidden;  /* Ẩn nội dung vượt quá */
+  }
+  
+  .card-body > * {
+    margin-bottom: 10px; /* Giảm bớt khoảng cách giữa các phần tử trong card-body */
+  }
+  
+  .specialty-details {
+    margin: 1rem 0;
+    padding: 0.5rem 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .card-body{
+        padding: 15px;
+    }
+    .specialties-page {
+      padding-bottom: 60px;
+    }
+  
+    .specialties-list {
+      padding: 20px 0;
+    }
+  
+    .col-specialty {
+      flex: 1 1 48%;
+    }
+  
+    .image-border {
+      margin-bottom: 1rem;
+    }
+  }
+  

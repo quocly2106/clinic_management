@@ -38,17 +38,15 @@ public class ServiceServiceImpl implements ServiceService {
             service.setImage(imageFile.getOriginalFilename());
         }
 
-        // Lấy thông tin admin từ SecurityContextHolder
-        String email = getCurrentUsername(); // Hàm lấy username từ context
+        String email = getCurrentUsername();
         Admin admin = adminRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Admin not found with email: " + email)); // Bây giờ dùng được orElseThrow
+                .orElseThrow(() -> new ResourceNotFoundException("Admin not found with email: " + email));
 
-        service.setAdmin(admin); // Gán admin cho thiết bị
+        service.setAdmin(admin);
 
         return serviceRepository.save(service);
     }
 
-    // Hàm để lấy tên người dùng hiện tại
     private String getCurrentUsername() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {

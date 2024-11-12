@@ -27,6 +27,8 @@ public class Specialty {
     @Column(nullable = false)
     private String description; // Mô tả khoa
 
+    private String image;
+
     @Column(name = "date_created", nullable = false)
     private LocalDate dateCreated = LocalDate.now();
 

@@ -1,14 +1,17 @@
 package com.clinic.clinic.controller;
 
+import com.clinic.clinic.dto.ServiceDto;
 import com.clinic.clinic.dto.SpecialtyDto;
 import com.clinic.clinic.model.Specialty;
 import com.clinic.clinic.service.SpecialtyService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,14 +23,16 @@ public class SpecialtyController {
     private SpecialtyService specialtyService;
 
     @PostMapping("/add")
-    public ResponseEntity<Specialty> createSpecialty(@RequestBody SpecialtyDto specialtyDto) {
-        Specialty createdSpecialty = specialtyService.addSpecialty(specialtyDto);
-        return ResponseEntity.ok(createdSpecialty);
+    public ResponseEntity<Specialty> createSpecialty(@RequestPart("specialtyDto") SpecialtyDto specialtyDto,
+                                                     @RequestPart(value = "image", required = false) MultipartFile image) {
+        Specialty createdSpecialty = specialtyService.addSpecialty(specialtyDto, image);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdSpecialty);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Specialty> updateSpecialty(@PathVariable @NotNull Long id,@RequestBody SpecialtyDto specialtyDto) {
-        Specialty updatedSpecialty = specialtyService.updateSpecialty(id, specialtyDto);
+    public ResponseEntity<Specialty> updateSpecialty(@PathVariable @NotNull Long id, @RequestPart("specialtyDto") SpecialtyDto specialtyDto,
+                                                     @RequestPart(value = "image", required = false) MultipartFile image) {
+        Specialty updatedSpecialty = specialtyService.updateSpecialty(id, specialtyDto, image);
         return ResponseEntity.ok(updatedSpecialty);
     }
 

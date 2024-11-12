@@ -7,10 +7,12 @@ import com.clinic.clinic.model.Medicine;
 import com.clinic.clinic.repository.AdminRepository;
 import com.clinic.clinic.repository.MedicineRepository;
 import com.clinic.clinic.service.MedicineService;
+import com.clinic.clinic.utils.ImageUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,8 +25,11 @@ public class MedicineServiceImpl implements MedicineService {
     @Autowired
     AdminRepository adminRepository;
 
+    @Autowired
+    private ImageUpload imageUpload;
+
     @Override
-    public Medicine addMedicine(MedicineDto medicineDto) {
+    public Medicine addMedicine(MedicineDto medicineDto , MultipartFile imageFile) {
         Medicine medicine = convertToEntity(medicineDto);
 
         // Lấy thông tin admin từ SecurityContextHolder
@@ -32,6 +37,12 @@ public class MedicineServiceImpl implements MedicineService {
         Admin admin = adminRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Admin not found with email: " + email)); // Bây giờ dùng được orElseThrow
 
+        if (imageFile != null && !imageFile.isEmpty()) {
+            if (!imageUpload.checkExisted(imageFile)) {
+                imageUpload.uploadImage(imageFile);
+            }
+            medicine.setImage(imageFile.getOriginalFilename());
+        }
         medicine.setAdmin(admin); // Gán admin cho thiết bị
 
         return medicineRepository.save(medicine);
@@ -47,11 +58,17 @@ public class MedicineServiceImpl implements MedicineService {
     }
 
     @Override
-    public Medicine updateMedicine(Long id, MedicineDto medicineDto) {
+    public Medicine updateMedicine(Long id, MedicineDto medicineDto , MultipartFile imageFile) {
         Medicine existingMedicine = medicineRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Medicine not found with ID: " + id));
         existingMedicine.setName(medicineDto.getName());
         existingMedicine.setDescription(medicineDto.getDescription());
+        if (imageFile != null && !imageFile.isEmpty()) {
+            if (!imageUpload.checkExisted(imageFile)) {
+                imageUpload.uploadImage(imageFile);
+            }
+            existingMedicine.setImage(imageFile.getOriginalFilename());
+        }
         existingMedicine.setPrice(medicineDto.getPrice());
         existingMedicine.setQuantity(medicineDto.getQuantity());
         return medicineRepository.save(existingMedicine);
@@ -77,6 +94,7 @@ public class MedicineServiceImpl implements MedicineService {
         Medicine medicine = new Medicine();
         medicine.setName(medicineDto.getName());
         medicine.setDescription(medicineDto.getDescription());
+        medicine.setImage(medicineDto.getImage());
         medicine.setPrice(medicineDto.getPrice());
         medicine.setQuantity(medicineDto.getQuantity());
         return  medicine;

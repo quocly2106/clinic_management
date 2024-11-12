@@ -146,6 +146,7 @@ function Specialty() {
                   <th>STT</th>
                   <th>Name</th>
                   <th>Description</th>
+                  <th>Image</th>
                   <th>Date Created</th>
                   <th>Action</th>
                 </tr>
@@ -171,6 +172,24 @@ function Specialty() {
                       <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                       <td>{specialty.name}</td>
                       <td>{specialty.description}</td>
+                      <td>
+                        {specialty.image ? (
+                          <img 
+                            loading="lazy"
+                            className="image-specialty"
+                            src={`http://localhost:9191/img/${specialty.image}`}
+                            alt={specialty.name}
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = '/placeholder.jpg';
+                            }}
+                          />
+                        ) : (
+                          <div className="image-specialty-no">
+                            No Image
+                          </div>
+                        )}
+                      </td>
                       <td>{specialty.dateCreated}</td> 
                       <td>
                         <div className="action-buttons">

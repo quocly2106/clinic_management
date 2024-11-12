@@ -69,7 +69,7 @@ public class NewsServiceImpl implements NewsService {
 
         existingNews.setTitle(newsDto.getTitle());
         existingNews.setContent(newsDto.getContent());
-        existingNews.setUpdatedAt(LocalDateTime.now()); // Cập nhật thời gian sửa đổi
+        existingNews.setUpdatedAt(LocalDateTime.now());
         existingNews.setStatus(newsDto.getStatus());
         existingNews.setCategory(newsDto.getCategory());
 

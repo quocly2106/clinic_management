@@ -154,6 +154,7 @@ function Medicine() {
                   <th>STT</th>
                   <th>Name</th>
                   <th>Description</th>
+                  <th>Image</th>
                   <th>Price</th>
                   <th>Quantity</th>
                   <th>Action</th>
@@ -162,7 +163,7 @@ function Medicine() {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="6" className="text-center">
+                    <td colSpan="8" className="text-center">
                       <div className="loading-spinner">
                         <div className="spinner"></div>
                       </div>
@@ -170,7 +171,7 @@ function Medicine() {
                   </tr>
                 ) : filteredMedicines.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="no-data">
+                    <td colSpan="8" className="no-data">
                       No medicines found
                     </td>
                   </tr>
@@ -180,6 +181,24 @@ function Medicine() {
                       <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                       <td>{medicine.name}</td>
                       <td>{medicine.description}</td>
+                      <td>
+                        {medicine.image ? (
+                          <img 
+                            loading="lazy"
+                            className="image-medicine"
+                            src={`http://localhost:9191/img/${medicine.image}`}
+                            alt={medicine.name}
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = '/placeholder.jpg';
+                            }}
+                          />
+                        ) : (
+                          <div className="image-medicine-no">
+                            No Image
+                          </div>
+                        )}
+                      </td>
                       <td>{formatPrice(medicine.price)}</td>
                       <td>{medicine.quantity}</td> 
                       <td>

@@ -9,8 +9,10 @@ function AddMedicine() {
     description: "",
     price: "",
     quantity: "",
+    image: "",
   });
 
+  const [imagePreview, setImagePreview] = useState(null);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -19,6 +21,33 @@ function AddMedicine() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setMedicineData({ ...medicineData, [name]: value });
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        setError("Image size should not exceed 5MB");
+        setShowToast(true);
+        return;
+      }
+
+      const validTypes = ["image/jpeg", "image/png", "image/jpg"];
+      if (!validTypes.includes(file.type)) {
+        setError("Please upload a valid image file (JPEG, PNG, or JPG)");
+        setShowToast(true);
+        return;
+      }
+
+      const imageUrl = URL.createObjectURL(file);
+      setImagePreview(imageUrl);
+      setMedicineData((prevState) => ({ ...prevState, image: file }));
+
+      // Cleanup URL to prevent memory leaks
+      return () => URL.revokeObjectURL(imageUrl);
+    } else {
+      setMedicineData((prevState) => ({ ...prevState, image: "" }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -38,7 +67,15 @@ function AddMedicine() {
       return; // Dừng lại nếu quantity không hợp lệ
     }
     try {
-      await addMedicine(medicineData);
+      const medicineDto = {
+        name: medicineData.name,
+        description: medicineData.description,
+        price: parseFloat(medicineData.price),
+        quantity: parseInt(medicineData.quantity),
+      };
+      const response = await addMedicine(medicineDto, medicineData.image);
+      const imageUrl = `${response.imageUrl}?timestamp=${new Date().getTime()}`;
+
       setSuccessMessage("Medicine added successfully!");
       setError("");
       setShowToast(true);
@@ -47,13 +84,18 @@ function AddMedicine() {
         description: "",
         price: "",
         quantity: "",
+        image: "",
       });
+      setImagePreview(imageUrl);
       navigate("/admin/medicine");
     } catch (error) {
       console.error("Error adding medicine:", error);
       setError("Failed to add medicine. Please try again.");
       setSuccessMessage("");
       setShowToast(true);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 3000);
     }
   };
 
@@ -118,6 +160,30 @@ function AddMedicine() {
             onChange={handleChange}
             required
           />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="image" className="form-label">
+            Image
+          </label>
+          <input
+            type="file"
+            className="form-control rounded-3"
+            id="image"
+            name="image"
+            onChange={handleImageChange}
+            accept="image/*"
+          />
+          {imagePreview && (
+            <div className="mt-2">
+              <img
+                src={imagePreview}
+                alt="Preview"
+                key={imagePreview} // Force React to rerender
+                style={{ maxWidth: "200px", maxHeight: "200px" }}
+                className="img-thumbnail"
+              />
+            </div>
+          )}
         </div>
         <button type="submit" className="btn btn-primary">
           Add Medicine

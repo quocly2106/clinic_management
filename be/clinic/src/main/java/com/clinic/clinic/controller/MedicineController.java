@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,14 +23,16 @@ public class MedicineController {
     private MedicineService medicineService;
 
     @PostMapping("/add")
-    public ResponseEntity<Medicine> createMedicine(@Valid @RequestBody MedicineDto medicineDto) {
-        Medicine savedMedicine = medicineService.addMedicine(medicineDto);
+    public ResponseEntity<Medicine> createMedicine(@Valid @RequestPart("medicineDto")MedicineDto medicineDto,
+            @RequestPart(value = "image", required = false)MultipartFile image) {
+        Medicine savedMedicine = medicineService.addMedicine(medicineDto, image);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedMedicine);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Medicine> updateMedicine(@PathVariable @NotNull Long id, @Valid @RequestBody MedicineDto medicineDto) {
-        Medicine updatedMedicine = medicineService.updateMedicine(id, medicineDto);
+    public ResponseEntity<Medicine> updateMedicine(@PathVariable @NotNull Long id, @Valid @RequestPart("medicineDto") MedicineDto medicineDto,
+                                                   @RequestPart(value = "image", required = false) MultipartFile image) {
+        Medicine updatedMedicine = medicineService.updateMedicine(id, medicineDto , image);
         return ResponseEntity.ok(updatedMedicine);
     }
 

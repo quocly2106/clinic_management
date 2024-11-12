@@ -262,16 +262,25 @@ export const allSpecialties = async () => {
   }
 };
 
-export const addSpecialty = async (data) => {
+export const addSpecialty = async (specialtyDto, imageFile) => {
   try {
     const token = localStorage.getItem("token");
-    console.log("Token:", token);
+    const formData = new FormData();
+    formData.append("specialtyDto", new Blob([JSON.stringify(specialtyDto)], {
+      type: "application/json"
+    }));
+    
+    if (imageFile) {
+      formData.append("image", imageFile);
+    }
+
     const response = await axios.post(
       "http://localhost:9191/specialties/add",
-      data,
+      formData,
       {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
         },
       }
     );
@@ -282,16 +291,26 @@ export const addSpecialty = async (data) => {
   }
 };
 
-export const editSpecialty = async (specialtyId, data) => {
+
+export const editSpecialty = async (specialtyId, specialtyDto, imageFile) => {
   try {
     const token = localStorage.getItem("token");
-    console.log("Token:", token);
+    const formData = new FormData();
+    formData.append("specialtyDto", new Blob([JSON.stringify(specialtyDto)], {
+      type: "application/json"
+    }));
+    
+    if (imageFile) {
+      formData.append("image", imageFile);
+    }
+
     const response = await axios.put(
       `http://localhost:9191/specialties/update/${specialtyId}`,
-      data,
+      formData,
       {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
         },
       }
     );
@@ -301,6 +320,7 @@ export const editSpecialty = async (specialtyId, data) => {
     throw error;
   }
 };
+
 
 export async function deleteSpecialty(specialtyId) {
   try {
@@ -406,16 +426,25 @@ export const allMedicines = async () => {
   }
 };
 
-export const addMedicine = async (data) => {
+export const addMedicine = async (medicineDto,imageFile) => {
   try {
     const token = localStorage.getItem("token");
-    console.log("Token:", token);
+    const formData = new FormData();
+    formData.append("medicineDto", new Blob([JSON.stringify(medicineDto)], {
+      type: "application/json"
+    }));
+    
+    if (imageFile) {
+      formData.append("image", imageFile);
+    }
+
     const response = await axios.post(
       "http://localhost:9191/medicines/add",
-      data,
+      formData,
       {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
         },
       }
     );
@@ -426,16 +455,26 @@ export const addMedicine = async (data) => {
   }
 };
 
-export const editMedicine = async (medicineId, data) => {
+
+export const editMedicine = async (medicineId, medicineDto,imageFile) => {
   try {
     const token = localStorage.getItem("token");
-    console.log("Token:", token);
+    const formData = new FormData();
+    formData.append("medicineDto", new Blob([JSON.stringify(medicineDto)], {
+      type: "application/json"
+    }));
+    
+    if (imageFile) {
+      formData.append("image", imageFile);
+    }
+
     const response = await axios.put(
       `http://localhost:9191/medicines/update/${medicineId}`,
-      data,
+      formData,
       {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
         },
       }
     );
@@ -445,6 +484,7 @@ export const editMedicine = async (medicineId, data) => {
     throw error;
   }
 };
+
 
 export async function deleteMedicine(medicineId) {
   try {

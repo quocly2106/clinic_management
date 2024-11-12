@@ -17,6 +17,8 @@ public class MedicineDto {
     @NotBlank(message = "Description is mandatory")
     private String description; // Mô tả thuốc
 
+    private String image;
+
     @Min(value = 0, message = "Price must be non-negative")
     private Double price; // Giá thuốc
 

@@ -1,15 +1,11 @@
 import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCommentDots,
-  faBars,
-  faXmark,
-} from "@fortawesome/free-solid-svg-icons";
-import "./CustomerNavbar.css";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCommentDots, faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
+import "./CustomerNavbar.css";
 import { toast } from "react-toastify";
 
-function CustomerNavbar() {
+function CustomerNavbar({ onServiceClick , onSpecialtyClick}) {
   const [nav, setNav] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
@@ -48,13 +44,18 @@ function CustomerNavbar() {
           </a>
         </li>
         <li>
-          <a href="/services" className="navbar-links">
+          <Link onClick={onServiceClick} className="navbar-links">
             Dịch vụ
-          </a>
+          </Link>
         </li>
         <li>
-          <a href="/doctors" className="navbar-links">
-            Bác sĩ
+          <Link onClick={onSpecialtyClick} className="navbar-links">
+            Chuyên khoa
+          </Link>
+        </li>
+        <li>  
+          <a href="/news" className="navbar-links">
+            Tin tức
           </a>
         </li>
         <li>
@@ -124,6 +125,5 @@ function CustomerNavbar() {
     </div>
   );
 }
-
 
 export default CustomerNavbar;

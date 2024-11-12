@@ -20,6 +20,8 @@ public class SpecialtyDto {
     @NotBlank(message = "Description is required")
     private String description;
 
+    private String image;
+
     @NotNull(message = "Date is required")
     private LocalDate dateCreated;
 

@@ -7,10 +7,10 @@ import { api } from "../../utils/ApiFunction"; // Import your Axios instance
 
 const EditMedicine = () => {
   const { medicineId } = useParams();
-  console.log("Medicine ID:", medicineId);
-  const [medicine, setMedicine] = useState({ name: "", description: "" });
+  const [medicine, setMedicine] = useState({ name: "", description: "" ,image: null,});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const navigate = useNavigate(); // For navigation after success
 
   useEffect(() => {
@@ -23,9 +23,13 @@ const EditMedicine = () => {
           setMedicine({
             name: data.name,
             description: data.description,
+            image: data.image,
             price: data.price,
             quantity: data.quantity,
           });
+          setImagePreview(
+            data.image ? `http://localhost:9191/img/${data.image}` : null
+          );
         } else {
           toast.error("Fetched medicine data is incomplete");
         }
@@ -39,6 +43,25 @@ const EditMedicine = () => {
 
     fetchMedicineById(medicineId);
   }, [medicineId]);
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.size > 5000000) {
+        toast.error("File size should be less than 5MB");
+        return;
+      }
+
+      const validTypes = ["image/jpeg", "image/png", "image/jpg"];
+      if (!validTypes.includes(file.type)) {
+        toast.error("Please upload a valid image file (JPEG, PNG, JPG)");
+        return;
+      }
+
+      setImagePreview(URL.createObjectURL(file)); // Update image preview
+      setMedicine((prev) => ({ ...prev, image: file })); // Store image for form submission
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -55,12 +78,27 @@ const EditMedicine = () => {
       return; // Dừng lại nếu quantity không hợp lệ
     }
 
-    const updatedMedicine = {
-      name: medicine.name,
-      description: medicine.description,
-      price: medicine.price,
-      quantity: medicine.quantity,
-    };
+    const formData = new FormData();
+    // Use "medicineDto" instead of "serviceDto" as the key name
+    formData.append(
+      "medicineDto",
+      new Blob(
+        [
+          JSON.stringify({
+            name: medicine.name,
+            description: medicine.description,
+            price: medicine.price,
+            quantity: medicine.quantity,
+          }),
+        ],
+        { type: "application/json" }
+      )
+    );
+
+    if (medicine.image) {
+      formData.append("image", medicine.image);
+    }
+
 
     try {
       const response = await fetch(
@@ -68,10 +106,9 @@ const EditMedicine = () => {
         {
           method: "PUT",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(updatedMedicine),
+          body: formData,
         }
       );
 
@@ -88,6 +125,8 @@ const EditMedicine = () => {
     } catch (error) {
       setError(error.message);
       toast.error(error.message);
+    }finally {
+      setLoading(false);
     }
   };
 
@@ -163,6 +202,24 @@ const EditMedicine = () => {
                   setMedicine({ ...medicine, quantity: e.target.value })
                 }
               />
+            </div>
+            <div className="col-md-6 mb-3">
+              <label className="form-label">Image</label>
+              <input
+                type="file"
+                className="form-control"
+                onChange={handleImageChange}
+                accept="image/*"
+              />
+              {imagePreview && (
+                <div className="mt-2 image-preview-container">
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="img-preview"
+                  />
+                </div>
+              )}
             </div>
             <div className="mt-4">
               <button type="submit" className="btn btn-save">
