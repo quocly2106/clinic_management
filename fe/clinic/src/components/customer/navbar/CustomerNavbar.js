@@ -39,29 +39,29 @@ function CustomerNavbar({ onServiceClick , onSpecialtyClick}) {
           </Link>
         </li>
         <li>
-          <a href="/about" className="navbar-links">
+          <Link to="/about" className="navbar-links">
             Về chúng tôi
-          </a>
+          </Link>
         </li>
         <li>
-          <Link onClick={onServiceClick} className="navbar-links">
+          <Link to="/service" className="navbar-links">
             Dịch vụ
           </Link>
         </li>
         <li>
-          <Link onClick={onSpecialtyClick} className="navbar-links">
+          <Link to="/specialty" className="navbar-links">
             Chuyên khoa
           </Link>
         </li>
         <li>  
-          <a href="/news" className="navbar-links">
+          <Link to="/news" className="navbar-links">
             Tin tức
-          </a>
+          </Link>
         </li>
         <li>
-          <a href="/appointment" className="navbar-links">
+          <Link to="/appointment" className="navbar-links">
             Đặt lịch
-          </a>
+          </Link>
         </li>
       </ul>
 
@@ -83,33 +83,33 @@ function CustomerNavbar({ onServiceClick , onSpecialtyClick}) {
         <ul className="mobile-navbar-links">
           <li>
             <Link onClick={openNav} to="/">
-              Home
+              Trang chủ
             </Link>
           </li>
           <li>
-            <a onClick={openNav} href="#services">
-              Services
-            </a>
+            <Link onClick={openNav} to="/about">
+              Về chúng tôi 
+            </Link>
           </li>
           <li>
-            <a onClick={openNav} href="#about">
-              About
-            </a>
+            <Link onClick={openNav} to="/service">
+              Dịch vụ
+            </Link>
           </li>
           <li>
-            <a onClick={openNav} href="#reviews">
-              Reviews
-            </a>
+            <Link onClick={openNav} to="/specialty">
+              Chuyên khoa
+            </Link>
           </li>
           <li>
-            <a onClick={openNav} href="#doctors">
-              Doctors
-            </a>
+            <Link onClick={openNav} to="/news">
+              Tin tức
+            </Link>
           </li>
           <li>
-            <a onClick={openNav} href="#contact">
-              Contact
-            </a>
+            <Link onClick={openNav} to="/appointment">
+              Đặt lịch
+            </Link>
           </li>
         </ul>
       </div>

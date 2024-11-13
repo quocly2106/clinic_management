@@ -1,11 +1,18 @@
 /* Services.css */
-.services-page {
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.services-page .container {
+    min-height: calc(100vh - 200px);
+    position: relative;
     background-color: #f8f9fa;
-    padding-bottom: 80px; /* Đảm bảo khoảng cách từ nội dung đến footer */
+    margin-bottom: 50px;
 }
 
 .services-list {
-    padding: 60px 0;
+    padding: 20px 0;
 }
 
 .service-card {
@@ -15,14 +22,8 @@
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
 }
 
-.image-border {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    padding: 4px;
-    background-color: white;
+.col-service {
+    margin-bottom: 30px;
 }
 
 .service-image {
@@ -50,17 +51,57 @@
     font-size: 0.9rem;
 }
 
+.pagination {
+    margin-bottom: 2rem;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #6EC2F7;
+    border-color: #6EC2F7;
+}
+
+.pagination .page-link {
+    color: #6EC2F7;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .services-page {
-        padding-bottom: 60px; /* Giảm khoảng cách dưới để tránh chèn xuống footer */
+        padding-bottom: 30px; /* Giảm khoảng cách dưới để tránh chèn xuống footer */
     }
 
-    .services-list {
-        padding: 20px 0; /* Điều chỉnh padding trên/dưới */
+    .service-card {
+        margin: 0 0 1rem; /* Giảm khoảng cách giữa các thẻ dịch vụ */
     }
 
-    .image-border {
-        margin-bottom: 1rem;
+    .service-image {
+        height: 200px; /* Giảm chiều cao hình ảnh */
+    }
+
+    .service-details {
+        margin: 0.5rem 0; /* Giảm khoảng cách cho thông tin dịch vụ */
+    }
+
+    .service-price, .service-duration {
+        font-size: 0.9rem; /* Giảm kích thước chữ cho thông tin dịch vụ */
+    }
+
+    .pagination {
+        font-size: 0.8rem; /* Giảm kích thước chữ cho phân trang */
+    }
+
+    /* Bố cục để chỉ hiển thị 2 dịch vụ mỗi hàng */
+    .row-service {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .col-service {
+        flex: 0 0 50%; /* Hiển thị 2 cột mỗi hàng trên màn hình nhỏ */
+        max-width: 50%;
+    }
+    .col-service {
+        flex: 0 0 50%; /* Hiển thị 3 cột mỗi hàng */
+        max-width: 50%;
     }
 }

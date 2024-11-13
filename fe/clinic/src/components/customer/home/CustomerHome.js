@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Route, Routes, Link } from "react-router-dom";
+import React from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import CustomerNavbar from "../navbar/CustomerNavbar";
 import CustomerFooter from "../footer/CustomerFooter";
 import "./CustomerHome.css";
@@ -9,44 +9,41 @@ import Info from "../info/Info";
 import Reviews from "../reviews/Reviews";
 import BookAppointment from "../book-appointment/BookAppointment";
 import ServiceAll from "../service/ServiceAll";
-import SpecialtyAll from "../specialties/SepcialtiesAll"; // Assuming you have a SpecialtyAll component
+import SpecialtyAll from "../specialties/SepcialtiesAll"; // Giả sử bạn đã có component SpecialtyAll
 
 function CustomerHome() {
-  const [showServices, setShowServices] = useState(false); // Trạng thái cho việc hiển thị "Dịch vụ"
-  const [showSpecialties, setShowSpecialties] = useState(false); // Trạng thái cho việc hiển thị "Chuyên khoa"
+  const navigate = useNavigate();
 
   const handleServiceClick = () => {
-    setShowServices(true);
-    setShowSpecialties(false); // Nếu dịch vụ được chọn thì không hiển thị chuyên khoa
+    navigate("/service"); // Điều hướng đến đường dẫn /service
   };
 
   const handleSpecialtyClick = () => {
-    setShowSpecialties(true);
-    setShowServices(false); // Nếu chuyên khoa được chọn thì không hiển thị dịch vụ
+    navigate("/specialty"); // Điều hướng đến đường dẫn /specialty
   };
 
   return (
     <div className="page-container">
       <CustomerNavbar onServiceClick={handleServiceClick} onSpecialtyClick={handleSpecialtyClick} />
       <div className="content-wrap">
-        {/* Chỉ hiển thị các phần nếu chưa chọn "Dịch vụ" hoặc "Chuyên khoa" */}
-        {!showServices && !showSpecialties && (
-          <>
-            <Banner />
-            <Info />
-            <About />
-            <BookAppointment />
-            <Reviews />
-          </>
-        )}
-        
-        <div className="container-fluid">
-          {/* Hiển thị ServiceAll khi chọn "Dịch vụ" */}
-          {showServices && <ServiceAll />}
-          
-          {/* Hiển thị SpecialtyAll khi chọn "Chuyên khoa" */}
-          {showSpecialties && <SpecialtyAll />}
-        </div>
+        <Routes>
+          {/* Route mặc định hiển thị tất cả các phần */}
+          <Route
+            path="/"
+            element={
+              <>
+                <Banner />
+                <Info />
+                <About />
+                <BookAppointment />
+                <Reviews />
+              </>
+            }
+          />
+          <Route path="/about" element={<About />} />
+          <Route path="/service" element={<ServiceAll />} />
+          <Route path="/specialty" element={<SpecialtyAll />} />
+        </Routes>
       </div>
       <CustomerFooter />
     </div>

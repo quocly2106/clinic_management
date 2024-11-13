@@ -1,6 +1,5 @@
-// Services.js
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Card, Spinner } from "react-bootstrap";
+import { Container, Row, Col, Card, Spinner, Pagination } from "react-bootstrap";
 import { motion } from "framer-motion";
 import { allServices } from "../../utils/ApiFunction";
 import "./Services.css";
@@ -9,9 +8,26 @@ function Services() {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [servicesPerPage, setServicesPerPage] = useState(6); // Mặc định 6 dịch vụ mỗi trang
 
   useEffect(() => {
     fetchServices();
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setServicesPerPage(4); // Khi màn hình nhỏ hơn hoặc bằng 768px, hiển thị tối đa 4 dịch vụ mỗi trang
+      } else {
+        setServicesPerPage(6); // Khi màn hình lớn hơn 768px, hiển thị tối đa 6 dịch vụ mỗi trang
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Gọi ngay để xử lý khi tải trang lần đầu tiên
+
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const fetchServices = async () => {
@@ -26,6 +42,12 @@ function Services() {
       setLoading(false);
     }
   };
+
+  const indexOfLastService = currentPage * servicesPerPage;
+  const indexOfFirstService = indexOfLastService - servicesPerPage;
+  const currentServices = services.slice(indexOfFirstService, indexOfLastService);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   if (loading) {
     return (
@@ -49,35 +71,28 @@ function Services() {
 
   return (
     <div className="services-page">
-      {/* Services List Section */}
       <section className="services-list">
-        <Container>
-          {services.map((service, index) => (
-            <Row key={service.id} className="mb-4">
-              <Col lg={3} md={4} sm={12} className="image-border">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  {service.image && (
-                    <Card.Img
-                      variant="top"
-                      src={`http://localhost:9191/img/${service.image}`}
-                      alt={service.name}
-                      className="service-image"
-                    />
-                  )}
-                </motion.div>
-              </Col>
-              <Col lg={9} md={8} sm={12}>
+        <div className="container">
+          <Row className="row-service justify-content-center">
+            {currentServices.map((service, index) => (
+              <Col key={service.id} xs={6} sm={6} md={4} lg={4} className="col-service">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                 >
                   <Card className="service-card">
-                    <Card.Body>
+                    <div className="image-border">
+                      {service.image && (
+                        <Card.Img
+                          variant="top"
+                          src={`http://localhost:9191/img/${service.image}`}
+                          alt={service.name}
+                          className="service-image"
+                        />
+                      )}
+                    </div>
+                    <div className="card-body">
                       <Card.Title>{service.name}</Card.Title>
                       <Card.Text>{service.description}</Card.Text>
                       <div className="service-details">
@@ -96,13 +111,42 @@ function Services() {
                           </div>
                         )}
                       </div>
-                    </Card.Body>
+                    </div>
                   </Card>
                 </motion.div>
               </Col>
-            </Row>
-          ))}
-        </Container>
+            ))}
+          </Row>
+
+          {/* Pagination */}
+          <Row className="justify-content-center mt-4">
+            <Col xs="auto">
+              <Pagination>
+                <Pagination.First onClick={() => paginate(1)} disabled={currentPage === 1} />
+                <Pagination.Prev onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} />
+                
+                {[...Array(Math.ceil(services.length / servicesPerPage))].map((_, index) => (
+                  <Pagination.Item
+                    key={index + 1}
+                    active={index + 1 === currentPage}
+                    onClick={() => paginate(index + 1)}
+                  >
+                    {index + 1}
+                  </Pagination.Item>
+                ))}
+
+                <Pagination.Next
+                  onClick={() => paginate(currentPage + 1)}
+                  disabled={currentPage === Math.ceil(services.length / servicesPerPage)}
+                />
+                <Pagination.Last
+                  onClick={() => paginate(Math.ceil(services.length / servicesPerPage))}
+                  disabled={currentPage === Math.ceil(services.length / servicesPerPage)}
+                />
+              </Pagination>
+            </Col>
+          </Row>
+        </div>
       </section>
     </div>
   );
