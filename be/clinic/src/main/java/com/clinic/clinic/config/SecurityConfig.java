@@ -47,7 +47,7 @@ public class SecurityConfig {
                         .requestMatchers("/patients/**").hasAnyRole("ADMIN", "RECEPTIONIST")
                         .requestMatchers("/news/add", "/news/update/", "news/delete/{id}").hasAnyRole("ADMIN")
                         .requestMatchers("/news/all", "/news/{id}", "/news/increment-views/{id}","/doctors/all","/receptionists/all").permitAll()
-                        .requestMatchers("/appointments/book-appointment" , "appointments/all").permitAll()
+                        .requestMatchers("/appointments/book-appointment" , "appointments/all","specialties/{id}/doctors").permitAll()
                         .requestMatchers("/doctors/**", "/receptionists/**", "/departments/**",
                                 "/appointments/**", "services/**", "/medicines/**","specialties/**").hasRole("ADMIN")
 

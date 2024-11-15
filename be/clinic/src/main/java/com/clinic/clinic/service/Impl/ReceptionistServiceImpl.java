@@ -11,12 +11,14 @@ import com.clinic.clinic.model.Receptionist;
 import com.clinic.clinic.model.Role;
 import com.clinic.clinic.repository.ReceptionistRepository;
 import com.clinic.clinic.service.ReceptionistService;
+import com.clinic.clinic.utils.ImageUpload;
 import com.clinic.clinic.utils.JWTUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,10 +32,19 @@ public class ReceptionistServiceImpl implements ReceptionistService {
     @Autowired
     private JWTUtils jwtUtils;
 
+    @Autowired
+    private ImageUpload imageUpload;
+
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     @Override
-    public Receptionist addReceptionist(ReceptionistDto receptionistDto) {
+    public Receptionist addReceptionist(ReceptionistDto receptionistDto , MultipartFile imageFile) {
         Receptionist receptionist = convertToEntity(receptionistDto);
+        if (imageFile != null && !imageFile.isEmpty()) {
+            if (!imageUpload.checkExisted(imageFile)) {
+                imageUpload.uploadImage(imageFile);
+            }
+            receptionist.setImage(imageFile.getOriginalFilename());
+        }
         return receptionistRepository.save(receptionist);
     }
 
@@ -73,7 +84,7 @@ public class ReceptionistServiceImpl implements ReceptionistService {
 
     @Transactional
     @Override
-    public Receptionist updateReceptionist(Long id, ReceptionistDto receptionistDto) {
+    public Receptionist updateReceptionist(Long id, ReceptionistDto receptionistDto , MultipartFile imageFile) {
         Receptionist existingReceptionist = receptionistRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Receptionist not found"));
 
@@ -86,7 +97,12 @@ public class ReceptionistServiceImpl implements ReceptionistService {
         if (receptionistDto.getPassword() != null && !receptionistDto.getPassword().isEmpty()) {
             existingReceptionist.setPassword(passwordEncoder.encode(receptionistDto.getPassword()));
         }
-        existingReceptionist.setImage(receptionistDto.getImage());
+        if (imageFile != null && !imageFile.isEmpty()) {
+            if (!imageUpload.checkExisted(imageFile)) {
+                imageUpload.uploadImage(imageFile);
+            }
+            existingReceptionist.setImage(imageFile.getOriginalFilename());
+        }
 
         return receptionistRepository.save(existingReceptionist);
     }

@@ -10,8 +10,10 @@ function AddReceptionist() {
     lastName: '',
     password: '',
     role: 'RECEPTIONIST',
+    image: "",
   });
 
+  const [imagePreview, setImagePreview] = useState(null);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [showToast, setShowToast] = useState(false);
@@ -22,27 +24,70 @@ function AddReceptionist() {
     setReceptionistData({ ...receptionistData, [name]: value });
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        setError("Image size should not exceed 5MB");
+        setShowToast(true);
+        return;
+      }
+
+      const validTypes = ["image/jpeg", "image/png", "image/jpg"];
+      if (!validTypes.includes(file.type)) {
+        setError("Please upload a valid image file (JPEG, PNG, or JPG)");
+        setShowToast(true);
+        return;
+      }
+
+      const imageUrl = URL.createObjectURL(file);
+      setImagePreview(imageUrl);
+      setReceptionistData((prevState) => ({ ...prevState, image: file }));
+
+      // Cleanup URL to prevent memory leaks
+      return () => URL.revokeObjectURL(imageUrl);
+    } else {
+      setReceptionistData((prevState) => ({ ...prevState, image: "" }));
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Receptionist Data:", receptionistData);
     try {
-      await addReceptionist(receptionistData);
-      setSuccessMessage('Receptionist added successfully!');
-      setError('');
+      const receptionistDto = {
+        firstName: receptionistData.firstName,
+        lastName: receptionistData.lastName,
+        email: receptionistData.email,
+        password: receptionistData.password,
+      };
+
+      const response = await addReceptionist(receptionistDto, receptionistData.image);
+
+      // Nếu backend trả về URL ảnh, thêm timestamp để đảm bảo hình ảnh mới nhất luôn hiển thị
+      const imageUrl = `${response.imageUrl}?timestamp=${new Date().getTime()}`;
+
+      setSuccessMessage("Receptionist added successfully!");
+      setError("");
       setShowToast(true);
       setReceptionistData({
-        email: '',
-        firstName: '',
-        lastName: '',
-        password: '',
-        role: 'RECEPTIONIST',
+        email: "",
+        firstName: "",
+        lastName: "",
+        password: "",
+        role: "RECEPTIONIST",
+        image: "",
       });
-      navigate('/admin/receptionist'); 
+      setImagePreview(imageUrl);
+      navigate("/admin/receptionist");
     } catch (error) {
       console.error("Error adding receptionist:", error);
-      setError('Failed to add receptionist. Please try again.');
-      setSuccessMessage('');
+      setError("Failed to add doctor. Please try again.");
+      setSuccessMessage("");
       setShowToast(true);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 3000);
     }
   };
 
@@ -99,6 +144,31 @@ function AddReceptionist() {
             required
           />
         </div>
+
+        <div className="mb-3">
+            <label htmlFor="image" className="form-label">
+              Image
+            </label>
+            <input
+              type="file"
+              className="form-control rounded-3"
+              id="image"
+              name="image"
+              onChange={handleImageChange}
+              accept="image/*"
+            />
+            {imagePreview && (
+              <div className="mt-2">
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  key={imagePreview} // Force React to rerender
+                  style={{ maxWidth: "200px", maxHeight: "200px" }}
+                  className="img-thumbnail"
+                />
+              </div>
+            )}
+          </div>
         <button type="submit" className="btn btn-primary">Add Receptionist</button>
       </form>
 

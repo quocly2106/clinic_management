@@ -1,5 +1,6 @@
 package com.clinic.clinic.controller;
 
+import com.clinic.clinic.dto.DoctorDto;
 import com.clinic.clinic.dto.ServiceDto;
 import com.clinic.clinic.dto.SpecialtyDto;
 import com.clinic.clinic.model.Specialty;
@@ -53,5 +54,12 @@ public class SpecialtyController {
     public ResponseEntity<Specialty> getSpecialtyById(@PathVariable @NotNull Long id) {
         Specialty specialty = specialtyService.getSpecialtyById(id);
         return ResponseEntity.ok(specialty);
+    }
+
+
+    @GetMapping("/{id}/doctors")
+    public ResponseEntity<List<DoctorDto>> getDoctorsBySpecialty(@PathVariable @NotNull Long id) {
+        List<DoctorDto> doctors = specialtyService.getDoctorsBySpecialty(id);
+        return ResponseEntity.ok(doctors);
     }
 }

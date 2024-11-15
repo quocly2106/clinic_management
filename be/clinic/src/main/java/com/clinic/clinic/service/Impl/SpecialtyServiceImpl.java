@@ -1,7 +1,10 @@
 package com.clinic.clinic.service.Impl;
 
+import com.clinic.clinic.dto.DoctorDto;
 import com.clinic.clinic.dto.SpecialtyDto;
+import com.clinic.clinic.model.Doctor;
 import com.clinic.clinic.model.Specialty;
+import com.clinic.clinic.repository.DoctorRepository;
 import com.clinic.clinic.repository.SpecialtyRepository;
 import com.clinic.clinic.service.SpecialtyService;
 import com.clinic.clinic.utils.ImageUpload;
@@ -19,6 +22,9 @@ public class SpecialtyServiceImpl implements SpecialtyService {
 
     @Autowired
     private SpecialtyRepository specialtyRepository;
+
+    @Autowired
+    private DoctorRepository doctorRepository;
 
     @Autowired
     private ImageUpload imageUpload;
@@ -68,5 +74,23 @@ public class SpecialtyServiceImpl implements SpecialtyService {
     public Specialty getSpecialtyById(Long id) {
         return specialtyRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Specialty not found with ID: " + id));
+    }
+
+    @Override
+    public List<DoctorDto> getDoctorsBySpecialty(Long specialtyId) {
+        Specialty specialty = specialtyRepository.findById(specialtyId)
+                .orElseThrow(() -> new RuntimeException("Specialty not found"));
+
+        List<Doctor> doctors = doctorRepository.findBySpecialty(specialty);
+
+        return doctors.stream().map(doctor -> {
+            DoctorDto doctorDto = new DoctorDto();
+            doctorDto.setFirstName(doctor.getFirstName());
+            doctorDto.setLastName(doctor.getLastName());
+            doctorDto.setEmail(doctor.getEmail());
+            doctorDto.setImage(doctor.getImage());
+            doctorDto.setSpecialtyId(specialtyId);
+            return doctorDto;
+        }).toList();
     }
 }

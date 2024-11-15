@@ -23,15 +23,17 @@ public class DoctorController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
-    public ResponseEntity<Doctor> createDoctor(@Valid @RequestBody DoctorDto doctorDto) {
-        Doctor createdDoctor = doctorService.addDoctor(doctorDto);
+    public ResponseEntity<Doctor> createDoctor(@Valid @RequestPart DoctorDto doctorDto,
+                                               @RequestPart(value = "image", required = false) MultipartFile image) {
+        Doctor createdDoctor = doctorService.addDoctor(doctorDto ,image);
         return ResponseEntity.ok(createdDoctor);
     }
 
     @PreAuthorize("hasRole('ADMIN') or (hasRole('DOCTOR') and #id == authentication.principal.id)")
     @PutMapping("/update/{id}")
-    public ResponseEntity<Doctor> updateDoctor(@PathVariable @NotNull Long id, @RequestBody DoctorDto doctorDto, MultipartFile file) {
-        Doctor updatedDoctor = doctorService.updateDoctor(id, doctorDto,file);
+    public ResponseEntity<Doctor> updateDoctor(@PathVariable @NotNull Long id, @RequestPart DoctorDto doctorDto,
+                                               @RequestPart(value = "image", required = false) MultipartFile image) {
+        Doctor updatedDoctor = doctorService.updateDoctor(id, doctorDto,image);
         return ResponseEntity.ok(updatedDoctor);
     }
 

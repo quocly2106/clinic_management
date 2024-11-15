@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,17 +25,18 @@ public class ReceptionistController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
-    public ResponseEntity<Receptionist> createReceptionist(@Valid @RequestBody ReceptionistDto receptionistDto) {
-        Receptionist createdReceptionist = receptionistService.addReceptionist(receptionistDto);
+    public ResponseEntity<Receptionist> createReceptionist(@Valid @RequestPart ReceptionistDto receptionistDto,
+                                                           @RequestPart(value = "image", required = false) MultipartFile image) {
+        Receptionist createdReceptionist = receptionistService.addReceptionist(receptionistDto,image);
         return ResponseEntity.ok(createdReceptionist);
     }
 
 
     @PreAuthorize("hasRole('ADMIN') or (hasRole('RECEPTIONIST') and #id == authentication.principal.id)")
     @PutMapping("/update/{id}")
-    public ResponseEntity<Receptionist> updateDoctor(@PathVariable @NotNull Long id, @RequestBody ReceptionistDto receptionistDto) {
-
-        Receptionist updatedReceptionist = receptionistService.updateReceptionist(id, receptionistDto);
+    public ResponseEntity<Receptionist> updateDoctor(@PathVariable @NotNull Long id, @RequestPart ReceptionistDto receptionistDto,
+                                                     @RequestPart(value = "image", required = false) MultipartFile image){
+        Receptionist updatedReceptionist = receptionistService.updateReceptionist(id, receptionistDto,image);
         return ResponseEntity.ok(updatedReceptionist);
     }
 
@@ -45,6 +47,7 @@ public class ReceptionistController {
         receptionistService.deleteReceptionist(id);
         return ResponseEntity.ok("Receptionist deleted successfully");
     }
+
     @PreAuthorize("hasAnyRole('ADMIN','DOCTOR','RECEPTIONIST')")
     @GetMapping("/all")
     public ResponseEntity<List<Receptionist>> getAllReceptionists() {

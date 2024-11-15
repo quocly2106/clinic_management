@@ -41,8 +41,14 @@ public class DoctorServiceImpl implements DoctorService {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
-    public Doctor addDoctor(DoctorDto doctorDto) {
+    public Doctor addDoctor(DoctorDto doctorDto , MultipartFile imageFile) {
         Doctor doctor = convertToEntity(doctorDto);
+        if (imageFile != null && !imageFile.isEmpty()) {
+            if (!imageUpload.checkExisted(imageFile)) {
+                imageUpload.uploadImage(imageFile);
+            }
+            doctor.setImage(imageFile.getOriginalFilename());
+        }
         return doctorRepository.save(doctor);
     }
 
@@ -93,10 +99,10 @@ public class DoctorServiceImpl implements DoctorService {
             existingDoctor.setPassword(passwordEncoder.encode(doctorDto.getPassword()));
         }
         if (imageFile != null && !imageFile.isEmpty()) {
-            String fileName = imageUpload.uploadImage(imageFile);
-            if (fileName != null) {
-                existingDoctor.setImage("/static/img/" + fileName); // Lưu URL ảnh
+            if (!imageUpload.checkExisted(imageFile)) {
+                imageUpload.uploadImage(imageFile);
             }
+            existingDoctor.setImage(imageFile.getOriginalFilename());
         }
 
         if (doctorDto.getSpecialtyId() != null) {

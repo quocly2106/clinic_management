@@ -1,0 +1,112 @@
+.doctors-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .specialties-section {
+    margin-bottom: 30px;
+  }
+  
+  .specialty-list {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+  
+  .specialty-button {
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .specialty-button:hover {
+    background: #f0f0f0;
+  }
+  
+  .specialty-button.active {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+  }
+  
+  .doctors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  .doctor-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
+  
+  .doctor-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .doctor-image {
+    height: 200px;
+    overflow: hidden;
+  }
+  
+  .doctor-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .doctor-info {
+    padding: 15px;
+  }
+  
+  .doctor-info h3 {
+    margin: 0 0 10px 0;
+    color: #333;
+  }
+  
+  .experience {
+    color: #666;
+    font-size: 0.9em;
+    margin: 5px 0;
+  }
+  
+  .description {
+    color: #444;
+    margin: 10px 0;
+  }
+  
+  .book-appointment {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+  }
+  
+  .book-appointment:hover {
+    background: #218838;
+  }
+  
+  @media (max-width: 768px) {
+    .doctors-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .specialty-list {
+      flex-direction: column;
+    }
+    
+    .specialty-button {
+      width: 100%;
+    }
+  }

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Card, Spinner, Pagination } from "react-bootstrap";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { allSpecialties } from "../../utils/ApiFunction";
 import "./Specialties.css";
 
 function Specialties() {
+  const navigate = useNavigate(); // Khởi tạo navigate
   const [specialties, setSpecialties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -16,7 +18,6 @@ function Specialties() {
   }, []);
 
   useEffect(() => {
-    // Cập nhật số lượng chuyên khoa mỗi trang khi màn hình thay đổi kích thước
     const handleResize = () => {
       if (window.innerWidth <= 768) {
         setSpecialtiesPerPage(6);
@@ -26,11 +27,10 @@ function Specialties() {
     };
 
     window.addEventListener("resize", handleResize);
-    handleResize(); // Gọi ngay lập tức để xử lý khi trang đã tải
+    handleResize();
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  
 
   const fetchSpecialties = async () => {
     try {
@@ -43,6 +43,11 @@ function Specialties() {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Hàm xử lý khi click vào chuyên khoa
+  const handleSpecialtyClick = (specialtyId) => {
+    navigate(`/doctors/${specialtyId}`); // Điều hướng đến trang bác sĩ với ID chuyên khoa
   };
 
   const indexOfLastSpecialty = currentPage * specialtiesPerPage;
@@ -82,6 +87,8 @@ function Specialties() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
+                  onClick={() => handleSpecialtyClick(specialty.id)} // Thêm sự kiện click
+                  style={{ cursor: 'pointer' }} // Thêm con trỏ để người dùng biết có thể click
                 >
                   <Card className="specialty-card">
                     <div className="image-border">

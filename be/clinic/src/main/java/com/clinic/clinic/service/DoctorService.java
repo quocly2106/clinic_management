@@ -12,7 +12,7 @@
 
     public interface DoctorService {
 
-        Doctor addDoctor(DoctorDto doctorDto);
+        Doctor addDoctor(DoctorDto doctorDto , MultipartFile imageFile);
         String  login(LoginDto loginDto);
 
         boolean isValidUser(String email, String password);

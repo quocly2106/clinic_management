@@ -130,16 +130,25 @@ export const allDoctors = async () => {
   }
 };
 
-export const addDoctor = async (data) => {
+export const addDoctor = async (doctorDto, imageFile) => {
   try {
-    const token = localStorage.getItem("token"); // Lấy token từ localStorage
-    console.log("Token:", token);
+    const token = localStorage.getItem("token");
+    const formData = new FormData();
+    formData.append("doctorDto", new Blob([JSON.stringify(doctorDto)], {
+      type: "application/json"
+    }));
+    
+    if (imageFile) {
+      formData.append("image", imageFile);
+    }
+
     const response = await axios.post(
       "http://localhost:9191/doctors/add",
-      data,
+      formData,
       {
         headers: {
-          Authorization: `Bearer ${token}`, // Gửi token trong header
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
         },
       }
     );
@@ -150,17 +159,26 @@ export const addDoctor = async (data) => {
   }
 };
 
-export const editDoctor = async (doctorId, data) => {
+
+export const editDoctor = async (doctorId, doctorDto, imageFile) => {
   try {
-    const token = localStorage.getItem("token"); // Lấy token từ localStorage
-    console.log("Token:", token);
+    const token = localStorage.getItem("token");
+    const formData = new FormData();
+    formData.append("doctorDto", new Blob([JSON.stringify(doctorDto)], {
+      type: "application/json"
+    }));
+    
+    if (imageFile) {
+      formData.append("image", imageFile);
+    }
+
     const response = await axios.put(
       `http://localhost:9191/doctors/update/${doctorId}`,
-      data,
+      formData,
       {
         headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`, // Gửi token trong header
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
         },
       }
     );
@@ -171,7 +189,6 @@ export const editDoctor = async (doctorId, data) => {
   }
 };
 
-// receptionist
 export async function deleteDoctor(doctorId) {
   try {
     const result = await api.delete(`/doctors/delete/${doctorId}`);
@@ -180,6 +197,9 @@ export async function deleteDoctor(doctorId) {
     throw new Error(`Error deleting doctor" ${error.message}`);
   }
 }
+
+
+// receptionist
 
 export const allReceptionists = async () => {
   try {
@@ -191,16 +211,25 @@ export const allReceptionists = async () => {
   }
 };
 
-export const addReceptionist = async (data) => {
+export const addReceptionist = async (receptionistDto, imageFile) => {
   try {
-    const token = localStorage.getItem("token"); // Lấy token từ localStorage
-    console.log("Token:", token);
+    const token = localStorage.getItem("token");
+    const formData = new FormData();
+    formData.append("receptionistDto", new Blob([JSON.stringify(receptionistDto)], {
+      type: "application/json"
+    }));
+    
+    if (imageFile) {
+      formData.append("image", imageFile);
+    }
+
     const response = await axios.post(
       "http://localhost:9191/receptionists/add",
-      data,
+      formData,
       {
         headers: {
-          Authorization: `Bearer ${token}`, // Gửi token trong header
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
         },
       }
     );
@@ -211,16 +240,25 @@ export const addReceptionist = async (data) => {
   }
 };
 
-export const editReceptionist = async (receptionistId, data) => {
+export const editReceptionist = async (receptionistId, receptionistDto, imageFile) => {
   try {
-    const token = localStorage.getItem("token"); // Lấy token từ localStorage
-    console.log("Token:", token);
+    const token = localStorage.getItem("token");
+    const formData = new FormData();
+    formData.append("receptionistDto", new Blob([JSON.stringify(receptionistDto)], {
+      type: "application/json"
+    }));
+    
+    if (imageFile) {
+      formData.append("image", imageFile);
+    }
+
     const response = await axios.put(
       `http://localhost:9191/receptionists/update/${receptionistId}`,
-      data,
+      formData,
       {
         headers: {
-          Authorization: `Bearer ${token}`, // Gửi token trong header
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
         },
       }
     );
@@ -330,6 +368,16 @@ export async function deleteSpecialty(specialtyId) {
     throw new Error(`Error deleting specialty" ${error.message}`);
   }
 }
+
+export const allDoctorsOfSpecialties = async (specialtyId) => {
+  try {
+    const response = await api.get(`/specialties/${specialtyId}/doctors`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching all doctors of specialties:", error);
+    throw error;
+  }
+};
 
 // service
 export const allServices = async () => {
