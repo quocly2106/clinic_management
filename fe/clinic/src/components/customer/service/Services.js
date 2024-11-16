@@ -73,50 +73,54 @@ function Services() {
     <div className="services-page">
       <section className="services-list">
         <div className="container">
-          <Row className="row-service justify-content-center">
-            {currentServices.map((service, index) => (
-              <Col key={service.id} xs={6} sm={6} md={4} lg={4} className="col-service">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <Card className="service-card">
-                    <div className="image-border">
-                      {service.image && (
-                        <Card.Img
-                          variant="top"
-                          src={`http://localhost:9191/img/${service.image}`}
-                          alt={service.name}
-                          className="service-image"
-                        />
-                      )}
-                    </div>
-                    <div className="card-body">
-                      <Card.Title>{service.name}</Card.Title>
-                      <Card.Text>{service.description}</Card.Text>
-                      <div className="service-details">
-                        {service.price && (
-                          <div className="service-price">
-                            Giá:{" "}
-                            {new Intl.NumberFormat("vi-VN", {
-                              style: "currency",
-                              currency: "VND",
-                            }).format(service.price)}
-                          </div>
-                        )}
-                        {service.duration && (
-                          <div className="service-duration">
-                            Thời gian: {service.duration}
-                          </div>
+          {currentServices.length === 0 ? (
+            <p className="no-services">Không tìm thấy dịch vụ nào.</p>
+          ) : (
+            <Row className="row-service justify-content-center">
+              {currentServices.map((service, index) => (
+                <Col key={service.id} xs={6} sm={6} md={4} lg={4} className="col-service">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    <Card className="service-card">
+                      <div className="image-border">
+                        {service.image && (
+                          <Card.Img
+                            variant="top"
+                            src={`http://localhost:9191/img/${service.image}`}
+                            alt={service.name}
+                            className="service-image"
+                          />
                         )}
                       </div>
-                    </div>
-                  </Card>
-                </motion.div>
-              </Col>
-            ))}
-          </Row>
+                      <div className="card-body">
+                        <Card.Title>{service.name}</Card.Title>
+                        <Card.Text>{service.description}</Card.Text>
+                        <div className="service-details">
+                          {service.price && (
+                            <div className="service-price">
+                              Giá:{" "}
+                              {new Intl.NumberFormat("vi-VN", {
+                                style: "currency",
+                                currency: "VND",
+                              }).format(service.price)}
+                            </div>
+                          )}
+                          {service.duration && (
+                            <div className="service-duration">
+                              Thời gian: {service.duration}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </Card>
+                  </motion.div>
+                </Col>
+              ))}
+            </Row>
+          )}
 
           {/* Pagination */}
           <Row className="justify-content-center mt-4">

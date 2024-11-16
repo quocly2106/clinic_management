@@ -87,6 +87,8 @@ public class SpecialtyServiceImpl implements SpecialtyService {
             DoctorDto doctorDto = new DoctorDto();
             doctorDto.setFirstName(doctor.getFirstName());
             doctorDto.setLastName(doctor.getLastName());
+            doctorDto.setExperience(doctor.getExperience());
+            doctorDto.setDescription(doctor.getDescription());
             doctorDto.setEmail(doctor.getEmail());
             doctorDto.setImage(doctor.getImage());
             doctorDto.setSpecialtyId(specialtyId);

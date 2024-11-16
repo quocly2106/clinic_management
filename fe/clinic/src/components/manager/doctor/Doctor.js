@@ -147,6 +147,8 @@ function Doctor() {
                   <th>Email</th>
                   <th>First Name</th>
                   <th>Last Name</th>
+                  <th>Experience</th>
+                  <th>Description</th>
                   <th>Specialty</th>
                   <th>Action</th>
                 </tr>
@@ -154,7 +156,7 @@ function Doctor() {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="6" className="text-center">
+                    <td colSpan="8" className="text-center">
                       <div className="loading-spinner">
                         <div className="spinner"></div>
                       </div>
@@ -162,7 +164,7 @@ function Doctor() {
                   </tr>
                 ) : filteredDoctors.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="no-data">
+                    <td colSpan="8" className="no-data">
                       No doctors found
                     </td>
                   </tr>
@@ -173,6 +175,8 @@ function Doctor() {
                       <td>{doctor.email}</td>
                       <td>{doctor.firstName}</td>
                       <td>{doctor.lastName}</td>
+                      <td>{doctor.experience}</td>
+                      <td>{doctor.description}</td>
                       <td>
                         {doctor.specialty ? doctor.specialty.name : "N/A"}
                       </td>

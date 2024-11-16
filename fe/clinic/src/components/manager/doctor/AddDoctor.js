@@ -12,6 +12,8 @@ function AddDoctor() {
     specialtyId: "",
     role: "DOCTOR",
     image: "",
+    experience: "",
+    description: "",
   });
 
   const [imagePreview, setImagePreview] = useState(null);
@@ -62,6 +64,8 @@ function AddDoctor() {
         email: doctorData.email,
         password: doctorData.password,
         specialtyId: doctorData.specialtyId,
+        experience: doctorData.experience,
+        description: doctorData.description,
       };
 
       const response = await addDoctor(doctorDto, doctorData.image);
@@ -80,6 +84,8 @@ function AddDoctor() {
         specialtyId: "",
         role: "DOCTOR",
         image: "",
+        experience: "",
+        description: "",
       });
       setImagePreview(imageUrl);
       navigate("/admin/doctor");
@@ -123,6 +129,34 @@ function AddDoctor() {
             id="lastName"
             name="lastName"
             value={doctorData.lastName}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="experience" className="form-label">
+            Experience
+          </label>
+          <input
+            type="text"
+            className="form-control rounded-3"
+            id="experience"
+            name="experience"
+            value={doctorData.experience}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="description" className="form-label">
+          Description
+          </label>
+          <input
+            type="text"
+            className="form-control rounded-3"
+            id="description"
+            name="description"
+            value={doctorData.description}
             onChange={handleChange}
             required
           />

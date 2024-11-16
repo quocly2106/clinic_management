@@ -24,6 +24,12 @@ public class Doctor {
     @Column(nullable = false)
     private String lastName;
 
+    @Column(nullable = false)
+    private String experience;
+
+    @Column(nullable = false)
+    private String description;
+
     @Column(nullable = false, unique = true)
     private String email;
 

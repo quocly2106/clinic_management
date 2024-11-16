@@ -17,6 +17,10 @@ public class DoctorDto {
     @NotBlank(message = "Last Name is required")
     private String lastName;
 
+    private String experience;
+
+    private String description;
+
     @Email(message = "Email should be valid")
     @NotBlank(message = "Email is required")
     private String email;

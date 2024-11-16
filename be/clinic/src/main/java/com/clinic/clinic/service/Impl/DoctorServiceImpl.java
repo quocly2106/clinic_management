@@ -92,6 +92,8 @@ public class DoctorServiceImpl implements DoctorService {
                 .orElseThrow(() -> new ResourceNotFoundException("Doctor not found"));
         existingDoctor.setFirstName(doctorDto.getFirstName());
         existingDoctor.setLastName(doctorDto.getLastName());
+        existingDoctor.setExperience(doctorDto.getExperience());
+        existingDoctor.setDescription(doctorDto.getDescription());
         if (doctorDto.getEmail() != null && !doctorDto.getEmail().isEmpty()) {
             existingDoctor.setEmail(doctorDto.getEmail());
         }
@@ -153,6 +155,8 @@ public class DoctorServiceImpl implements DoctorService {
         Doctor doctor = new Doctor();
         doctor.setFirstName(doctorDto.getFirstName());
         doctor.setLastName(doctorDto.getLastName());
+        doctor.setExperience(doctorDto.getExperience());
+        doctor.setDescription(doctorDto.getDescription());
         doctor.setEmail(doctorDto.getEmail());
         doctor.setPassword(passwordEncoder.encode(doctorDto.getPassword()));
         doctor.setImage(doctorDto.getImage());

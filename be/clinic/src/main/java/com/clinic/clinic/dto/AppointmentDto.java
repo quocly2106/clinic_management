@@ -15,7 +15,6 @@ public class AppointmentDto {
     @NotNull(message = "Doctor ID is required")
     private Long doctorId;
 
-    @NotNull(message = "Patient ID is required")
     private Long patientId;
 
     @NotNull(message = "Patient information is required")
@@ -28,9 +27,7 @@ public class AppointmentDto {
     @NotNull(message = "Reason is required")
     private String reason;
 
-    @NotNull(message = "Status is required")
     private String status;
 
-    @NotNull(message = "Receptionist ID is required")
     private Long receptionistId;
 }
