@@ -11,6 +11,7 @@ const EditDoctor = () => {
   const [error, setError] = useState(null);
   const [specialties, setSpecialties] = useState([]);
   const [selectedSpecialty, setSelectedSpecialty] = useState("");
+  const [file, setFile] = useState(null); // State for the file upload
   const navigate = useNavigate();
 
   // Lấy role từ localStorage
@@ -64,12 +65,25 @@ const EditDoctor = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const updatedDoctor = {
+  
+    // Create doctorDto object containing all the necessary fields
+    const doctorDto = {
       firstName: doctor.firstName,
       lastName: doctor.lastName,
+      experience: doctor.experience,
+      description: doctor.description,
       specialtyId: selectedSpecialty,
     };
-
+  
+    // Create FormData object to append doctorDto and file (only if the file is present)
+    const formData = new FormData();
+    formData.append("doctorDto", new Blob([JSON.stringify(doctorDto)], {
+      type: "application/json"
+    }));
+    if (file) {
+      formData.append("file", file); // Append the file if it's provided
+    }
+  
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
@@ -77,24 +91,23 @@ const EditDoctor = () => {
         {
           method: "PUT",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(updatedDoctor),
+          body: formData, // Send the FormData with or without the file
         }
       );
-
+  
       if (!response.ok) {
         const errorMessage = await response.text();
         console.error("Update failed:", errorMessage);
         throw new Error("Failed to update doctor: " + errorMessage);
       }
-
-
-        // Chuyển hướng sau 2 giây
-        setTimeout(() => {
-            navigate('/admin/doctor'); 
-        }, 2000);
+  
+      toast.success("Doctor updated successfully");
+      // Redirect after successful update
+      setTimeout(() => {
+        navigate("/admin/doctor");
+      }, 2000);
     } catch (error) {
       setError(error.message);
       toast.error(error.message);
@@ -127,7 +140,7 @@ const EditDoctor = () => {
       <ToastContainer position="top-right" autoClose={3000} />
       <div className="form-container">
         <h2 className="form-title">Edit Doctor</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
           <div className="row">
             <div className="col-md-6 mb-3">
               <label className="form-label">First Name</label>
@@ -161,6 +174,37 @@ const EditDoctor = () => {
               />
             </div>
             <div className="col-md-6 mb-3">
+              <label className="form-label">Experience</label>
+              <input
+                type="number"
+                className="form-control"
+                value={doctor.experience || ""}
+                onChange={(e) =>
+                  setDoctor({ ...doctor, experience: e.target.value })
+                }
+              />
+            </div>
+            <div className="col-md-12 mb-3">
+              <label className="form-label">Description</label>
+              <input
+                type="text"
+                className="form-control"
+                value={doctor.description || ""}
+                onChange={(e) =>
+                  setDoctor({ ...doctor, description: e.target.value })
+                }
+              />
+            </div>
+            <div className="col-md-6 mb-3">
+              <label className="form-label">Role</label>
+              <input
+                type="text"
+                className="form-control"
+                value={doctor.role || ""}
+                readOnly
+              />
+            </div>
+            <div className="col-md-6 mb-3">
               <label className="form-label">Specialty</label>
               {userRole === "admin" ? (
                 <select
@@ -179,22 +223,21 @@ const EditDoctor = () => {
                 <input
                   type="text"
                   className="form-control"
-                  value={
-                    specialties.find(
-                      (specialty) => specialty.id === selectedSpecialty
-                    )?.name || ""
-                  }
+                  value={specialties.find(
+                    (specialty) => specialty.id === selectedSpecialty
+                  )?.name || ""}
                   readOnly
                 />
               )}
             </div>
-            <div className="col-md-6 mb-3">
-              <label className="form-label">Role</label>
+
+            {/* File Upload Section */}
+            <div className="col-md-12 mb-3">
+              <label className="form-label">Upload File (Optional)</label>
               <input
-                type="text"
+                type="file"
                 className="form-control"
-                value={doctor.role || ""}
-                readOnly
+                onChange={(e) => setFile(e.target.files[0])}
               />
             </div>
           </div>

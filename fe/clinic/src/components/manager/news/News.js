@@ -137,7 +137,7 @@ function News() {
               <input
                 type="search"
                 className="search-input"
-                placeholder="Search by name..."
+                placeholder="Search by title and category..."
                 value={search}
                 onChange={handleSearch}
               />

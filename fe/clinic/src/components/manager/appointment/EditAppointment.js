@@ -5,7 +5,6 @@ import "react-toastify/dist/ReactToastify.css";
 import "./EditAppointment.css";
 import {
   allDoctors,
-  allPatients,
   allReceptionists,
 } from "../../utils/ApiFunction";
 
@@ -16,7 +15,7 @@ const EditAppointment = () => {
     receptionistId: "",
     dateTime: "",
     reason: "",
-    status: "",
+    status: "Waiting", // Set default value to 'Waiting' if status is undefined
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -40,11 +39,11 @@ const EditAppointment = () => {
 
         const data = await response.json();
         setAppointment({
-          doctorId: data.doctor.id,
-          receptionistId: data.receptionist.id,
-          dateTime: data.dateTime,
-          reason: data.reason,
-          status: data.status,
+          doctorId: data.doctor ? data.doctor.id : "",  // Ensure doctorId is fetched correctly
+          receptionistId: data.receptionist ? data.receptionist.id : "",  // Ensure receptionistId is fetched correctly
+          dateTime: data.dateTime || "",  // Set empty string if dateTime is undefined
+          reason: data.reason || "",  // Set empty string if reason is undefined
+          status: data.status || "Waiting", // Ensure status is set properly
         });
       } catch (err) {
         setError(err.message);
@@ -89,16 +88,16 @@ const EditAppointment = () => {
       !appointment.reason ||
       !appointment.receptionistId
     ) {
-      setError("Please fill in all required fields.");
-      toast.error("Please fill in all required fields.");
+      setError("Vui lòng điền vào tất cả các trường bắt buộc.");
+      toast.error("Vui lòng điền vào tất cả các trường bắt buộc.");
       return;
     }
 
     const selectedDateTime = new Date(appointment.dateTime);
     const now = new Date();
     if (selectedDateTime <= now) {
-      setError("Date and Time must be in the future.");
-      toast.error("Date and Time must be in the future.");
+      setError("Ngày và Giờ phải ở trong tương lai.");
+      toast.error("Ngày và Giờ phải ở trong tương lai.");
       return;
     }
     const token = localStorage.getItem("token");

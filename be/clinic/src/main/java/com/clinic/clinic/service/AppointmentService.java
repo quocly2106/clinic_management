@@ -1,6 +1,7 @@
 package com.clinic.clinic.service;
 
 import com.clinic.clinic.dto.AppointmentDto;
+import com.clinic.clinic.dto.BookAppointmentDto;
 import com.clinic.clinic.model.Appointment;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public interface AppointmentService {
     void deleteAppointment(Long id);
     List<Appointment> getAllAppointment();
     Appointment getAppointmentById(Long id);
-    void bookAppointment(AppointmentDto appointmentDto);
+    void bookAppointment(BookAppointmentDto bookAppointmentDto);
 
 
 }

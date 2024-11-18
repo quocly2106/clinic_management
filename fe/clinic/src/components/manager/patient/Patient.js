@@ -121,7 +121,7 @@ function Patient() {
               <input
                 type="search"
                 className="search-input"
-                placeholder="Search by name..."
+                placeholder="Search by phone..."
                 value={search}
                 onChange={handleSearch}
               />

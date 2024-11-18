@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import "./Banner.css";
+import { Link } from "react-router-dom";
 
 function Banner() {
   return (
@@ -22,7 +23,9 @@ function Banner() {
                 Khám Nhân Tâm để trải nghiệm dịch vụ y tế tận tình và chuyên
                 nghiệp!
               </p>
-              <button className="appointment-btn">Đặt lịch ngay</button>
+              <Link to="/appointment">  {/* Thêm Link để chuyển hướng */}
+                <button className="appointment-btn">Đặt lịch ngay</button>
+              </Link>
               <div className="text-stats">
                 <div className="text-stats-container">
                   <p>145k+</p>

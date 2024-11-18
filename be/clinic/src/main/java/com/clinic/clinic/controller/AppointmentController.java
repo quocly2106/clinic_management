@@ -2,6 +2,7 @@ package com.clinic.clinic.controller;
 
 
 import com.clinic.clinic.dto.AppointmentDto;
+import com.clinic.clinic.dto.BookAppointmentDto;
 import com.clinic.clinic.model.Appointment;
 import com.clinic.clinic.service.AppointmentService;
 import jakarta.validation.Valid;
@@ -10,9 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/appointments")
@@ -55,10 +59,15 @@ public class AppointmentController {
     }
 
     @PostMapping("/book-appointment")
-    public ResponseEntity<?> bookAppointment(@Valid @RequestBody AppointmentDto appointmentDto) {
-        appointmentService.bookAppointment(appointmentDto);
+    public ResponseEntity<?> bookAppointment(@Valid @RequestBody BookAppointmentDto bookAppointmentDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<String> errorMessages = bindingResult.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errorMessages);
+        }
+        appointmentService.bookAppointment(bookAppointmentDto);
         return ResponseEntity.ok("Appointment booked successfully");
     }
-
 
 }

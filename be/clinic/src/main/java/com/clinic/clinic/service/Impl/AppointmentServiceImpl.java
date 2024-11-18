@@ -1,12 +1,10 @@
 package com.clinic.clinic.service.Impl;
 
 import com.clinic.clinic.dto.AppointmentDto;
+import com.clinic.clinic.dto.BookAppointmentDto;
 import com.clinic.clinic.exception.ResourceNotFoundException;
 import com.clinic.clinic.model.*;
-import com.clinic.clinic.repository.DoctorRepository;
-import com.clinic.clinic.repository.PatientRepository;
-import com.clinic.clinic.repository.AppointmentRepository;
-import com.clinic.clinic.repository.ReceptionistRepository;
+import com.clinic.clinic.repository.*;
 import com.clinic.clinic.service.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +26,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Autowired
     private ReceptionistRepository receptionistRepository;
+
+    @Autowired SpecialtyRepository specialtyRepository;
 
     @Override
     public Appointment addAppointment(AppointmentDto appointmentDto) {
@@ -92,37 +92,49 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public void bookAppointment(AppointmentDto appointmentDto) {
-        // Tìm bác sĩ trước khi tạo lịch khám
-        Doctor doctor = doctorRepository.findById(appointmentDto.getDoctorId())
-                .orElseThrow(() -> new ResourceNotFoundException("Doctor not found with ID: " + appointmentDto.getDoctorId()));
+    public void bookAppointment(BookAppointmentDto bookAppointmentDto) {
+        // Tìm bác sĩ dựa trên tên và chuyên khoa
+        Specialty specialty = specialtyRepository.findByName(bookAppointmentDto.getSpecialtyName())
+                .orElseThrow(() -> new ResourceNotFoundException("Specialty not found with name: " + bookAppointmentDto.getSpecialtyName()));
 
-        // Tạo mới bệnh nhân từ thông tin trong ScheduleDto
+        Doctor doctor = doctorRepository.findByFirstNameAndLastNameAndSpecialty(
+                bookAppointmentDto.getDoctorFirstName(),
+                bookAppointmentDto.getDoctorLastName(),
+                specialty
+        ).orElseThrow(() -> new ResourceNotFoundException("Doctor not found with name: "
+                + bookAppointmentDto.getDoctorFirstName() + " "
+                + bookAppointmentDto.getDoctorLastName()
+                + " and specialty: " + bookAppointmentDto.getSpecialtyName()));
+
+        // Kiểm tra số điện thoại bệnh nhân
+        String phone = bookAppointmentDto.getPatient().getPhone();
+        if (patientRepository.existsByPhone(phone)) {
+            throw new IllegalArgumentException("Phone number already exists: " + phone);
+        }
+
+        // Tạo mới bệnh nhân
         Patient patient = new Patient();
-        patient.setFirstName(appointmentDto.getPatient().getFirstName());
-        patient.setLastName(appointmentDto.getPatient().getLastName());
-        patient.setGender(appointmentDto.getPatient().getGender());
-        patient.setPhone(appointmentDto.getPatient().getPhone());
-        patient.setDateOfBirth(appointmentDto.getPatient().getDateOfBirth());
-        patient.setDoctor(doctor);  // Gán bác sĩ cho bệnh nhân
-        patient.setRole(Role.PATIENT); // Gán role là 'PATIENT'
+        patient.setFirstName(bookAppointmentDto.getPatient().getFirstName());
+        patient.setLastName(bookAppointmentDto.getPatient().getLastName());
+        patient.setGender(bookAppointmentDto.getPatient().getGender());
+        patient.setPhone(phone);
+        patient.setDateOfBirth(bookAppointmentDto.getPatient().getDateOfBirth());
+        patient.setDoctor(doctor);
+        patient.setRole(Role.PATIENT);
 
-        // Lưu bệnh nhân vào cơ sở dữ liệu
         Patient savedPatient = patientRepository.save(patient);
 
         // Tạo lịch khám
         Appointment appointment = new Appointment();
-        appointment.setCreatedAt(LocalDateTime.now()); // Sử dụng LocalDateTime.now() làm giá trị mặc định
+        appointment.setCreatedAt(LocalDateTime.now());
         appointment.setUpdatedAt(LocalDateTime.now());
-        appointment.setDateTime(appointmentDto.getDateTime());
-        appointment.setReason(appointmentDto.getReason());
+        appointment.setDateTime(bookAppointmentDto.getDateTime());
+        appointment.setReason(bookAppointmentDto.getReason());
         appointment.setStatus("Waiting");
-        appointment.setDoctor(doctor); // Gán bác sĩ vào lịch khám
-        appointment.setPatient(savedPatient); // Gán bệnh nhân vừa tạo vào lịch khám
+        appointment.setDoctor(doctor);
+        appointment.setPatient(savedPatient);
 
-        // Lưu lịch khám vào cơ sở dữ liệu
         appointmentRepository.save(appointment);
     }
-
 
 }

@@ -1,0 +1,258 @@
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    background: linear-gradient(135deg, #ffffff, #f0f9ff);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(110, 194, 247, 0.15);
+}
+
+.form-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.form-title > span {
+    position: relative;
+    display: inline-block;
+}
+
+.form-title span::after {
+    content: '';
+    position: absolute;
+    width: 60%;
+    height: 4px;
+    background: linear-gradient(90deg, #6EC2F7, #3498db);
+    border-radius: 4px;
+    left: 20%;
+    bottom: -12px;
+}
+
+.form-content {
+    display: grid;
+    gap: 24px;
+}
+
+.form-content label {
+    display: block;
+    font-family: 'Rubik', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #34495e;
+    margin-bottom: 8px;
+}
+
+.form-content label::before {
+    content: "*";
+    color: #e74c3c;
+    margin-right: 4px;
+}
+
+.form-content input,
+.form-content select,
+.form-content textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e1e8ed;
+    border-radius: 8px;
+    background-color: #ffffff;
+    font-family: 'Rubik', sans-serif;
+    font-size: 15px;
+    color: #2c3e50;
+    transition: all 0.3s ease;
+}
+
+.form-content input:focus,
+.form-content select:focus,
+.form-content textarea:focus {
+    border-color: #6EC2F7;
+    box-shadow: 0 0 0 4px rgba(110, 194, 247, 0.1);
+    outline: none;
+}
+
+.form-content textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 14px 28px;
+    margin-top: 20px;
+    background: linear-gradient(135deg, #6EC2F7, #3498db);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Rubik', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-button:hover {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(110, 194, 247, 0.2);
+}
+
+.submit-button:active {
+    transform: translateY(0);
+}
+
+.error-message {
+    color: #e74c3c;
+    font-size: 14px;
+    margin-top: 4px;
+    font-family: 'Rubik', sans-serif;
+}
+
+/* Custom Select Styling */
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236EC2F7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+/* Toast Notification Custom Styling */
+.Toastify__toast {
+    border-radius: 8px;
+    font-family: 'Rubik', sans-serif;
+}
+
+.Toastify__toast--success {
+    background: #6EC2F7;
+}
+
+.confirmation-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+  }
+  
+  .modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .modal-buttons button {
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .modal-buttons button:first-child {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+  }
+  
+  .modal-buttons button:last-child {
+    background-color: #f44336;
+    color: white;
+    border: none;
+  }
+  
+  .modal-buttons button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .submit-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+
+  
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .form-container {
+        padding: 24px;
+        margin: 16px;
+    }
+
+    .form-title {
+        font-size: 28px;
+    }
+
+    .form-content {
+        gap: 16px;
+    }
+
+    .form-content label {
+        font-size: 15px;
+    }
+
+    .form-content input,
+    .form-content select,
+    .form-content textarea {
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+
+    .submit-button {
+        padding: 12px 24px;
+        font-size: 15px;
+    }
+}
+
+/* Animation for Form Elements */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-content > * {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Add some spacing between form elements */
+.form-content > *:not(:last-child) {
+    margin-bottom: 8px;
+}
+
+/* Custom styling for date and time inputs */
+input[type="date"],
+input[type="datetime-local"] {
+    position: relative;
+    padding-right: 40px;
+}
+
+/* Hover effects for interactive elements */
+.form-content input:hover,
+.form-content select:hover,
+.form-content textarea:hover {
+    border-color: #6EC2F7;
+}

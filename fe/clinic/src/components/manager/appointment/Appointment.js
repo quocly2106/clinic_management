@@ -76,8 +76,8 @@ function Appointment() {
 
   const filteredAppointments = appointments.filter((appointment) => {
     if (appointment.patient) {
-      const fullName = `${appointment.patient.phone}`.toLowerCase();
-      return fullName.includes(search);
+      const phone = `${appointment.patient.phone}`.toLowerCase();
+      return phone.includes(search);
     }
     return false; // Nếu không có bệnh nhân, không bao gồm trong kết quả
   });
@@ -151,7 +151,7 @@ function Appointment() {
               <input
                 type="search"
                 className="search-input"
-                placeholder="Search by name..."
+                placeholder="Search by phone..."
                 value={search}
                 onChange={handleSearch}
               />

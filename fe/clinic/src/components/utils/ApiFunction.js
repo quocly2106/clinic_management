@@ -642,11 +642,11 @@ export const addAppointment = async (data) => {
   }
 };
 
-export const editAppointment = async (newsId, data) => {
+export const editAppointment = async (appointmentId, data) => {
   try {
     const token = localStorage.getItem("token");
     const response = await axios.put(
-      `http://localhost:9191/appointments/update/${newsId}`,
+      `http://localhost:9191/appointments/update/${appointmentId}`,
       data,
       {
         headers: {
@@ -661,9 +661,9 @@ export const editAppointment = async (newsId, data) => {
   }
 };
 
-export async function deleteAppointment(newsId) {
+export async function deleteAppointment(appointmentId) {
   try {
-    const result = await api.delete(`/appointments/delete/${newsId}`);
+    const result = await api.delete(`/appointments/delete/${appointmentId}`);
     // Trả về toàn bộ response.data thay vì throw error
     return {
       success: true,
@@ -676,6 +676,25 @@ export async function deleteAppointment(newsId) {
     };
   }
 }
+
+export async function bookAppointment(data) {
+  try {
+    console.log("Data being sent to API:", data);
+    const result = await api.post("/appointments/book-appointment", data);
+    console.log("API Response:", data);
+    return {
+      success: true,
+      data: result.data,
+      message: "Appointment booked successfully",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.response?.data?.message || "Unknown error occurred while booking appointment",
+    };
+  }
+}
+
 
 
 // news
