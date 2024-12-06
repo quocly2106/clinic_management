@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Card, Spinner, Pagination } from "react-bootstrap";
+import { Row, Col, Card, Spinner, Pagination } from "react-bootstrap";
 import { motion } from "framer-motion";
 import { allServices } from "../../utils/ApiFunction";
 import "./Services.css";

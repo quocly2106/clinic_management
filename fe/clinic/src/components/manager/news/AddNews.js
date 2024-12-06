@@ -6,6 +6,7 @@ import "./AddNews.css";
 function AddNews() {
   const [newsData, setNewsData] = useState({
     title: "",
+    description: "",
     content: "",
     status: "Draft",
     category: "",
@@ -68,6 +69,7 @@ function AddNews() {
 
       const newsDto = {
         title: newsData.title,
+        description: newsData.description,
         content: newsData.content,
         category: newsData.category,
         status: newsData.status,
@@ -80,6 +82,7 @@ function AddNews() {
       setShowToast(true);
       setNewsData({
         title: "",
+        description: "",
         content: "",
         status: "Draft",
         category: "",
@@ -109,6 +112,18 @@ function AddNews() {
             id="title"
             name="title"
             value={newsData.title}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="description" className="form-label">Description</label>
+          <input
+            type="text"
+            className="form-control"
+            id="description"
+            name="description"
+            value={newsData.description}
             onChange={handleChange}
             required
           />

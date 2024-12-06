@@ -54,7 +54,7 @@ function CustomerNavbar({ onServiceClick , onSpecialtyClick}) {
           </Link>
         </li>
         <li>  
-          <Link to="/news" className="navbar-links">
+          <Link to="/newss" className="navbar-links">
             Tin tức
           </Link>
         </li>
@@ -102,7 +102,7 @@ function CustomerNavbar({ onServiceClick , onSpecialtyClick}) {
             </Link>
           </li>
           <li>
-            <Link onClick={openNav} to="/news">
+            <Link onClick={openNav} to="/newss">
               Tin tức
             </Link>
           </li>

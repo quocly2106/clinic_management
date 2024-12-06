@@ -190,6 +190,22 @@
     height: 50px;
     opacity: 0.5;
   }
+  .read-more-button {
+    background-color: #6EC2F7; /* Màu nền */
+    border: none; /* Xóa bỏ viền mặc định */
+    color: white; /* Màu chữ */
+    padding: 8px 16px; /* Khoảng cách xung quanh chữ */
+    font-size: 14px; /* Kích thước chữ */
+    border-radius: 12px; /* Viền tròn */
+    cursor: pointer; /* Con trỏ chuột khi hover */
+    transition: background-color 0.3s ease; /* Hiệu ứng thay đổi màu nền khi hover */
+    margin-top: 8px; /* Khoảng cách phía trên */
+  }
+  
+  .read-more-button:hover {
+    background-color: #5bb3e6; /* Màu nền khi hover */
+  }
+  
 
   
   @keyframes spin {

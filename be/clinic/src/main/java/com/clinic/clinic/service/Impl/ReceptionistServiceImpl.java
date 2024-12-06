@@ -1,12 +1,10 @@
 package com.clinic.clinic.service.Impl;
 
-import com.clinic.clinic.config.Doctor.DoctorDetails;
-import com.clinic.clinic.config.Reception.ReceptionistDetails;
+import com.clinic.clinic.config.Receptionist.ReceptionistDetails;
 import com.clinic.clinic.dto.ChangePasswordDto;
 import com.clinic.clinic.dto.LoginDto;
 import com.clinic.clinic.dto.ReceptionistDto;
 import com.clinic.clinic.exception.ResourceNotFoundException;
-import com.clinic.clinic.model.Doctor;
 import com.clinic.clinic.model.Receptionist;
 import com.clinic.clinic.model.Role;
 import com.clinic.clinic.repository.ReceptionistRepository;

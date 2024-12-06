@@ -12,6 +12,8 @@ import ServiceAll from "../service/ServiceAll";
 import SpecialtyAll from "../specialties/SepcialtiesAll"; // Giả sử bạn đã có component SpecialtyAll
 import Doctors from '../doctors/Doctors';
 import AppointmentForm from "../apointmentform/AppointmentForm";
+import NewsCustomer from "../news/NewsCustomer";
+import NewsCustomerDetail from "../news/NewsCustomerDetail";
 
 function CustomerHome() {
   const navigate = useNavigate();
@@ -47,6 +49,8 @@ function CustomerHome() {
           <Route path="/specialty" element={<SpecialtyAll />} />
           <Route path="/doctors/:specialtyId" element={<Doctors />} />
           <Route path="/appointment" element={<AppointmentForm />} />
+          <Route path="/newss" element={<NewsCustomer />} />
+          <Route path="/newss/detail/:id" element={<NewsCustomerDetail/>} />
         </Routes>
       </div>
       <CustomerFooter />

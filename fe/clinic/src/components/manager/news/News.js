@@ -15,8 +15,10 @@ function News() {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("success");
+  const [expandedContentIds, setExpandedContentIds] = useState(new Set());
+  const [expandedDescriptionIds, setExpandedDescriptionIds] = useState(new Set());
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 3;
 
   const fetchNews = useCallback(async () => {
     try {
@@ -81,6 +83,43 @@ function News() {
   for (let i = 1; i <= Math.ceil(filteredNews.length / itemsPerPage); i++) {
     pageNumbers.push(i);
   }
+  //description
+  const toggleDescriptionVisibility = (id) => {
+    setExpandedDescriptionIds((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
+
+  const truncateDescription = (content) => {
+    const maxLength = 100;
+    return content.length > maxLength
+      ? content.substring(0, maxLength) + "..."
+      : content;
+  };
+  //content
+  const toggleContentVisibility = (id) => {
+    setExpandedContentIds((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
+  const truncateContent = (content) => {
+    const maxLength = 100;
+    return content.length > maxLength
+      ? content.substring(0, maxLength) + "..."
+      : content;
+  };
 
   // Hàm chuyển đổi thời gian
   const convertToLocalTime = (dateString) => {
@@ -163,6 +202,7 @@ function News() {
                 <tr>
                   <th>STT</th>
                   <th>Title</th>
+                  <th>Description</th>
                   <th>Content</th>
                   <th>Image</th>
                   <th>Category</th>
@@ -193,7 +233,37 @@ function News() {
                     <tr key={news.id}>
                       <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                       <td>{news.title}</td>
-                      <td>{news.content}</td>
+                      <td>
+                        {expandedDescriptionIds.has(news.id) ? (
+                          <>{news.description}</>
+                        ) : (
+                          <>{truncateDescription(news.description)}</>
+                        )}
+                        <button
+                          className="read-more-button"
+                          onClick={() => toggleDescriptionVisibility(news.id)}
+                        >
+                          {expandedDescriptionIds.has(news.id)
+                            ? "Ẩn đi"
+                            : "Xem thêm"}
+                        </button>
+                      </td>
+
+                      <td>
+                        {expandedContentIds.has(news.id) ? (
+                          <>{news.content}</>
+                        ) : (
+                          <>{truncateContent(news.content)}</>
+                        )}
+                        <button
+                          className="read-more-button"
+                          onClick={() => toggleContentVisibility(news.id)}
+                        >
+                          {expandedContentIds.has(news.id)
+                            ? "Ẩn đi"
+                            : "Xem thêm"}
+                        </button>
+                      </td>
                       <td>
                         {news.image ? (
                           <img

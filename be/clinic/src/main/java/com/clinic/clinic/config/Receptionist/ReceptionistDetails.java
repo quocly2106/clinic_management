@@ -1,4 +1,4 @@
-package com.clinic.clinic.config.Reception;
+package com.clinic.clinic.config.Receptionist;
 
 import com.clinic.clinic.model.Receptionist;
 import org.springframework.security.core.GrantedAuthority;

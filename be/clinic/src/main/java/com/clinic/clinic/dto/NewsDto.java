@@ -18,6 +18,8 @@ import java.util.Set;
 public class NewsDto {
     @NotBlank(message = "Title is required")
     private String title;
+    @NotBlank(message = "Description is required")
+    private String description;
 
     @NotBlank(message = "Content is required")
     private String content;

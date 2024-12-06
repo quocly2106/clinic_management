@@ -1,4 +1,4 @@
-package com.clinic.clinic.config.Reception;
+package com.clinic.clinic.config.Receptionist;
 
 import com.clinic.clinic.model.Receptionist;
 import com.clinic.clinic.repository.ReceptionistRepository;
@@ -13,8 +13,7 @@ import java.util.Optional;
 @Service
 public class ReceptionistDetailsService implements UserDetailsService {
 
-    @Autowired
-    private ReceptionistRepository receptionistRepository;
+    private final ReceptionistRepository receptionistRepository;
 
     @Autowired
     public ReceptionistDetailsService(ReceptionistRepository receptionistRepository) {

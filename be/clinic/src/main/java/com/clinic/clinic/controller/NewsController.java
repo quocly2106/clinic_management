@@ -59,14 +59,14 @@ public class NewsController {
     @GetMapping("/{id}")
     public ResponseEntity<News> getNewsById(@PathVariable @NotNull Long id) {
         newsService.incrementViews(id); // Tăng lượt xem trước khi lấy bài viết
-        News news = newsService.getNewsByIdProfile(id);
+        News news = newsService.getNewsById(id);
         return ResponseEntity.ok(news);
     }
 
 //    @GetMapping("views/{id}")
 //    public ResponseEntity<News> getNewsByIdProfile(@PathVariable Long id) {
 //        newsService.incrementViews(id); // Tăng lượt xem trước khi lấy bài viết
-//        News news = newsService.getNewsById(id);
+//        News news = newsService.getNewsByIdProfile(id);
 //        return ResponseEntity.ok(news);
 //    }
 

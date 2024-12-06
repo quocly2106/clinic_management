@@ -11,6 +11,7 @@ const EditNews = () => {
 
   const [newsData, setNewsData] = useState({
     title: "",
+    description: "",
     content: "",
     status: "Draft",
     category: "",
@@ -29,6 +30,7 @@ const EditNews = () => {
 
         setNewsData({
           title: data.title,
+          description: data.description,
           content: data.content,
           category: data.category,
           status: data.status,
@@ -80,7 +82,7 @@ const EditNews = () => {
     event.preventDefault();
     const token = localStorage.getItem("token");
 
-    if (!newsData.title || !newsData.content || !newsData.category) {
+    if (!newsData.title || !newsData.description || !newsData.content || !newsData.category) {
       toast.error("Please fill in all required fields");
       return;
     }
@@ -94,6 +96,7 @@ const EditNews = () => {
         [
           JSON.stringify({
             title: newsData.title,
+            description: newsData.description,
             content: newsData.content,
             category: newsData.category,
             status: newsData.status,
@@ -159,6 +162,17 @@ const EditNews = () => {
                 className="form-control"
                 name="title"
                 value={newsData.title}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="col-md-6 mb-3">
+              <label className="form-label">Description *</label>
+              <input
+                type="description"
+                className="form-control"
+                name="description"
+                value={newsData.description}
                 onChange={handleChange}
                 required
               />

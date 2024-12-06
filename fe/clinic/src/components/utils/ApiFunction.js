@@ -782,3 +782,19 @@ export async function deleteNews(newsId) {
     };
   }
 }
+
+export async function getNewsById(newsId) {
+  try {
+    const result = await api.get(`/news/${newsId}`);
+    return {
+      success: true,
+      data: result.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.response?.data?.message || "Unknown error",
+    };
+  }
+}
+

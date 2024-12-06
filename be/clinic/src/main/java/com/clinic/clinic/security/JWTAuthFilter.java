@@ -2,7 +2,7 @@ package com.clinic.clinic.security;
 
 import com.clinic.clinic.config.Admin.AdminDetailsService;
 import com.clinic.clinic.config.Doctor.DoctorDetailsService;
-import com.clinic.clinic.config.Reception.ReceptionistDetailsService;
+import com.clinic.clinic.config.Receptionist.ReceptionistDetailsService;
 import com.clinic.clinic.utils.JWTUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,17 +26,20 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(JWTAuthFilter.class);
 
-    @Autowired
-    private JWTUtils jwtUtils;
+    private final JWTUtils jwtUtils;
+    private final AdminDetailsService adminDetailsService;
+    private final DoctorDetailsService doctorDetailsService;
+    private final ReceptionistDetailsService receptionistDetailsService;
 
     @Autowired
-    private AdminDetailsService adminDetailsService;
-
-    @Autowired
-    private DoctorDetailsService doctorDetailsService;
-
-    @Autowired
-    private ReceptionistDetailsService receptionistDetailsService;
+    public JWTAuthFilter(JWTUtils jwtUtils, AdminDetailsService adminDetailsService,
+                         DoctorDetailsService doctorDetailsService,
+                         ReceptionistDetailsService receptionistDetailsService) {
+        this.jwtUtils = jwtUtils;
+        this.adminDetailsService = adminDetailsService;
+        this.doctorDetailsService = doctorDetailsService;
+        this.receptionistDetailsService = receptionistDetailsService;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -52,44 +55,55 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         }
 
         jwtToken = authHeader.substring(7);
-        userEmail = jwtUtils.extractUsername(jwtToken);
 
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = null;
+        try {
+            userEmail = jwtUtils.extractUsername(jwtToken);
 
-            try {
-                userDetails = adminDetailsService.loadUserByUsername(userEmail);
-                logger.info("User found in admin service: {}", userDetails.getUsername());
-            } catch (UsernameNotFoundException e) {
-                logger.warn("User not found in admin service, trying doctor service");
-                try {
-                    userDetails = doctorDetailsService.loadUserByUsername(userEmail);
-                    logger.info("User found in doctor service: {}", userDetails.getUsername());
-                } catch (UsernameNotFoundException e2) {
-                    logger.warn("User not found in doctor service, trying receptionist service");
-                    try {
-                        userDetails = receptionistDetailsService.loadUserByUsername(userEmail);
-                        logger.info("User found in receptionist service: {}", userDetails.getUsername());
-                    } catch (UsernameNotFoundException e3) {
-                        logger.error("User not found in any service (admin, doctor, receptionist)");
-                        return; // Ngừng xử lý nếu không tìm thấy người dùng
+            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = loadUserDetails(userEmail);
+                if (userDetails != null) {
+                    if (jwtUtils.isTokenExpired(jwtToken)) {
+                        logger.warn("Expired JWT token for user: {}", userEmail);
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT token expired");
+                        return;
+                    }
+
+                    if (jwtUtils.isValidToken(jwtToken, userDetails)) {
+                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                                userDetails, null, userDetails.getAuthorities());
+                        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(authToken);
+                        logger.info("Authentication set for user: {}", userEmail);
+                    } else {
+                        logger.warn("Invalid JWT token for user: {}", userEmail);
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
+                        return;
                     }
                 }
             }
-
-            if (userDetails != null && jwtUtils.isValidToken(jwtToken, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-                logger.info("Authentication set for user: {}", userDetails.getUsername());
-            } else {
-                logger.warn("Token is not valid or user details are null");
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token is not valid");
-                return; // Ngừng xử lý nếu token không hợp lệ
-            }
+        } catch (Exception e) {
+            logger.error("JWT processing error: {}", e.getMessage());
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
+            return;
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private UserDetails loadUserDetails(String userEmail) {
+        try {
+            return adminDetailsService.loadUserByUsername(userEmail);
+        } catch (UsernameNotFoundException exAdmin) {
+            try {
+                return doctorDetailsService.loadUserByUsername(userEmail);
+            } catch (UsernameNotFoundException exDoctor) {
+                try {
+                    return receptionistDetailsService.loadUserByUsername(userEmail);
+                } catch (UsernameNotFoundException exReceptionist) {
+                    logger.warn("User not found in any service for email: {}", userEmail);
+                    return null;
+                }
+            }
+        }
     }
 }

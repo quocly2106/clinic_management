@@ -18,7 +18,7 @@ import java.util.function.Function;
 @Component
 public class JWTUtils {
 
-    private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7; // 7 days in milliseconds
+    private static final long EXPIRATION_TIME = 1000L * 60 * 60 * 24 * 30; // 30 days in milliseconds
 
     @NonFinal
     @Value("${jwt.secret}")

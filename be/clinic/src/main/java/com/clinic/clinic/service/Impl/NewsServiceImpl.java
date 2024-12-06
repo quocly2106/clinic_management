@@ -33,6 +33,7 @@ public class NewsServiceImpl implements NewsService {
     public News addNews(NewsDto newsDto, MultipartFile imageFile) {
         News news = new News();
         news.setTitle(newsDto.getTitle());
+        news.setDescription(newsDto.getDescription());
         news.setContent(newsDto.getContent());
         LocalDateTime now = LocalDateTime.now();
         news.setCreatedAt(now);
@@ -68,6 +69,7 @@ public class NewsServiceImpl implements NewsService {
                 .orElseThrow(() -> new ResourceNotFoundException("News not found with ID: " + id));
 
         existingNews.setTitle(newsDto.getTitle());
+        existingNews.setDescription(newsDto.getDescription());
         existingNews.setContent(newsDto.getContent());
         existingNews.setUpdatedAt(LocalDateTime.now());
         existingNews.setStatus(newsDto.getStatus());
