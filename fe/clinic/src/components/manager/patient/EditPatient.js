@@ -79,6 +79,7 @@ const EditPatient = () => {
     const updatedPatient = {
       firstName: patient.firstName,
       lastName: patient.lastName,
+      email: patient.email,
       gender: patient.gender,
       phone: patient.phone,
       dateOfBirth: patient.dateOfBirth,
@@ -165,6 +166,17 @@ const EditPatient = () => {
                 value={patient.lastName || ""}
                 onChange={(e) =>
                   setPatient({ ...patient, lastName: e.target.value })
+                }
+              />
+            </div>
+            <div className="col-md-6 mb-3">
+              <label className="form-label">Email</label>
+              <input
+                type="text"
+                className="form-control"
+                value={patient.email || ""}
+                onChange={(e) =>
+                  setPatient({ ...patient, email: e.target.value })
                 }
               />
             </div>

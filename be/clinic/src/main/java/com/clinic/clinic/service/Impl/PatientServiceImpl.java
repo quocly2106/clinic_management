@@ -42,6 +42,7 @@ public class PatientServiceImpl implements PatientService {
         // Cập nhật các thông tin từ PatientDto
         existingPatient.setFirstName(patientDto.getFirstName());
         existingPatient.setLastName(patientDto.getLastName());
+        existingPatient.setEmail(patientDto.getEmail());
         existingPatient.setGender(patientDto.getGender());
         existingPatient.setDateOfBirth(patientDto.getDateOfBirth());
         existingPatient.setPhone(patientDto.getPhone());
@@ -86,6 +87,7 @@ public class PatientServiceImpl implements PatientService {
         Patient patient = new Patient();
         patient.setFirstName(patientDto.getFirstName());
         patient.setLastName(patientDto.getLastName());
+        patient.setEmail(patientDto.getEmail());
         patient.setGender(patientDto.getGender());
         patient.setDateOfBirth(patientDto.getDateOfBirth());
         patient.setPhone(patientDto.getPhone());

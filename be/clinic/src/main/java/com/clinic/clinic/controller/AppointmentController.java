@@ -3,7 +3,9 @@ package com.clinic.clinic.controller;
 
 import com.clinic.clinic.dto.AppointmentDto;
 import com.clinic.clinic.dto.BookAppointmentDto;
+import com.clinic.clinic.email.EmailService;
 import com.clinic.clinic.model.Appointment;
+import com.clinic.clinic.repository.AppointmentRepository;
 import com.clinic.clinic.service.AppointmentService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -15,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +27,6 @@ public class AppointmentController {
 
     @Autowired
     private AppointmentService appointmentService;
-
 
     @PostMapping("/add")
     public ResponseEntity<Appointment> createAppointment(@RequestBody AppointmentDto appointmentDto) {
@@ -69,5 +71,4 @@ public class AppointmentController {
         appointmentService.bookAppointment(bookAppointmentDto);
         return ResponseEntity.ok("Appointment booked successfully");
     }
-
 }

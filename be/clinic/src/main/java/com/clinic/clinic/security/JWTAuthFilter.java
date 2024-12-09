@@ -49,7 +49,6 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         final String userEmail;
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            logger.warn("No Bearer token found in request");
             filterChain.doFilter(request, response);
             return;
         }

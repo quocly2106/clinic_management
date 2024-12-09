@@ -48,4 +48,6 @@ public class Appointment {
     @JsonManagedReference
     @JoinColumn(name = "patient_id", nullable = true)
     private Patient patient;
+
+    private boolean reminderSent = false;
 }

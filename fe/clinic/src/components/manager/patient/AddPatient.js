@@ -7,6 +7,7 @@ function AddPatient() {
   const [patientData, setPatientData] = useState({
     firstName: "",
     lastName: "",
+    email: "",
     gender: "",
     dateOfBirth: "",
     phone: "",
@@ -38,6 +39,12 @@ function AddPatient() {
       setShowToast(true);
       return;
     }
+
+    if (!patientData.email.endsWith("@gmail.com")) {
+      setError("Email phải có @gmail.com");
+      setShowToast(true);
+      return;
+    }
     try {
       await addPatient(patientData);
       setSuccessMessage("Patient added successfully!");
@@ -46,6 +53,7 @@ function AddPatient() {
       setPatientData({
         firstName: "",
         lastName: "",
+        email: "",
         gender: "",
         dateOfBirth: "",
         phone: "",
@@ -89,6 +97,20 @@ function AddPatient() {
             id="lastName"
             name="lastName"
             value={patientData.lastName}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label">
+            Email
+          </label>
+          <input
+            type="text"
+            className="form-control rounded-3"
+            id="email"
+            name="email"
+            value={patientData.email}
             onChange={handleChange}
             required
           />

@@ -20,6 +20,7 @@ function AppointmentForm() {
     patient: {
       firstName: "",
       lastName: "",
+      email: "",
       gender: "default",
       dateOfBirth: "",
       phone: "",
@@ -97,6 +98,10 @@ function AppointmentForm() {
     const { patient, dateTime, specialtyId, doctorId, reason } = formData;
     const currentDate = new Date();
 
+    //validate email
+    if (!patient.email.endsWith("@gmail.com")) {
+      errors.email = "Email phải có @gmail.com";
+    }
     // Validate phone number
     if (!/^\d{10}$/.test(patient.phone)) {
       errors.phone = "Số điện thoại phải có đúng 10 chữ số";
@@ -133,12 +138,16 @@ function AppointmentForm() {
     if (!patient.lastName.trim()) {
       errors.lastName = "Vui lòng nhập tên";
     }
+    if (!patient.email.trim()) {
+      errors.email = "Vui lòng Email";
+    }
     if (patient.gender === "default") {
       errors.gender = "Vui lòng chọn giới tính";
     }
     if (!reason.trim()) {
       errors.reason = "Vui lòng nhập lý do khám";
     }
+    
 
     return errors;
   };
@@ -200,6 +209,7 @@ function AppointmentForm() {
           patient: {
             firstName: "",
             lastName: "",
+            email:"",
             gender: "default",
             dateOfBirth: "",
             phone: "",
@@ -299,6 +309,19 @@ function AppointmentForm() {
             />
             {formErrors.lastName && (
               <p className="error-message">{formErrors.lastName}</p>
+            )}
+          </label>
+          <label>
+            Email:
+            <input
+              type="text"
+              name="patient.email"
+              value={patient.email}
+              onChange={handleInputChange}
+              required
+            />
+            {formErrors.email && (
+              <p className="error-message">{formErrors.email}</p>
             )}
           </label>
 

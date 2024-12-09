@@ -148,6 +148,7 @@ function Patient() {
                   <th>STT</th>
                   <th>Frist Name</th>
                   <th>Last Name</th>
+                  <th>Email</th>
                   <th>Gender</th>
                   <th>Phone</th>
                   <th>Date Of Birth</th>
@@ -176,6 +177,7 @@ function Patient() {
                       <td>{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                       <td>{patient.firstName}</td>
                       <td>{patient.lastName}</td>
+                      <td>{patient.email}</td>
                       <td>{patient.gender}</td>
                       <td>{patient.phone}</td>
                       <td>{patient.dateOfBirth}</td> 

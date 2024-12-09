@@ -2,6 +2,7 @@ package com.clinic.clinic.service.Impl;
 
 import com.clinic.clinic.dto.AppointmentDto;
 import com.clinic.clinic.dto.BookAppointmentDto;
+import com.clinic.clinic.email.EmailService;
 import com.clinic.clinic.exception.ResourceNotFoundException;
 import com.clinic.clinic.model.*;
 import com.clinic.clinic.repository.*;
@@ -27,8 +28,17 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Autowired
     private ReceptionistRepository receptionistRepository;
 
-    @Autowired SpecialtyRepository specialtyRepository;
+    @Autowired
+    private SpecialtyRepository specialtyRepository;
 
+    @Autowired
+    private EmailService emailService;
+
+    private Receptionist getReceptionistIfExists(Long receptionistId) {
+        if (receptionistId == null) return null;
+        return receptionistRepository.findById(receptionistId)
+                .orElseThrow(() -> new ResourceNotFoundException("Receptionist not found with ID: " + receptionistId));
+    }
     @Override
     public Appointment addAppointment(AppointmentDto appointmentDto) {
         Doctor doctor = doctorRepository.findById(appointmentDto.getDoctorId())
@@ -36,21 +46,20 @@ public class AppointmentServiceImpl implements AppointmentService {
         Patient patient = patientRepository.findById(appointmentDto.getPatientId())
                 .orElseThrow(() -> new ResourceNotFoundException("Patient not found with ID: " + appointmentDto.getPatientId()));
 
-        Receptionist receptionist = null;
-        if (appointmentDto.getReceptionistId() != null) {
-            receptionist = receptionistRepository.findById(appointmentDto.getReceptionistId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Receptionist not found with ID: " + appointmentDto.getReceptionistId()));
-        }
+        Receptionist receptionist = getReceptionistIfExists(appointmentDto.getReceptionistId());
 
         Appointment appointment = new Appointment();
-        appointment.setCreatedAt(LocalDateTime.now()); // Sử dụng LocalDateTime.now() làm giá trị mặc định
+        appointment.setCreatedAt(LocalDateTime.now());
         appointment.setUpdatedAt(LocalDateTime.now());
         appointment.setDateTime(appointmentDto.getDateTime());
         appointment.setReason(appointmentDto.getReason());
         appointment.setStatus("Confirmed");
-        appointment.setDoctor(doctor); // Gán bác sĩ vào lịch khám
+        appointment.setDoctor(doctor);
         appointment.setPatient(patient);
         appointment.setReceptionist(receptionist);
+
+        emailService.scheduleReminderEmail(patient.getEmail(), patient.getFirstName() + patient.getLastName(), appointment.getDateTime());
+
         return appointmentRepository.save(appointment);
     }
 
@@ -59,18 +68,21 @@ public class AppointmentServiceImpl implements AppointmentService {
         Appointment existingAppointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + id));
 
-        // Cập nhật dateTime cho lịch khám
         existingAppointment.setUpdatedAt(LocalDateTime.now());
         existingAppointment.setDateTime(appointmentDto.getDateTime());
         existingAppointment.setReason(appointmentDto.getReason());
         existingAppointment.setStatus(appointmentDto.getStatus());
 
-        // Cập nhật bác sĩ nếu có
         if (appointmentDto.getDoctorId() != null) {
             Doctor doctor = doctorRepository.findById(appointmentDto.getDoctorId())
                     .orElseThrow(() -> new IllegalArgumentException("Doctor not found with ID: " + appointmentDto.getDoctorId()));
             existingAppointment.setDoctor(doctor);
         }
+
+        // Gọi phương thức gửi email nhắc nhở
+        emailService.scheduleReminderEmail(existingAppointment.getPatient().getEmail(),
+                existingAppointment.getPatient().getFirstName() +
+                        existingAppointment.getPatient().getLastName(), existingAppointment.getDateTime());
 
         return appointmentRepository.save(existingAppointment);
     }
@@ -93,7 +105,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public void bookAppointment(BookAppointmentDto bookAppointmentDto) {
-        // Tìm bác sĩ dựa trên tên và chuyên khoa
         Specialty specialty = specialtyRepository.findByName(bookAppointmentDto.getSpecialtyName())
                 .orElseThrow(() -> new ResourceNotFoundException("Specialty not found with name: " + bookAppointmentDto.getSpecialtyName()));
 
@@ -101,21 +112,17 @@ public class AppointmentServiceImpl implements AppointmentService {
                 bookAppointmentDto.getDoctorFirstName(),
                 bookAppointmentDto.getDoctorLastName(),
                 specialty
-        ).orElseThrow(() -> new ResourceNotFoundException("Doctor not found with name: "
-                + bookAppointmentDto.getDoctorFirstName() + " "
-                + bookAppointmentDto.getDoctorLastName()
-                + " and specialty: " + bookAppointmentDto.getSpecialtyName()));
+        ).orElseThrow(() -> new ResourceNotFoundException("Doctor not found"));
 
-        // Kiểm tra số điện thoại bệnh nhân
         String phone = bookAppointmentDto.getPatient().getPhone();
         if (patientRepository.existsByPhone(phone)) {
             throw new IllegalArgumentException("Phone number already exists: " + phone);
         }
 
-        // Tạo mới bệnh nhân
         Patient patient = new Patient();
         patient.setFirstName(bookAppointmentDto.getPatient().getFirstName());
         patient.setLastName(bookAppointmentDto.getPatient().getLastName());
+        patient.setEmail(bookAppointmentDto.getPatient().getEmail());
         patient.setGender(bookAppointmentDto.getPatient().getGender());
         patient.setPhone(phone);
         patient.setDateOfBirth(bookAppointmentDto.getPatient().getDateOfBirth());
@@ -124,7 +131,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         Patient savedPatient = patientRepository.save(patient);
 
-        // Tạo lịch khám
         Appointment appointment = new Appointment();
         appointment.setCreatedAt(LocalDateTime.now());
         appointment.setUpdatedAt(LocalDateTime.now());
@@ -134,7 +140,9 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setDoctor(doctor);
         appointment.setPatient(savedPatient);
 
-        appointmentRepository.save(appointment);
+        Appointment savedAppointment = appointmentRepository.save(appointment);
+        emailService.scheduleReminderEmail(savedPatient.getEmail(),
+                savedPatient.getFirstName() + " " + savedPatient.getLastName(),
+                savedAppointment.getDateTime());
     }
-
 }
