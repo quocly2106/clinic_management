@@ -28,7 +28,7 @@ public class ReminderScheduler {
     @Transactional
     public void sendReminders() {
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime oneDayFromNow = now.plusDays(1);
+        LocalDateTime oneDayFromNow = now.plusHours(2);
 
         List<Appointment> appointments = appointmentRepository
                 .findByDateTimeBetweenAndReminderSentFalse(now, oneDayFromNow);

@@ -44,27 +44,32 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        final String authHeader = request.getHeader("Authorization");
-        final String jwtToken;
-        final String userEmail;
-
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        jwtToken = authHeader.substring(7);
-
         try {
-            userEmail = jwtUtils.extractUsername(jwtToken);
+            final String authHeader = request.getHeader("Authorization");
+
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            final String jwtToken = authHeader.substring(7);
+            final String userEmail = jwtUtils.extractUsername(jwtToken);
 
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = loadUserDetails(userEmail);
+
                 if (userDetails != null) {
                     if (jwtUtils.isTokenExpired(jwtToken)) {
-                        logger.warn("Expired JWT token for user: {}", userEmail);
-                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT token expired");
+                        logger.warn("JWT expired for user: {}", userEmail);
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT expired");
                         return;
+                    }
+
+                    // Nếu token sắp hết hạn, tạo token mới
+                    if (jwtUtils.needsRefresh(jwtToken)) {
+                        String newToken = jwtUtils.generateToken(userDetails);
+                        response.setHeader("New-Token", newToken);
+                        logger.info("Token refreshed for user: {}", userEmail);
                     }
 
                     if (jwtUtils.isValidToken(jwtToken, userDetails)) {
@@ -72,21 +77,15 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                                 userDetails, null, userDetails.getAuthorities());
                         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authToken);
-                        logger.info("Authentication set for user: {}", userEmail);
-                    } else {
-                        logger.warn("Invalid JWT token for user: {}", userEmail);
-                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
-                        return;
                     }
                 }
             }
+
+            filterChain.doFilter(request, response);
         } catch (Exception e) {
             logger.error("JWT processing error: {}", e.getMessage());
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
-            return;
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT processing error: " + e.getMessage());
         }
-
-        filterChain.doFilter(request, response);
     }
 
     private UserDetails loadUserDetails(String userEmail) {

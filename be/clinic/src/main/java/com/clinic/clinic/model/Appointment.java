@@ -30,8 +30,8 @@ public class Appointment {
     @Column(nullable = false)
     private String reason;
 
-    @Column(nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private AppointmentStatus status;
 
     // Mối quan hệ n-1 với Doctor
     @ManyToOne(fetch = FetchType.LAZY)

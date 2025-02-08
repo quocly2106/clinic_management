@@ -53,12 +53,12 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setUpdatedAt(LocalDateTime.now());
         appointment.setDateTime(appointmentDto.getDateTime());
         appointment.setReason(appointmentDto.getReason());
-        appointment.setStatus("Confirmed");
+        appointment.setStatus(AppointmentStatus.CONFIRMED);
         appointment.setDoctor(doctor);
         appointment.setPatient(patient);
         appointment.setReceptionist(receptionist);
 
-        emailService.scheduleReminderEmail(patient.getEmail(), patient.getFirstName() + patient.getLastName(), appointment.getDateTime());
+        emailService.scheduleReminderEmailIfConfirmed(patient.getEmail(), patient.getFirstName() + patient.getLastName(), appointment.getDateTime(),AppointmentStatus.CONFIRMED);
 
         return appointmentRepository.save(appointment);
     }
@@ -66,12 +66,16 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public Appointment updateAppointment(Long id, AppointmentDto appointmentDto) {
         Appointment existingAppointment = appointmentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Schedule not found with ID: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("Appointment not found with ID: " + id));
 
         existingAppointment.setUpdatedAt(LocalDateTime.now());
         existingAppointment.setDateTime(appointmentDto.getDateTime());
         existingAppointment.setReason(appointmentDto.getReason());
-        existingAppointment.setStatus(appointmentDto.getStatus());
+
+        if (appointmentDto.getStatus() != null) {
+            existingAppointment.setStatus(appointmentDto.getStatus());
+            sendAppointmentStatusEmail(existingAppointment);
+        }
 
         if (appointmentDto.getDoctorId() != null) {
             Doctor doctor = doctorRepository.findById(appointmentDto.getDoctorId())
@@ -79,13 +83,21 @@ public class AppointmentServiceImpl implements AppointmentService {
             existingAppointment.setDoctor(doctor);
         }
 
-        // Gọi phương thức gửi email nhắc nhở
-        emailService.scheduleReminderEmail(existingAppointment.getPatient().getEmail(),
-                existingAppointment.getPatient().getFirstName() +
-                        existingAppointment.getPatient().getLastName(), existingAppointment.getDateTime());
-
         return appointmentRepository.save(existingAppointment);
     }
+
+    private void sendAppointmentStatusEmail(Appointment appointment) {
+        String email = appointment.getPatient().getEmail();
+        String patientName = appointment.getPatient().getFirstName() + " " + appointment.getPatient().getLastName();
+        LocalDateTime dateTime = appointment.getDateTime();
+
+        switch (appointment.getStatus()) {
+            case CONFIRMED -> emailService.sendConfirmedEmail(email, patientName,dateTime);
+            case CANCELED -> emailService.sendCanceledEmail(email, patientName,dateTime);
+            case FINISHED -> emailService.sendFinishedEmail(email, patientName,dateTime);
+        }
+    }
+
 
     @Override
     public void deleteAppointment(Long id) {
@@ -136,13 +148,9 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setUpdatedAt(LocalDateTime.now());
         appointment.setDateTime(bookAppointmentDto.getDateTime());
         appointment.setReason(bookAppointmentDto.getReason());
-        appointment.setStatus("Waiting");
+        appointment.setStatus(AppointmentStatus.WAITING);
         appointment.setDoctor(doctor);
         appointment.setPatient(savedPatient);
-
-        Appointment savedAppointment = appointmentRepository.save(appointment);
-        emailService.scheduleReminderEmail(savedPatient.getEmail(),
-                savedPatient.getFirstName() + " " + savedPatient.getLastName(),
-                savedAppointment.getDateTime());
+        appointmentRepository.save(appointment);
     }
 }

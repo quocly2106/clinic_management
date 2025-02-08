@@ -30,11 +30,6 @@ public class LoginController {
     @Autowired
     private ReceptionistService receptionistService;
 
-    @Autowired
-    private JWTUtils jwtUtils;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginDto loginDto) {

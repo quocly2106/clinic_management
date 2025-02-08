@@ -1,5 +1,6 @@
 package com.clinic.clinic.dto;
 
+import com.clinic.clinic.model.AppointmentStatus;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Future;
 import lombok.AllArgsConstructor;
@@ -27,7 +28,7 @@ public class AppointmentDto {
     @NotNull(message = "Reason is required")
     private String reason;
 
-    private String status;
+    private AppointmentStatus status;
 
     private Long receptionistId;
 }
