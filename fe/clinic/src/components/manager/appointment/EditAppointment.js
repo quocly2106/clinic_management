@@ -15,7 +15,7 @@ const EditAppointment = () => {
     receptionistId: "",
     dateTime: "",
     reason: "",
-    status: "Waiting", // Set default value to 'Waiting' if status is undefined
+    status: "WAITING", // Set default value to 'Waiting' if status is undefined
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -95,7 +95,7 @@ const EditAppointment = () => {
 
     const selectedDateTime = new Date(appointment.dateTime);
     const now = new Date();
-    if (selectedDateTime <= now) {
+    if (appointment.status !== "FINISHED" && selectedDateTime <= now) {
       setError("Ngày và Giờ phải ở trong tương lai.");
       toast.error("Ngày và Giờ phải ở trong tương lai.");
       return;
@@ -208,8 +208,10 @@ const EditAppointment = () => {
               onChange={handleChange}
               required
             >
-              <option value="Waiting">Waiting</option>
-              <option value="Confirmed">Confirmed</option>
+              <option value="WAITING">WAITING</option>
+              <option value="CONFIRMED">CONFIRMED</option>
+              <option value="FINISHED">FINISHED</option>
+              <option value="CANCELED">CANCELED</option>
             </select>
           </div>
 

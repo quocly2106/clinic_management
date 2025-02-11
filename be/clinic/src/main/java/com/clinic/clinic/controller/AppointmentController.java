@@ -5,6 +5,7 @@ import com.clinic.clinic.dto.AppointmentDto;
 import com.clinic.clinic.dto.BookAppointmentDto;
 import com.clinic.clinic.email.EmailService;
 import com.clinic.clinic.model.Appointment;
+import com.clinic.clinic.model.AppointmentStatus;
 import com.clinic.clinic.repository.AppointmentRepository;
 import com.clinic.clinic.service.AppointmentService;
 import jakarta.validation.Valid;
@@ -12,6 +13,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -34,11 +36,26 @@ public class AppointmentController {
         return ResponseEntity.ok(createAppointment);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR')")
     @PutMapping("/update/{id}")
-    public ResponseEntity<Appointment> updateAppointment(@PathVariable @NotNull Long id, @RequestBody AppointmentDto appointmentDto) {
-        Appointment updatedAppointment = appointmentService.updateAppointment(id, appointmentDto);
+    public ResponseEntity<Appointment> updateAppointment(
+            @PathVariable @NotNull Long id,
+            @RequestBody AppointmentDto appointmentDto,
+            Authentication authentication) {
+
+        // Lấy email của người dùng từ token
+        String username = authentication.getName();
+
+        // Kiểm tra xem người dùng có phải là admin không
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        // Gọi service với username và quyền hạn
+        Appointment updatedAppointment = appointmentService.updateAppointment(id, appointmentDto, username, isAdmin);
+
         return ResponseEntity.ok(updatedAppointment);
     }
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteAppointment(@PathVariable @NotNull Long id) {
@@ -46,8 +63,13 @@ public class AppointmentController {
         return ResponseEntity.ok("Appointment deleted successfully");
     }
 
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<Appointment>> getAppointmentsByStatus(@PathVariable String status) {
+        AppointmentStatus appointmentStatus = AppointmentStatus.fromString(status); // Dùng phương thức từ enum để chuyển đổi
+        List<Appointment> appointmentByStatus = appointmentService.getAppointmentsByStatus(appointmentStatus);
+        return ResponseEntity.ok(appointmentByStatus);
+    }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'RECEPTIONIST')")
     @GetMapping("/all")
     public ResponseEntity<List<Appointment>> getAllAppointments() {
         List<Appointment> appointments = appointmentService.getAllAppointment();

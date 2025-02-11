@@ -3,7 +3,6 @@ package com.clinic.clinic.config;
 import com.clinic.clinic.security.JWTAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -41,10 +40,11 @@ public class SecurityConfig {
                         .requestMatchers("/admin/register", "/auth/login").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/doctors/all", "/receptionists/all","/specialties/all","/services/all" , "/medicines/all").permitAll()
-                        .requestMatchers("/doctors/update/{id}","/doctors/{id}","/doctors/{id}/change-password","/appointments/**").hasAnyRole("DOCTOR", "ADMIN")
+                        .requestMatchers("/doctors/update/{id}","/doctors/{id}","/doctors/{id}/change-password").hasAnyRole("DOCTOR", "ADMIN")
                         .requestMatchers("/receptionists/update/{id}","/receptionists/{id}","/receptionists/{id}/change-password").hasAnyRole("RECEPTIONIST", "ADMIN")
                         .requestMatchers("/patients/check-phone","/patients/all").permitAll()
                         .requestMatchers("/patients/**").hasAnyRole("ADMIN", "RECEPTIONIST")
+                        .requestMatchers("/appointments/**").hasAnyRole("ADMIN", "RECEPTIONIST","DOCTOR")
                         .requestMatchers("/news/add", "/news/update/", "news/delete/{id}").hasAnyRole("ADMIN")
                         .requestMatchers("/news/all", "/news/{id}", "/news/increment-views/{id}","/doctors/all","/receptionists/all").permitAll()
                         .requestMatchers("/appointments/book-appointment" , "appointments/all","specialties/{id}/doctors").permitAll()
@@ -69,6 +69,8 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();  // Cung cấp AuthenticationManager
     }
+
+
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

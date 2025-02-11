@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -47,6 +48,11 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Patient not found with ID: " + appointmentDto.getPatientId()));
 
         Receptionist receptionist = getReceptionistIfExists(appointmentDto.getReceptionistId());
+        LocalDateTime start = appointmentDto.getDateTime().minus(30, ChronoUnit.MINUTES);
+        LocalDateTime end = appointmentDto.getDateTime().plus(30, ChronoUnit.MINUTES);
+        if (appointmentRepository.countOverlappingAppointmentsForDoctor(doctor.getId(), start, end) > 0) {
+            throw new IllegalArgumentException("Bác sĩ đã có lịch hẹn trong khoảng thời gian này, vui lòng chọn thời gian khác.");
+        }
 
         Appointment appointment = new Appointment();
         appointment.setCreatedAt(LocalDateTime.now());
@@ -64,9 +70,17 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public Appointment updateAppointment(Long id, AppointmentDto appointmentDto) {
+    public Appointment updateAppointment(Long id, AppointmentDto appointmentDto, String username, boolean isAdmin) {
         Appointment existingAppointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Appointment not found with ID: " + id));
+
+        // Nếu không phải admin, kiểm tra xem bác sĩ có quyền cập nhật không
+        if (!isAdmin) {
+            if (existingAppointment.getDoctor() == null ||
+                    !existingAppointment.getDoctor().getEmail().equals(username)) {
+                throw new SecurityException("You do not have permission to update this appointment");
+            }
+        }
 
         existingAppointment.setUpdatedAt(LocalDateTime.now());
         existingAppointment.setDateTime(appointmentDto.getDateTime());
@@ -77,14 +91,9 @@ public class AppointmentServiceImpl implements AppointmentService {
             sendAppointmentStatusEmail(existingAppointment);
         }
 
-        if (appointmentDto.getDoctorId() != null) {
-            Doctor doctor = doctorRepository.findById(appointmentDto.getDoctorId())
-                    .orElseThrow(() -> new IllegalArgumentException("Doctor not found with ID: " + appointmentDto.getDoctorId()));
-            existingAppointment.setDoctor(doctor);
-        }
-
         return appointmentRepository.save(existingAppointment);
     }
+
 
     private void sendAppointmentStatusEmail(Appointment appointment) {
         String email = appointment.getPatient().getEmail();
@@ -126,6 +135,13 @@ public class AppointmentServiceImpl implements AppointmentService {
                 specialty
         ).orElseThrow(() -> new ResourceNotFoundException("Doctor not found"));
 
+        LocalDateTime start = bookAppointmentDto.getDateTime().minus(30, ChronoUnit.MINUTES);
+        LocalDateTime end = bookAppointmentDto.getDateTime().plus(30, ChronoUnit.MINUTES);
+        if (appointmentRepository.countOverlappingAppointmentsForDoctor(doctor.getId(), start, end) > 0) {
+            throw new IllegalArgumentException("Bác sĩ đã có lịch hẹn trong khoảng thời gian này, vui lòng chọn thời gian khác.");
+        }
+
+
         String phone = bookAppointmentDto.getPatient().getPhone();
         if (patientRepository.existsByPhone(phone)) {
             throw new IllegalArgumentException("Phone number already exists: " + phone);
@@ -153,4 +169,15 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setPatient(savedPatient);
         appointmentRepository.save(appointment);
     }
+
+    @Override
+    public List<Appointment> getAppointmentsByStatus(AppointmentStatus status) {
+        return appointmentRepository.findByStatus(status);
+    }
+
+    @Override
+    public boolean isDoctorOfAppointment(Long doctorId, Long appointmentId) {
+        return appointmentRepository.existsByIdAndDoctorId(appointmentId, doctorId);
+    }
+
 }

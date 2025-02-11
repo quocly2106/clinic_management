@@ -26,7 +26,7 @@ export async function register(data) {
     const response = await api.post("/admin/register", data);
     return response.data;
   } catch (error) {
-    console.error("Error during register:", error);
+    console.error("Lỗi trong quá trình đăng ký:", error);
     throw error;
   }
 }
@@ -39,9 +39,9 @@ export async function login(data) {
   } catch (error) {
     console.error("Error during login:", error); // Log lỗi nếu có
     if (error.response && error.response.status === 401) {
-      throw new Error("Invalid email or password");
+      throw new Error("Email hoặc mật khẩu không hợp lệ");
     } else {
-      throw new Error("Login failed, please try again");
+      throw new Error("Đăng nhập không thành công, vui lòng thử lại");
     }
   }
 }
@@ -88,7 +88,7 @@ export const changeAdminPassword = async (adminId, data) => {
     const response = await api.put(`/admin/${adminId}/change-password`, data);
     return response.data;
   } catch (error) {
-    console.error("Error changing admin password:", error);
+    console.error("Lỗi đổi mật khẩu Admin:", error);
     throw error;
   }
 };
@@ -101,7 +101,7 @@ export const changeDoctorPassword = async (doctorId, data) => {
     );
     return response.data;
   } catch (error) {
-    console.error("Error during doctor password change:", error.response);
+    console.error("Lỗi khi đổi mật khẩu bác sĩ:", error.response);
     throw error;
   }
 };
@@ -114,7 +114,7 @@ export const changeReceptionistPassword = async (receptionistId, data) => {
     );
     return response.data;
   } catch (error) {
-    console.error("Error during receptionist password change:", error.response);
+    console.error("Lỗi khi đổi mật khẩu lễ tân:", error.response);
     throw error;
   }
 };
@@ -125,7 +125,7 @@ export const allDoctors = async () => {
     const response = await api.get("/doctors/all"); // Sử dụng api instance
     return response.data;
   } catch (error) {
-    console.error("Error fetching all doctors:", error); // Log lỗi nếu có
+    console.error("Lỗi khi tìm tất cả bác sĩ:", error); // Log lỗi nếu có
     throw error;
   }
 };
@@ -154,7 +154,7 @@ export const addDoctor = async (doctorDto, imageFile) => {
     );
     return response.data;
   } catch (error) {
-    console.error("Error add doctor:", error);
+    console.error("Lỗi khi thêm bác sĩ:", error);
     throw error;
   }
 };
@@ -184,7 +184,7 @@ export const editDoctor = async (doctorId, doctorDto, imageFile) => {
     );
     return response.data;
   } catch (error) {
-    console.error("Error edit doctor:", error);
+    console.error("Lỗi khi sửa bác sĩ:", error);
     throw error;
   }
 };
@@ -194,7 +194,7 @@ export async function deleteDoctor(doctorId) {
     const result = await api.delete(`/doctors/delete/${doctorId}`);
     return result.data;
   } catch (error) {
-    throw new Error(`Error deleting doctor" ${error.message}`);
+    throw new Error(`Lỗi khi xoá bác sĩ" ${error.message}`);
   }
 }
 
@@ -206,7 +206,7 @@ export const allReceptionists = async () => {
     const response = await api.get("/receptionists/all"); // Sử dụng api instance
     return response.data;
   } catch (error) {
-    console.error("Error fetching all receptionists:", error); // Log lỗi nếu có
+    console.error("Lỗi khi tìm tất cả lễ tân:", error); // Log lỗi nếu có
     throw error;
   }
 };
@@ -235,7 +235,7 @@ export const addReceptionist = async (receptionistDto, imageFile) => {
     );
     return response.data;
   } catch (error) {
-    console.error("Error add receptionist:", error);
+    console.error("Lỗi khi thêm lễ tân", error);
     throw error;
   }
 };
@@ -264,7 +264,7 @@ export const editReceptionist = async (receptionistId, receptionistDto, imageFil
     );
     return response.data;
   } catch (error) {
-    console.error("Error edit receptionist:", error);
+    console.error("Lỗi khi sửa lễ tân:", error);
     throw error;
   }
 };
@@ -274,7 +274,7 @@ export async function deleteReceptionist(receptionistId) {
     const result = await api.delete(`/receptionists/delete/${receptionistId}`);
     return result.data;
   } catch (error) {
-    throw new Error(`Error deleting receptionist" ${error.message}`);
+    throw new Error(`Lỗi khi xoá lễ tân" ${error.message}`);
   }
 }
 
@@ -284,7 +284,7 @@ export const allAdmins = async () => {
     const response = await api.get("/admin/all");
     return response.data;
   } catch (error) {
-    console.error("Error fetching all admins:", error);
+    console.error("Lỗi khi tìm tất cả admin:", error);
     throw error;
   }
 };
@@ -295,7 +295,7 @@ export const allSpecialties = async () => {
     const response = await api.get("/specialties/all");
     return response.data;
   } catch (error) {
-    console.error("Error fetching all specialties:", error);
+    console.error("Lỗi khi tìm tất cả chuyên khoa:", error);
     throw error;
   }
 };
@@ -324,7 +324,7 @@ export const addSpecialty = async (specialtyDto, imageFile) => {
     );
     return response.data;
   } catch (error) {
-    console.error("Error add specialty:", error);
+    console.error("Lỗi khi thêm chuyên khoa:", error);
     throw error;
   }
 };
@@ -354,7 +354,7 @@ export const editSpecialty = async (specialtyId, specialtyDto, imageFile) => {
     );
     return response.data;
   } catch (error) {
-    console.error("Error edit specialty:", error);
+    console.error("Lỗi khi sửa chuyên khoa:", error);
     throw error;
   }
 };
@@ -365,7 +365,7 @@ export async function deleteSpecialty(specialtyId) {
     const result = await api.delete(`/specialties/delete/${specialtyId}`);
     return result.data;
   } catch (error) {
-    throw new Error(`Error deleting specialty" ${error.message}`);
+    throw new Error(`Lỗi khi xoá chuyên khoa" ${error.message}`);
   }
 }
 
@@ -374,7 +374,7 @@ export const allDoctorsOfSpecialties = async (specialtyId) => {
     const response = await api.get(`/specialties/${specialtyId}/doctors`);
     return response.data;
   } catch (error) {
-    console.error("Error fetching all doctors of specialties:", error);
+    console.error("Lỗi khi tìm tất cả bác sĩ của chuyên khoa:", error);
     throw error;
   }
 };
@@ -385,7 +385,7 @@ export const allServices = async () => {
     const response = await api.get("/services/all");
     return response.data;
   } catch (error) {
-    console.error("Error fetching all services:", error);
+    console.error("Lỗi khi tìm tất cả các dịch vụ:", error);
     throw error;
   }
 };
@@ -414,7 +414,7 @@ export const addService = async (serviceDto, imageFile) => {
     );
     return response.data;
   } catch (error) {
-    console.error("Error add service:", error);
+    console.error("Lỗi khi thêm dịch vụ:", error);
     throw error;
   }
 };
@@ -443,7 +443,7 @@ export const editService = async (serviceId, serviceDto, imageFile) => {
     );
     return response.data;
   } catch (error) {
-    console.error("Error edit service:", error);
+    console.error("Lỗi khi sửa dịch vụ:", error);
     throw error;
   }
 };
@@ -458,7 +458,7 @@ export async function deleteService(serviceId) {
   } catch (error) {
     return {
       success: false,
-      message: error.response?.data?.message || "Unknown error",
+      message: error.response?.data?.message || "Lỗi khi xoá dịch vụ",
     };
   }
 }
@@ -469,7 +469,7 @@ export const allMedicines = async () => {
     const response = await api.get("/medicines/all");
     return response.data;
   } catch (error) {
-    console.error("Error fetching all medicines:", error);
+    console.error("Lỗi khi tìm tất cả thuốc:", error);
     throw error;
   }
 };
@@ -498,7 +498,7 @@ export const addMedicine = async (medicineDto,imageFile) => {
     );
     return response.data;
   } catch (error) {
-    console.error("Error add medicine:", error);
+    console.error("Lỗi khi thêm thuốc:", error);
     throw error;
   }
 };
@@ -528,7 +528,7 @@ export const editMedicine = async (medicineId, medicineDto,imageFile) => {
     );
     return response.data;
   } catch (error) {
-    console.error("Error edit medicine:", error);
+    console.error("Lỗi khi sửa thuốc:", error);
     throw error;
   }
 };
@@ -545,7 +545,7 @@ export async function deleteMedicine(medicineId) {
   } catch (error) {
     return {
       success: false,
-      message: error.response?.data?.message || "Unknown error",
+      message: error.response?.data?.message || "Lỗi khi xoá thuốc",
     };
   }
 }
@@ -556,7 +556,7 @@ export const allPatients = async () => {
     const response = await api.get("/patients/all");
     return response.data;
   } catch (error) {
-    console.error("Error fetching all patients:", error);
+    console.error("Lỗi khi tìm tất cả bệnh nhân:", error);
     throw error;
   }
 };
@@ -576,7 +576,7 @@ export const addPatient = async (data) => {
     );
     return response.data;
   } catch (error) {
-    console.error("Error add patient:", error);
+    console.error("Lỗi khi thêm bệnh nhân:", error);
     throw error;
   }
 };
@@ -596,7 +596,7 @@ export const editPatient = async (patientId, data) => {
     );
     return response.data;
   } catch (error) {
-    console.error("Error edit medicine:", error);
+    console.error("Lỗi khi sửa bệnh nhân:", error);
     throw error;
   }
 };
@@ -611,7 +611,7 @@ export async function deletePatient(patientId) {
   } catch (error) {
     return {
       success: false,
-      message: error.response?.data?.message || "Unknown error",
+      message: error.response?.data?.message || "Lỗi khi xoá bệnh nhân",
     };
   }
 }
@@ -622,7 +622,7 @@ export const allAppointments = async () => {
     const response = await api.get("/appointments/all");
     return response.data;
   } catch (error) {
-    console.error("Error fetching all appointments:", error);
+    console.error("Lỗi khi tìm tất cả lịch hẹn:", error);
     throw error;
   }
 };
@@ -637,7 +637,7 @@ export const addAppointment = async (data) => {
     });
     return response.data;
   } catch (error) {
-    console.error("Error add appointment:", error);
+    console.error("Lỗi khi thêm lịch hẹn:", error);
     throw error;
   }
 };
@@ -656,7 +656,7 @@ export const editAppointment = async (appointmentId, data) => {
     );
     return response.data;
   } catch (error) {
-    console.error("Error edit appointment:", error);
+    console.error("Lỗi khi sửa lịch hẹn:", error);
     throw error;
   }
 };
@@ -672,7 +672,7 @@ export async function deleteAppointment(appointmentId) {
   } catch (error) {
     return {
       success: false,
-      message: error.response?.data?.message || "Unknown error",
+      message: error.response?.data?.message || "Lỗi khi xoá lịch hẹn",
     };
   }
 }
@@ -685,12 +685,12 @@ export async function bookAppointment(data) {
     return {
       success: true,
       data: result.data,
-      message: "Appointment booked successfully",
+      message: "Lịch hẹn đã được đặt thành công",
     };
   } catch (error) {
     return {
       success: false,
-      message: error.response?.data?.message || "Unknown error occurred while booking appointment",
+      message: error.response?.data?.message || "Thời gian này của bác sĩ đã có người đặt , vui lòng đặt thời gian khác",
     };
   }
 }
@@ -703,7 +703,7 @@ export const allNews = async () => {
     const response = await api.get("/news/all");
     return response.data;
   } catch (error) {
-    console.error("Error fetching all news:", error);
+    console.error("Lỗi khi tìm tất cả tin tức:", error);
     throw error;
   }
 };
@@ -761,7 +761,7 @@ export const editNews = async (newsId, newsDto, imageFile) => {
     );
     return response.data;
   } catch (error) {
-    console.error("Error edit news:", error);
+    console.error("Lỗi khi sửa tin tức:", error);
     throw error;
   }
 };
@@ -778,7 +778,7 @@ export async function deleteNews(newsId) {
   } catch (error) {
     return {
       success: false,
-      message: error.response?.data?.message || "Unknown error",
+      message: error.response?.data?.message || "Lỗi khi xoá tin tức",
     };
   }
 }
@@ -793,7 +793,7 @@ export async function getNewsById(newsId) {
   } catch (error) {
     return {
       success: false,
-      message: error.response?.data?.message || "Unknown error",
+      message: error.response?.data?.message || "Lỗi khi tìm tin tức",
     };
   }
 }
